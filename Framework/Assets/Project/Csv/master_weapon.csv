@@ -1,0 +1,6 @@
+id,name,type,attack,type2,extra
+int,string,CuteProject.WeaponType,int,WeaponType,int[]
+1,"どうのつるぎ
+",Sword,5,Sword,"1,2,3"
+2,木の弓,Bow,5,Bow,
+3,ふつうの杖,Rod,5,Rod,3
