@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 559348974
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: commonatlas
+      Dependencies: {}
+    Info_1:
+      Name: view1
+      Dependencies: {}
+    Info_2:
+      Name: tulips
+      Dependencies: {}

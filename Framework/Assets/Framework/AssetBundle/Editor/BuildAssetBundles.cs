@@ -9,6 +9,14 @@ using UnityEngine;
 
 namespace Framework.AssetBundle
 {
+    /// <summary>
+    /// Build assetbundles
+    /// 注意：
+    /// 1. 保存assetbundles的路径要设成相对路径，不要写成绝对路径，比如
+    ///     string assetBundleCacheDirectory = "AssetBundles/"; // 这里目录AssetBundles是与Assets同级的
+    /// 2. 要打包的文件目录也要设成相对路径
+    ///     private static string assetRootDirectory = "Assets/Project/Resources";  // 
+    /// </summary>
     public class BuildAssetBundles
     {
         public class AssetBundleFile
@@ -34,9 +42,9 @@ namespace Framework.AssetBundle
         // ディレクトリ名とAssetBundle名が同じだとエラーになるので拡張子をつける
         private const string assetBundleExtension = ".a";
 
-        private static string assetRootDirectory = Application.dataPath + "/Project/Resources";
+        private static string assetRootDirectory = "Assets/Project/Resources";
 
-        private static string assetBundleCacheDirectory = Application.dataPath + "/../AssetBundles";
+        private static string assetBundleCacheDirectory = "AssetBundles/";
 
         [MenuItem("Framework/AssetBundle/Build AssetBundle")]
         static void BuildAllAssetBundles()
@@ -52,12 +60,11 @@ namespace Framework.AssetBundle
             //var variants = CreateVariantInfoList(allAssetList, isBuildVariants);
 
             // 通常版ビルド
-            BuildAllWithVariant(assetBundleCacheDirectory, builds, null, BuildTarget.StandaloneWindows64);
+            BuildAllWithVariant(assetBundleCacheDirectory, builds, null, BuildTarget.StandaloneWindows);
 
             // 一時退避用ディレクトリ作成
             //Directory.CreateDirectory(tempDirectoryPath);
 
-            //BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
             AssetDatabase.Refresh();
 
         }
@@ -442,15 +449,34 @@ namespace Framework.AssetBundle
 
         private static void DeleteDirectory(string directory)
         {
-            if (Directory.Exists(directory))
+            //if (Directory.Exists(directory))
+            //{
+            //    Directory.Delete(directory);
+            //}
+            DirectoryInfo di = new DirectoryInfo(directory);
+
+            RemoveReadonlyAttribute(di);
+
+            di.Delete(true);
+        }
+
+        private static void RemoveReadonlyAttribute(DirectoryInfo directoryInfo)
+        {
+            if ((directoryInfo.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
             {
-                Directory.Delete(directory);
+                directoryInfo.Attributes = FileAttributes.Normal;
             }
-            //DirectoryInfo di = new DirectoryInfo(directory);
-
-            //RemoveReadonlyAttribute(di);
-
-            //di.Delete(true);
+            foreach (FileInfo fi in directoryInfo.GetFiles())
+            {
+                if ((fi.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
+                    fi.Attributes = FileAttributes.Normal;
+                }
+            }
+            foreach (DirectoryInfo di in directoryInfo.GetDirectories())
+            {
+                RemoveReadonlyAttribute(di);
+            }
         }
     }
 

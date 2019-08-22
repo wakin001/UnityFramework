@@ -14,20 +14,23 @@ using UnityEngine.Networking;
 /// </summary>
 public class AssetBrowserTester : MonoBehaviour
 {
+    private string _bundleName = "view1.a";
+    private string _prefabName = "View1";
+
     // Start is called before the first frame update
     void Start()
     {
         //StartCoroutine(LoadAssets("window1"));
 
-        string manifestPath = Application.dataPath + "/../AssetBundles/StandaloneWindows/" + name;
-        string uri = "file:///" + manifestPath;
-        StartCoroutine(DownloadAndCacheAssetBundle(uri, manifestPath, "Window1"));
+        string manifestPath = Application.dataPath + "/../AssetBundles/build/build";
+        string uri = "file:///" + Application.dataPath + "/../AssetBundles/build/" + _bundleName;
+        StartCoroutine(DownloadAndCacheAssetBundle(uri, manifestPath, _bundleName));
     }
 
     IEnumerator LoadAssets(string name)
     {
         // change url for you asset bundle path
-        string url = Application.dataPath + "/../AssetBundles/StandaloneWindows/" + name;
+        string url = Application.dataPath + "/../AssetBundles/build/" + name;
         // load asset bundle using WWW class
         WWW www = new WWW("file:///" + url);
         while (!www.isDone)
@@ -69,7 +72,8 @@ public class AssetBrowserTester : MonoBehaviour
         List<Hash128> listOfCachedVersions = new List<Hash128>();
         Caching.GetCachedVersions(bundle.name, listOfCachedVersions);
 
-        if (!AssetBundleContainsAssetIWantToLoad(bundle))     //Or any conditions you want to check on your new asset bundle
+        GameObject assetObj = AssetBundleContainsAssetIWantToLoad(bundle);
+        if (assetObj == null)     //Or any conditions you want to check on your new asset bundle
         {
             //If our criteria wasn't met, we can remove the new cache and revert back to the most recent one
             Caching.currentCacheForWriting = Caching.GetCacheAt(Caching.cacheCount);
@@ -92,11 +96,13 @@ public class AssetBrowserTester : MonoBehaviour
             //This is if we only want to keep 5 local caches at any time
             if (Caching.cacheCount > 5)
                 Caching.RemoveCache(Caching.GetCacheAt(1));     //Removes the oldest user created cache
+
+            GameObject.Instantiate(assetObj);
         }
     }
 
-    bool AssetBundleContainsAssetIWantToLoad(AssetBundle bundle)
+    GameObject AssetBundleContainsAssetIWantToLoad(AssetBundle bundle)
     {
-        return (bundle.LoadAsset<GameObject>("Window1") != null);     //this could be any conditional
+        return bundle.LoadAsset<GameObject>(_prefabName);     //this could be any conditional
     }
 }
