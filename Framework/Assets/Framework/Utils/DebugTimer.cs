@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Framework.Utils
+namespace Framework
 {
     public class DebugTimer : IDisposable
     {

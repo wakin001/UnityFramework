@@ -16,15 +16,20 @@ public class AssetBrowserTester : MonoBehaviour
 {
     private string _bundleName = "view1.a";
     private string _prefabName = "View1";
+    private const string manifestUrlPath = "http://localhost/manifests/";
+    private const string assetUrlPath = "http://localhost/AssetBundles/";
+    //private string savePath = Application.dataPath + "/../AssetBundles/build/";
 
     // Start is called before the first frame update
     void Start()
     {
         //StartCoroutine(LoadAssets("window1"));
 
-        string manifestPath = Application.dataPath + "/../AssetBundles/build/build";
-        string uri = "file:///" + Application.dataPath + "/../AssetBundles/build/" + _bundleName;
-        StartCoroutine(DownloadAndCacheAssetBundle(uri, manifestPath, _bundleName));
+        //string manifestPath = Application.dataPath + "/../AssetBundles/build/build";
+        //string uri = "file:///" + Application.dataPath + "/../AssetBundles/build/" + _bundleName;
+        //StartCoroutine(DownloadAndCacheAssetBundle(uri, manifestPath, _bundleName));
+        string savePath = Application.dataPath + "/../AssetBundles/test/";
+        StartCoroutine(Framework.AssetDownloader.instance.DownloadManifest(manifestUrlPath, assetUrlPath, savePath));
     }
 
     IEnumerator LoadAssets(string name)
