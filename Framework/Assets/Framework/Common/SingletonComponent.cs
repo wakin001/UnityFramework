@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Cute
+namespace Framework
 {
     public class SingletonComponent<T> : MonoBehaviour where T : SingletonComponent<T>
     {

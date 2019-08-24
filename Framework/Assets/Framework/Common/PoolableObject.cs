@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Cute
+namespace Framework
 {
     /// <summary>
     /// プールオブジェクトのベースクラス

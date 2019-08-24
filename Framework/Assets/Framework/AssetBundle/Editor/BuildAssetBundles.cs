@@ -1,5 +1,4 @@
-﻿using Framework.Utils;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Framework.AssetBundle
+namespace Framework
 {
     /// <summary>
     /// Build assetbundles
@@ -430,8 +429,7 @@ namespace Framework.AssetBundle
             // 空のディレクトリを削除してビルド成功率をあげる
             //DeleteEmptyDirectory(buildPath);
 
-            //BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
-            BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.None, target);
+            BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
 
             //if (error != null)
             //{

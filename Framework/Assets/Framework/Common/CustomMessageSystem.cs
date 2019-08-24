@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Cute
+namespace Framework
 {
     /// <summary>
     /// base of all Custom Message.
@@ -63,7 +63,7 @@ namespace Cute
                 _messageListeners[type].Remove(handler);
             }
         }
-        
+
         /// <summary>
         /// 同じタイプのListenerを全部削除します。
         /// </summary>
