@@ -32,11 +32,14 @@ namespace Framework
 
 #if UNITY_EDITOR_WIN
         // for local test
-        const string defaultAssetBundleOutputPath = "C:/nginx-1.16.0/html/AssetBundles";
-        const string defaultManifestOutputPath = "C:/nginx-1.16.0/html/manifests";
+        public const string defaultAssetBundleOutputPath = "C:/nginx-1.16.0/html/AssetBundles";
+        public const string defaultManifestOutputPath = "C:/nginx-1.16.0/html/manifests";
+#elif UNITY_EDITOR_OSX
+        public const string defaultAssetBundleOutputPath = "/Users/fongwang/Documents/Workspace/UnityFramework/LocalServer/AssetBundles";
+        public const string defaultManifestOutputPath = "/Users/fongwang/Documents/Workspace/UnityFramework/LocalServer/Manifests";
 #else
-        const string defaultAssetBundleOutputPath = "assetbundles";
-        const string defaultManifestOutputPath = "manifests";
+        public const string defaultAssetBundleOutputPath = "assetbundles";
+        public const string defaultManifestOutputPath = "manifests";
 #endif
         // ディレクトリ名とAssetBundle名が同じだとエラーになるので拡張子をつける
         private const string assetBundleExtension = ".a";
@@ -59,7 +62,7 @@ namespace Framework
             //var variants = CreateVariantInfoList(allAssetList, isBuildVariants);
 
             // 通常版ビルド
-            BuildAllWithVariant(assetBundleCacheDirectory, builds, null, BuildTarget.StandaloneWindows);
+            BuildAllWithVariant(assetBundleCacheDirectory, builds, null, BuildTarget.StandaloneOSX);
 
             // 一時退避用ディレクトリ作成
             //Directory.CreateDirectory(tempDirectoryPath);

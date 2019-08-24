@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 4020792411
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 3d833a0229913200d54f7dad6883e3ad
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ea5a42e0fd8ea905efa7aa926a3b8944
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Project/Resources/Sprite/Tulips.jpg
+Dependencies: []

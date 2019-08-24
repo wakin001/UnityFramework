@@ -16,9 +16,15 @@ public class AssetBrowserTester : MonoBehaviour
 {
     private string _bundleName = "view1.a";
     private string _prefabName = "View1";
+#if UNITY_EDITOR_OSX
+    private const string manifestUrlPath = "http://localhost:1234/";
+    private const string assetUrlPath = "http://localhost:1234/";
+#else
     private const string manifestUrlPath = "http://localhost/manifests/";
     private const string assetUrlPath = "http://localhost/AssetBundles/";
+#endif
     //private string savePath = Application.dataPath + "/../AssetBundles/build/";
+    private string savePath = "";
 
     // Start is called before the first frame update
     void Start()
@@ -28,28 +34,23 @@ public class AssetBrowserTester : MonoBehaviour
         //string manifestPath = Application.dataPath + "/../AssetBundles/build/build";
         //string uri = "file:///" + Application.dataPath + "/../AssetBundles/build/" + _bundleName;
         //StartCoroutine(DownloadAndCacheAssetBundle(uri, manifestPath, _bundleName));
-        string savePath = Application.dataPath + "/../AssetBundles/test/";
+        savePath = Application.dataPath + "/../AssetBundles/test/";
         StartCoroutine(Framework.AssetDownloader.instance.DownloadManifest(manifestUrlPath, assetUrlPath, savePath));
+
+        Framework.AssetDownloader.instance.onCompleted = () =>
+        {
+            var prefab = LoadAsset<GameObject>(_bundleName);
+            if (prefab != null)
+            {
+                Instantiate(prefab);
+            }
+        };
     }
 
-    IEnumerator LoadAssets(string name)
+    T LoadAsset<T>(string name) where T : UnityEngine.Object
     {
-        // change url for you asset bundle path
-        string url = Application.dataPath + "/../AssetBundles/build/" + name;
-        // load asset bundle using WWW class
-        WWW www = new WWW("file:///" + url);
-        while (!www.isDone)
-            yield return null;
-        AssetBundle testbundle = www.assetBundle;
-        if (testbundle != null)
-        {
-            GameObject cube = testbundle.LoadAsset("Window1") as GameObject;
-            Instantiate(cube, transform);
-        }
-        else
-        {
-            Debug.LogError("Asset Bundle is NULL");
-        }
+        AssetBundle asset = AssetBundle.LoadFromFile(savePath + name);
+        return asset.LoadAsset<T>("view1");
     }
 
     IEnumerator DownloadAndCacheAssetBundle(string uri, string manifestBundlePath, string bundleName)

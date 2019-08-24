@@ -7,10 +7,15 @@ using UnityEngine.Networking;
 
 namespace Framework
 {
+    /// <summary>
+    /// Asset downloader.
+    /// </summary>
     public class AssetDownloader : SingletonComponent<AssetDownloader>
     {
         private string _assetUrlPath;
         private const string assetBundleManafestName = "build.manifest";
+
+        public Action onCompleted = null;
 
         public IEnumerator DownloadManifest(string urlPath, string assetUrlPath, string toPath)
         {
@@ -22,6 +27,11 @@ namespace Framework
             {
                 string manifestName = Path.GetFileNameWithoutExtension(assetBundleManafestName);
                 AssetBundle manifestBundle = AssetBundle.LoadFromFile($"{toPath}/{manifestName}");
+                if (manifestBundle == null)
+                {
+                    Debug.LogWarning("Cannot load manifest file");
+                    yield break;
+                }
                 AssetBundleManifest manifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
 
                 StartCoroutine(DownloadAllAssets(assetUrlPath, toPath, manifest));
@@ -39,7 +49,12 @@ namespace Framework
             foreach (string assetName in allAssets)
             {
                 var downloader = new Downloader();
-                yield return downloader.Download(_assetUrlPath + assetName, toPath + "AssetBundles/" + assetName);
+                yield return downloader.Download(_assetUrlPath + assetName, toPath + assetName);
+            }
+
+            if (onCompleted != null)
+            {
+                onCompleted.Invoke();
             }
         }
     }
