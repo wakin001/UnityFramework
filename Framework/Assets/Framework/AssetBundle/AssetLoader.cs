@@ -40,27 +40,15 @@ namespace Framework
             SingletonMonoBehaviour.instance.StartCoroutine(LoadAsyncCoroutine<T>(name, onCompleted));
         }
 
-        public static IEnumerator LoadFromCacheCoroutine<T>(string name, System.Action<T> onCompleted) where T : Object
+        public static IEnumerator LoadFromCacheCoroutine<T>(string name, bool isAsync, System.Action<T> onCompleted) where T : Object
         {
-
             if (!AssetDownloader.instance.useCaching)
             {
+                if (onCompleted != null)
+                {
+                    onCompleted.Invoke(default(T));
+                }
                 yield break;
-            }
-            Coroutine<T> routine = SingletonMonoBehaviour.instance.StartCoroutine<T>(LoadFromCache<T>(name, false));
-            yield return routine.coroutine;
-            if (onCompleted != null)
-            {
-                onCompleted.Invoke(routine.Value as T);
-            }
-        }
-
-        private static IEnumerator LoadFromCache<T>(string name, bool isAsync) where T : Object
-        {
-            // Wait for caching is ready.
-            if (!Caching.ready)
-            {
-                yield return null;
             }
             Hash128 hash = AssetDownloader.instance.manifest.GetAssetBundleHash(name);
             UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(AssetDownloader.instance.assetUrlPath + name, hash, 0);
@@ -70,9 +58,19 @@ namespace Framework
             if (isAsync)
             {
                 var loadRequest = bundle.LoadAssetAsync(name);
-                yield return loadRequest.asset as T;
+                yield return loadRequest;
+                if (onCompleted != null)
+                {
+                    onCompleted.Invoke(loadRequest.asset as T);
+                }
             }
-            yield return bundle.LoadAsset(name) as T;
+            else
+            {
+                if (onCompleted != null)
+                {
+                    onCompleted.Invoke(bundle.LoadAsset(name) as T);
+                }
+            }
         }
 
         private static IEnumerator LoadAsyncCoroutine<T>(string name, System.Action<T> onCompleted) where T : Object
@@ -89,12 +87,7 @@ namespace Framework
             }
             else if (AssetDownloader.instance.useCaching)
             {
-                Coroutine<T> routine = SingletonMonoBehaviour.instance.StartCoroutine<T>(LoadFromCache<T>(name, true));
-                yield return routine.coroutine;
-                if (onCompleted != null)
-                {
-                    onCompleted.Invoke(routine.Value as T);
-                }
+                yield return LoadFromCacheCoroutine<T>(name, true, onCompleted);
             }
             else
             {

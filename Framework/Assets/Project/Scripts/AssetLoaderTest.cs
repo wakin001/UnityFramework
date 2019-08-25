@@ -18,13 +18,13 @@ public class AssetLoaderTest : MonoBehaviour
         });
 
         // sync
-        AssetLoader.Load<GameObject>("view1", (prefab) =>
-        {
-            if (prefab != null)
-            {
-                Instantiate(prefab);
-            }
-        });
+        //AssetLoader.Load<GameObject>("view1", (prefab) =>
+        //{
+        //    if (prefab != null)
+        //    {
+        //        Instantiate(prefab);
+        //    }
+        //});
     }
 
 }
