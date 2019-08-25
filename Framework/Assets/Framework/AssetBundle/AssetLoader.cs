@@ -9,21 +9,49 @@ namespace Framework
     {
         public static bool useAssetBundle = true;
 
-        public static T Load<T>(string name) where T : Object
+        public static void Load<T>(string name, System.Action<T> onCompleted) where T : Object
         {
+            T obj = null;
             if (!useAssetBundle)
             {
-                return Resources.Load<T>(name);
+                obj = Resources.Load<T>(name);
+                if (onCompleted != null)
+                {
+                    onCompleted.Invoke(obj);
+                }
             }
             else if (AssetDownloader.instance.useCaching)
             {
-                Coroutine<T> routine = AssetDownloader.instance.StartCoroutine<T>(LoadFromCache<T>(name, false));
-                return routine.Value;
+                SingletonMonoBehaviour.instance.StartCoroutine(LoadAsyncCoroutine<T>(name, onCompleted));
             }
             else
             {
                 AssetBundle asset = AssetBundle.LoadFromFile(AssetDownloader.instance.savePath + name);
-                return asset.LoadAsset<T>(name);
+                obj = asset.LoadAsset<T>(name);
+                if (onCompleted != null)
+                {
+                    onCompleted.Invoke(obj);
+                }
+            }
+        }
+
+        public static void LoadAsync<T>(string name, System.Action<T> onCompleted) where T : Object
+        {
+            SingletonMonoBehaviour.instance.StartCoroutine(LoadAsyncCoroutine<T>(name, onCompleted));
+        }
+
+        public static IEnumerator LoadFromCacheCoroutine<T>(string name, System.Action<T> onCompleted) where T : Object
+        {
+
+            if (!AssetDownloader.instance.useCaching)
+            {
+                yield break;
+            }
+            Coroutine<T> routine = SingletonMonoBehaviour.instance.StartCoroutine<T>(LoadFromCache<T>(name, false));
+            yield return routine.coroutine;
+            if (onCompleted != null)
+            {
+                onCompleted.Invoke(routine.Value as T);
             }
         }
 
@@ -47,7 +75,7 @@ namespace Framework
             yield return bundle.LoadAsset(name) as T;
         }
 
-        public static IEnumerator LoadAsync<T>(string name, System.Action<T> onCompleted) where T : Object
+        private static IEnumerator LoadAsyncCoroutine<T>(string name, System.Action<T> onCompleted) where T : Object
         {
             if (!useAssetBundle)
             {
@@ -61,26 +89,21 @@ namespace Framework
             }
             else if (AssetDownloader.instance.useCaching)
             {
-                // Wait for caching is ready.
-                if (!Caching.ready)
-                {
-                    yield return null;
-                }
-                Hash128 hash = AssetDownloader.instance.manifest.GetAssetBundleHash(name);
-                UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(AssetDownloader.instance.assetUrlPath + name, hash, 0);
-                yield return request.SendWebRequest();
-
-                var bundle = DownloadHandlerAssetBundle.GetContent(request);
-                var loadRequest = bundle.LoadAssetAsync(name);
-                yield return loadRequest;
+                Coroutine<T> routine = SingletonMonoBehaviour.instance.StartCoroutine<T>(LoadFromCache<T>(name, true));
+                yield return routine.coroutine;
                 if (onCompleted != null)
                 {
-                    onCompleted.Invoke(loadRequest.asset as T);
+                    onCompleted.Invoke(routine.Value as T);
                 }
             }
             else
             {
-                // todo
+                var asyncRequest = AssetBundle.LoadFromFileAsync(AssetDownloader.instance.savePath + name);
+                yield return asyncRequest;
+                if (onCompleted != null)
+                {
+                    onCompleted.Invoke(asyncRequest.assetBundle.LoadAsset(name) as T);
+                }
             }
         }
     }

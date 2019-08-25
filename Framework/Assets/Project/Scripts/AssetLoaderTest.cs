@@ -8,13 +8,23 @@ public class AssetLoaderTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(AssetLoader.LoadAsync<GameObject>("view1", (prefab) =>
+        // async
+        AssetLoader.LoadAsync<GameObject>("view1", (prefab) =>
         {
             if (prefab != null)
             {
                 Instantiate(prefab);
             }
-        }));
+        });
+
+        // sync
+        AssetLoader.Load<GameObject>("view1", (prefab) =>
+        {
+            if (prefab != null)
+            {
+                Instantiate(prefab);
+            }
+        });
     }
 
 }
