@@ -42,7 +42,7 @@ namespace Framework
         public const string defaultManifestOutputPath = "manifests";
 #endif
         // ディレクトリ名とAssetBundle名が同じだとエラーになるので拡張子をつける
-        private const string assetBundleExtension = ".a";
+        private const string assetBundleExtension = "";//".a";
 
         private static string assetRootDirectory = "Assets/Project/Resources";
 

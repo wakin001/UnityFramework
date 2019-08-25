@@ -18,7 +18,7 @@ namespace Framework
 
     public interface IDownloader
     {
-        IEnumerator Download(string path, string filename);
+        IEnumerator Download(string path, string name, Hash128 hash, string savePath);
         string error { get; }
 
         DownloadErrorType errorType { get; }
@@ -30,10 +30,17 @@ namespace Framework
 
         public DownloadErrorType errorType { get; private set; } = DownloadErrorType.None;
 
-        public IEnumerator Download(string path, string toPath)
+        /// <summary>
+        /// Download the specified path, name, hash and toPath.
+        /// </summary>
+        /// <returns>The download.</returns>
+        /// <param name="path">Path.</param>
+        /// <param name="name">Name.</param>
+        /// <param name="hash">Hash.</param> Ignore hash.
+        /// <param name="toPath">To path.</param> Save file to toPath.
+        public IEnumerator Download(string path, string name, Hash128 hash, string toPath)
         {
-            //UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(path);
-            using (UnityWebRequest request = UnityWebRequest.Get(path))
+            using (UnityWebRequest request = UnityWebRequest.Get(path + name))
             {
                 yield return request.SendWebRequest();
 
@@ -43,7 +50,7 @@ namespace Framework
 
                     try
                     {
-                        FileUtil.Save(toPath, data);
+                        FileUtil.Save(toPath + name, data);
                     }
                     catch (IOException e)
                     {

@@ -14,7 +14,7 @@ using UnityEngine.Networking;
 /// </summary>
 public class AssetBrowserTester : MonoBehaviour
 {
-    private string _bundleName = "view1.a";
+    private string _bundleName = "view1";
     private string _prefabName = "View1";
 #if UNITY_EDITOR_OSX
     private const string manifestUrlPath = "http://localhost:1234/";
@@ -39,19 +39,23 @@ public class AssetBrowserTester : MonoBehaviour
 
         Framework.AssetDownloader.instance.onCompleted = () =>
         {
-            var prefab = LoadAsset<GameObject>(_bundleName);
-            if (prefab != null)
+            StartCoroutine(Framework.AssetLoader.LoadAsync<GameObject>(_bundleName, (prefab) =>
             {
-                Instantiate(prefab);
-            }
+                if (prefab != null)
+                {
+                    Instantiate(prefab);
+                }
+            }));
         };
     }
 
     T LoadAsset<T>(string name) where T : UnityEngine.Object
     {
         AssetBundle asset = AssetBundle.LoadFromFile(savePath + name);
-        return asset.LoadAsset<T>("view1");
+        return asset.LoadAsset<T>(name);
     }
+
+
 
     IEnumerator DownloadAndCacheAssetBundle(string uri, string manifestBundlePath, string bundleName)
     {
