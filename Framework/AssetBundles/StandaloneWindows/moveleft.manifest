@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
-CRC: 3942384689
+CRC: 4072326487
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: c635d103c4c122bad047cfaf3084957c
+    Hash: e9b1bb4d52c7b0e88f76a4a86d03adab
   TypeTreeHash:
     serializedVersion: 2
-    Hash: bfb87d18134d160e3a907b7674713721
+    Hash: af57576da81d5d3ce45807ac11234de6
 HashAppended: 0
 ClassTypes:
-- Class: 687078895
+- Class: 74
   Script: {instanceID: 0}
 Assets:
-- Assets/Project/Resources/Atlas/CommonAtlas.spriteatlas
+- Assets/Project/Animations/MoveLeft.anim
 Dependencies: []

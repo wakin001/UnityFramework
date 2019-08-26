@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2150099340
+CRC: 1863137002
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 503e952812b7e6a2cd8dfb6b3d69b3f6
+    Hash: 15ec0ea3da26e7fcce5bb9fcc5b70669
   TypeTreeHash:
     serializedVersion: 2
     Hash: 95808722f199edf17d1f6f767a692bfb
@@ -40,5 +40,6 @@ ClassTypes:
 - Class: 224
   Script: {instanceID: 0}
 Assets:
-- Assets/Project/Resources/Prefabs/View1.prefab
-Dependencies: []
+- Assets/Project/Resources/Prefabs/Views/View3.prefab
+Dependencies:
+- D:/Projects/Workspace/UnityFramework/Framework/AssetBundles/StandaloneWindows/sprites_sources

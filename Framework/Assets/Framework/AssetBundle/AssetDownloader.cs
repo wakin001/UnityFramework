@@ -50,18 +50,12 @@ namespace Framework
         }
 
         // downalod from assetUrlPath
-        public string assetUrlPath { get; private set; }
+        public string assetUrlPath { get; set; }
         // manifest file path.
-        public string savePath { get; private set; }
+        public string savePath { get; set; }
         private const string assetBundleManafestName = "build.manifest";
 
         public Action onCompleted = null;
-
-        private void Awake()
-        {
-            // test.
-            savePath = Application.dataPath + "/../AssetBundles/test/";
-        }
 
         public IEnumerator DownloadManifest(string urlPath, string assetUrlPath, string toPath)
         {

@@ -1,13 +1,32 @@
 ManifestFileVersion: 0
-CRC: 559348974
+CRC: 3365408103
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: commonatlas
+      Name: sprites_sources
       Dependencies: {}
     Info_1:
-      Name: view1
-      Dependencies: {}
+      Name: prefabs/views/view1
+      Dependencies:
+        Dependency_0: animationctrls/view1
     Info_2:
-      Name: tulips
+      Name: prefabs/views/view2
+      Dependencies:
+        Dependency_0: sprites_sources
+    Info_3:
+      Name: prefabs/views/view3
+      Dependencies:
+        Dependency_0: sprites_sources
+    Info_4:
+      Name: atlas/commonatlas
+      Dependencies: {}
+    Info_5:
+      Name: sprites/tulips
+      Dependencies: {}
+    Info_6:
+      Name: animationctrls/view1
+      Dependencies:
+        Dependency_0: moveleft
+    Info_7:
+      Name: moveleft
       Dependencies: {}

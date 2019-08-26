@@ -17,14 +17,19 @@ public class AssetBrowserTester : MonoBehaviour
     private string _bundleName = "view1";
     private string _prefabName = "View1";
 #if UNITY_EDITOR_OSX
-    private const string manifestUrlPath = "http://localhost:1234/";
-    private const string assetUrlPath = "http://localhost:1234/";
+    public const string manifestUrlPath = "http://localhost:1234/";
+    public const string assetUrlPath = "http://localhost:1234/";
 #else
-    private const string manifestUrlPath = "http://localhost/manifests/";
-    private const string assetUrlPath = "http://localhost/AssetBundles/";
+    public const string manifestUrlPath = "http://localhost/manifests/";
+    public const string assetUrlPath = "http://localhost/AssetBundles/";
 #endif
     //private string savePath = Application.dataPath + "/../AssetBundles/build/";
-    private string savePath = "";
+    public string savePath = "";
+
+    private void Awake()
+    {
+        savePath = Application.dataPath + "/../AssetBundles/test/";
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +39,7 @@ public class AssetBrowserTester : MonoBehaviour
         //string manifestPath = Application.dataPath + "/../AssetBundles/build/build";
         //string uri = "file:///" + Application.dataPath + "/../AssetBundles/build/" + _bundleName;
         //StartCoroutine(DownloadAndCacheAssetBundle(uri, manifestPath, _bundleName));
-        savePath = Application.dataPath + "/../AssetBundles/test/";
+
         StartCoroutine(Framework.AssetDownloader.instance.DownloadManifest(manifestUrlPath, assetUrlPath, savePath));
 
         Framework.AssetDownloader.instance.onCompleted = () =>

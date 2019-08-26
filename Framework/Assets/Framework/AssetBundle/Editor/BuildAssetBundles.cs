@@ -44,9 +44,10 @@ namespace Framework
         // ディレクトリ名とAssetBundle名が同じだとエラーになるので拡張子をつける
         private const string assetBundleExtension = "";//".a";
 
-        private static string assetRootDirectory = "Assets/Project/Resources";
+        private static string assetRootDirectory = "Assets/Project/Resources/";
 
         private static string assetBundleCacheDirectory = "AssetBundles/";
+        const string assetbundleManifestName = "manifest.asset";
 
         [MenuItem("Framework/AssetBundle/Build AssetBundle")]
         static void BuildAllAssetBundles()
@@ -62,7 +63,11 @@ namespace Framework
             //var variants = CreateVariantInfoList(allAssetList, isBuildVariants);
 
             // 通常版ビルド
-            BuildAllWithVariant(assetBundleCacheDirectory, builds, null, BuildTarget.StandaloneOSX);
+            BuildTarget target = BuildTarget.StandaloneWindows;
+#if UNITY_EDITOR_OSX
+            target = BuildTarget.StandaloneOSX;
+#endif
+            BuildAllWithVariant(assetBundleCacheDirectory, builds, null, target);
 
             // 一時退避用ディレクトリ作成
             //Directory.CreateDirectory(tempDirectoryPath);
@@ -218,7 +223,7 @@ namespace Framework
                 // まだ名前設定されていないので、とりあえず親と同じAssetBundle
                 if (string.IsNullOrEmpty(parentPath))
                 {
-                    var assetBundleName = Path.GetFileNameWithoutExtension(path); // path.Replace(Path.GetExtension(path), "").Replace(rootDirectory, "");
+                    var assetBundleName = path.Replace(Path.GetExtension(path), "").Replace(rootDirectory, "");
                     asset.assetBundleName = assetBundleName;
                     //if (customFunction == null)
                     //{
@@ -479,6 +484,172 @@ namespace Framework
                 RemoveReadonlyAttribute(di);
             }
         }
+
+
+        ///// <summary>
+        ///// カテゴリビルドされたファイルを移動＆統合マニフェスト作成
+        ///// RawAssetのコピーもここで行う
+        ///// </summary>
+        //private static void FinalizeAssets(BuildTarget target, bool isBuildVariants)
+        //{
+        //    string outputPath = defaultAssetBundleOutputPath;// ProjectPrefs.GetString(AssetBundleOutputPath, DefaultAssetBundleOutputPath);
+        //    string scriptableObjectManifestPath = AssetDatabase.GenerateUniqueAssetPath("Assets/" + assetbundleManifestName);
+        //    string outputManifestDirectory = defaultManifestOutputPath;// ProjectPrefs.GetString(AssetBundleManifestOutputPath, DefaultManifestOutputPath);
+
+        //    // 変更がないファイルは残したほうが早いかもしれないが、大した差はなさそうなので毎回クリア
+        //    if (Directory.Exists(outputPath))
+        //    {
+        //        DeleteDirectory(outputPath);
+        //    }
+        //    Directory.CreateDirectory(outputPath);
+        //    if (Directory.Exists(outputManifestDirectory))
+        //    {
+        //        DeleteDirectory(outputManifestDirectory);
+        //    }
+        //    Directory.CreateDirectory(outputManifestDirectory);
+
+        //    // RawAssetのvariantリスト
+        //    var variants = GetRawAssetVariants(isBuildVariants);
+
+        //    // ビルド済みのvariantディレクトリをリストアップ
+        //    var categoryDirectories = Directory.GetDirectories(assetBundleCacheDirectory);
+        //    foreach (var categoryDirectory in categoryDirectories)
+        //    {
+        //        var variantDirectories = Directory.GetDirectories(categoryDirectory);
+        //        foreach (var d in variantDirectories)
+        //        {
+        //            // ファイル名ではないがちょうどいいので
+        //            var directory = Path.GetFileName(d);
+        //            if (directory.IndexOf(".") < 0)
+        //            {
+        //                variants.Add("");
+        //            }
+        //            else if (isBuildVariants)
+        //            {
+        //                variants.Add(directory.Split('.')[1]);
+        //            }
+        //        }
+        //    }
+
+        //    HashSet<string> basePaths = null;
+        //    foreach (var variant in variants)
+        //    {
+        //        string outputManifestPath;
+        //        string rawAssetRootDirectory;
+
+        //        if (variant != "")
+        //        {
+        //            outputManifestPath = outputManifestDirectory + "/" + AssetDownloader.ManifestName + "." + variant + AssetDownloader.ManifestExtension;
+        //            rawAssetRootDirectory = ProjectPrefs.GetString(RawAssetManager.RawAssetVariantDirectory) + variant + "/";
+        //        }
+        //        else
+        //        {
+        //            outputManifestPath = outputManifestDirectory + "/" + AssetDownloader.ManifestName + AssetDownloader.ManifestExtension;
+        //            rawAssetRootDirectory = ProjectPrefs.GetString(RawAssetManager.RawAssetRootDirectory);
+        //        }
+
+        //        foreach (var categoryDirectory in categoryDirectories)
+        //        {
+        //            var buildPath = categoryDirectory + "/build";
+        //            var sceneBuildPath = categoryDirectory + "/scene_build";
+        //            if (variant != "")
+        //            {
+        //                buildPath += "." + variant;
+        //                sceneBuildPath += "." + variant;
+        //            }
+        //            var category = Path.GetFileName(categoryDirectory);
+
+        //            CreateManifestAndCopyAssetBundle(category, buildPath, outputPath, scriptableObjectManifestPath);
+        //            CreateManifestAndCopyAssetBundle(category, sceneBuildPath, outputPath, scriptableObjectManifestPath);
+        //        }
+
+        //        // RawAssetを出力
+        //        if (Directory.Exists(rawAssetRootDirectory))
+        //        {
+        //            var scriptableObjectManifest = CreateManifestAndRawAssetCopy(rawAssetRootDirectory, outputPath, scriptableObjectManifestPath, basePaths);
+
+        //            if (variant == "")
+        //            {
+        //                basePaths = new HashSet<string>();
+        //                // variantなしRawAssetsマニフェスト取得
+        //                foreach (var r in scriptableObjectManifest.rawAssets)
+        //                {
+        //                    basePaths.Add(r.name);
+        //                }
+        //            }
+        //        }
+
+        //        CreateManifestAssetBundle(scriptableObjectManifestPath, outputManifestPath, target);
+
+        //        // チェック用のマニフェストcsvも出力
+        //        ManifestToCsv.OutputCsvFromManifest(outputManifestPath, outputManifestPath + ".csv");
+
+        //        // マニフェストをjson化
+        //        ManifestToCsv.OutputJsonFromManifest(outputManifestPath, outputManifestPath + ".txt");
+        //    }
+        //}
+
+        //public static void CreateManifestAssetBundle(string scriptableObjectManifestPath, string outputManifestPath, BuildTarget target)
+        //{
+        //    // マニフェストのAssetBundle化
+        //    AssetBundleBuild[] manifestBuild = new AssetBundleBuild[] { new AssetBundleBuild() { assetBundleName = assetbundleManifestName, assetNames = new string[] { scriptableObjectManifestPath } } };
+        //    string manifestBuildPath = "manifestbuild";
+        //    if (!Directory.Exists(manifestBuildPath))
+        //    {
+        //        Directory.CreateDirectory(manifestBuildPath);
+        //    }
+
+        //    BuildPipeline.BuildAssetBundles(manifestBuildPath, manifestBuild, BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
+        //    AssetDatabase.DeleteAsset(scriptableObjectManifestPath);
+
+        //    if (error != null)
+        //    {
+        //        throw new Exception(error);
+        //    }
+
+        //    // マニフェストを暗号化
+        //    var bytes = File.ReadAllBytes(manifestBuildPath + "/" + assetbundleManifestName);
+        //    var encrypted = GetEncryptionFunction()(bytes);
+        //    // 暗号化したマニフェストを出力
+        //    AssetBundleCreater.SaveManifestWithHash(encrypted, outputManifestPath);
+        //}
+
+        //private static UnityEngine.AssetBundleManifest GetAssetBundleManifest(string manifestPath)
+        //{
+        //    var assetbundle = UnityEngine.AssetBundle.LoadFromFile(manifestPath);
+        //    var manifest = assetbundle.LoadAllAssets()[0] as UnityEngine.AssetBundleManifest;
+        //    assetbundle.Unload(false);
+        //    return manifest;
+        //}
+
+        //private static HashSet<string> GetRawAssetVariants(bool isBuildVariants)
+        //{
+        //    using (new DebugTimer("GetRawAssetVariants"))
+        //    {
+        //        string rawAssetVaiantDirectory = ProjectPrefs.GetString(RawAssetManager.RawAssetVariantDirectory);
+
+        //        HashSet<string> variants = new HashSet<string>();
+        //        // RawAssetRootDirectory用
+        //        variants.Add("");
+
+        //        if (!isBuildVariants || string.IsNullOrEmpty(rawAssetVaiantDirectory))
+        //        {
+        //            return variants;
+        //        }
+
+        //        var variantsDirectories = Directory.GetDirectories(rawAssetVaiantDirectory);
+        //        foreach (var d in variantsDirectories)
+        //        {
+        //            var variantDirectory = d.Replace("\\", "/");
+
+        //            string variantName = variantDirectory.Replace(rawAssetVaiantDirectory, "").Replace("/", "");
+
+        //            variants.Add(variantName);
+        //        }
+
+        //        return variants;
+        //    }
+        //}
     }
 
 }

@@ -5,26 +5,43 @@ using Framework;
 
 public class AssetLoaderTest : MonoBehaviour
 {
+    private string[] loadFiles = new string[]
+    {
+        "Prefabs/Views/View1",
+        "Prefabs/Views/View2",
+        "Prefabs/Views/View3",
+        "Sprite/Tulips",
+        "AnimationCtrls/View1"
+    };
+
     // Start is called before the first frame update
     void Start()
     {
-        // async
-        AssetLoader.LoadAsync<GameObject>("view1", (prefab) =>
-        {
-            if (prefab != null)
-            {
-                Instantiate(prefab);
-            }
-        });
+        // set
+        AssetDownloader.instance.assetUrlPath = AssetBrowserTester.assetUrlPath;
+        AssetDownloader.instance.savePath = Application.dataPath + "/../AssetBundles/test/";
 
-        // sync
-        //AssetLoader.Load<GameObject>("view1", (prefab) =>
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            // sync
+            AssetLoader.Load<GameObject>(loadFiles[i], (prefab) =>
+            {
+                if (prefab != null)
+                {
+                    Instantiate(prefab);
+                }
+            });
+        }
+        //// async
+        //AssetLoader.LoadAsync<GameObject>("view1", (prefab) =>
         //{
         //    if (prefab != null)
         //    {
         //        Instantiate(prefab);
         //    }
         //});
+
+
     }
 
 }
