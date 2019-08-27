@@ -702,14 +702,24 @@ namespace Framework
                     //asset.hash = Hash.ComputeSha256HashOfFile(path, Hash.EncodeType.Base32NoPadding);
                     // use assetBundle's own hash128.
                     asset.hash = manifest.GetAssetBundleHash(assetBundleName).ToString();
-                    string directory = outputPath + "/" + AssetDownloader.GetSubDirectoryPath(asset.hash) + "/";
-                    Directory.CreateDirectory(directory);
-                    string dst = directory + asset.hash;
+                    //string directory = outputPath + "/" + AssetDownloader.GetSubDirectoryPath(asset.hash) + "/";
+                    //Directory.CreateDirectory(directory);
+                    //string dst = directory + asset.hash;
+                    //if (!File.Exists(dst))
+                    //{
+                    //    File.Copy(path, dst, true);
+                    //}
+                    // copy exactly the same directory category.
+                    string dst = outputPath + "/" + assetName;
+                    string directory = Path.GetDirectoryName(dst);
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
                     if (!File.Exists(dst))
                     {
                         File.Copy(path, dst, true);
                     }
-
                     assetList.Add(asset);
                 }
 

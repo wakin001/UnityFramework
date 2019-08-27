@@ -22,48 +22,23 @@ namespace Framework
             {
                 yield return null;
             }
-            listOfCachedVersions.Clear();
-            Caching.GetCachedVersions(name, listOfCachedVersions);
-
-            if (listOfCachedVersions.Contains(hash))
-            {   // aleady cached.
+            string uri = path + name;
+            if (Caching.IsVersionCached(uri, hash))
+            {
+                // aleady cached.
+                Debug.Log("Find cache for " + name);
                 yield break;
             }
 
-            string uri = path + name;
+            Debug.Log("Cannot find cache for " + name + ", then download..");
+
             UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(uri, hash, 0);
             yield return request.SendWebRequest();
 
             if (!request.isHttpError && !request.isNetworkError)
             {
-                AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(request);
-                if (!IsAssetBundleContainsAsset(bundle, name))     //Or any conditions you want to check on your new asset bundle
-                {
-                    //If our criteria wasn't met, we can remove the new cache and revert back to the most recent one
-                    //Caching.currentCacheForWriting = Caching.GetCacheAt(Caching.cacheCount);
-                    //Caching.RemoveCache(newCache);
-
-                    for (int i = listOfCachedVersions.Count - 1; i > 0; i--)
-                    {
-                        //Load a different bundle from a different cache
-                        request = UnityWebRequestAssetBundle.GetAssetBundle(uri, listOfCachedVersions[i], 0);
-                        yield return request.SendWebRequest();
-                        bundle = DownloadHandlerAssetBundle.GetContent(request);
-
-                        //Check and see if the newly loaded bundle from the cache meets your criteria
-                        if (IsAssetBundleContainsAsset(bundle, name))
-                        {
-                            // remove other caches.
-                            Caching.ClearOtherCachedVersions(name, listOfCachedVersions[i]);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    // remove other caches.
-                    Caching.ClearOtherCachedVersions(name, hash);
-                }
+                // remove other caches.
+                Caching.ClearOtherCachedVersions(name, hash);
             }
             else
             {
@@ -76,11 +51,6 @@ namespace Framework
                 {
                     errorType = DownloadErrorType.ConnectError;
                 }
-            }
-
-            bool IsAssetBundleContainsAsset(AssetBundle bundle, string assetName)
-            {
-                return bundle.LoadAsset<GameObject>(assetName) != null;     //this could be any conditional
             }
         }
     }

@@ -194,6 +194,10 @@ namespace Framework
             // add to cache.
             AddToAssetCache(fileName, hash, bundle, obj);
 
+            // unload assetbundle.
+            bundle.Unload(false);
+            bundle = null;
+
             if (onCompleted != null)
             {
                 onCompleted.Invoke(obj as T);
@@ -237,12 +241,12 @@ namespace Framework
             {
                 return null;
             }
-            if (cache.asset == null)
-            {
-                return null;
-            }
             if (cache.obj == null)
             {
+                if (cache.asset == null)
+                {
+                    return null;
+                }
                 string fullFileName = "";
                 var names = cache.asset.GetAllAssetNames();
                 foreach (string name in names)
@@ -263,7 +267,7 @@ namespace Framework
             return null;
         }
 
-        private static string GetRefinedAssetFileName(string fullName)
+        public static string GetRefinedAssetFileName(string fullName)
         {
             string refinedName = fullName;
             int index = fullName.LastIndexOf('.');
@@ -272,6 +276,23 @@ namespace Framework
                 refinedName = fullName.Substring(0, index);
             }
             return refinedName.Replace(AssetBundleDefine.assetRootDirectory.ToLower(), "");
+        }
+
+        /// <summary>
+        /// UnLoad asset.
+        /// </summary>
+        public static void UnLoad(string assetName)
+        {
+            AssetCache cache = null;
+            if (!assetCaches.TryGetValue(assetName, out cache))
+            {
+                return;
+            }
+            if (cache.asset != null)
+            {
+                cache.asset.Unload(false);
+            }
+            assetCaches.Remove(assetName);
         }
     }
 
