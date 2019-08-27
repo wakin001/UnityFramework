@@ -14,8 +14,8 @@ using UnityEngine.Networking;
 /// </summary>
 public class AssetBrowserTester : MonoBehaviour
 {
-    private string _bundleName = "view1";
-    private string _prefabName = "View1";
+    private string _prefabName = "Prefabs/Views/View1";
+
 #if UNITY_EDITOR_OSX
     public const string manifestUrlPath = "http://localhost:1234/";
     public const string assetUrlPath = "http://localhost:1234/";
@@ -23,12 +23,11 @@ public class AssetBrowserTester : MonoBehaviour
     public const string manifestUrlPath = "http://localhost/manifests/";
     public const string assetUrlPath = "http://localhost/AssetBundles/";
 #endif
-    //private string savePath = Application.dataPath + "/../AssetBundles/build/";
     public string savePath = "";
 
     private void Awake()
     {
-        savePath = Application.dataPath + "/../AssetBundles/test/";
+        savePath = Application.dataPath + "/../AssetBundlesDownload/";
     }
 
     // Start is called before the first frame update
@@ -44,7 +43,7 @@ public class AssetBrowserTester : MonoBehaviour
 
         Framework.AssetDownloader.instance.onCompleted = () =>
         {
-            Framework.AssetLoader.LoadAsync<GameObject>(_bundleName, (prefab) =>
+            Framework.AssetLoader.LoadAsync<GameObject>(_prefabName, (prefab) =>
             {
                 if (prefab != null)
                 {

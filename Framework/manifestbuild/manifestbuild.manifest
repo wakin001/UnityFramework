@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 226574385
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: manifest.asset
+      Dependencies: {}

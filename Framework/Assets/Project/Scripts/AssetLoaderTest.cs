@@ -19,7 +19,7 @@ public class AssetLoaderTest : MonoBehaviour
     {
         // set
         AssetDownloader.instance.assetUrlPath = AssetBrowserTester.assetUrlPath;
-        AssetDownloader.instance.savePath = Application.dataPath + "/../AssetBundles/test/";
+        AssetDownloader.instance.savePath = Application.dataPath + "/../AssetBundlesDownload/";
 
         for (int i = 0; i < loadFiles.Length; ++i)
         {

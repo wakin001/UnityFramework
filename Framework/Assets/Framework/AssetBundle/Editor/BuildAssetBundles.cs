@@ -30,24 +30,8 @@ namespace Framework
             public int dependencyCount;
         }
 
-#if UNITY_EDITOR_WIN
-        // for local test
-        public const string defaultAssetBundleOutputPath = "C:/nginx-1.16.0/html/AssetBundles";
-        public const string defaultManifestOutputPath = "C:/nginx-1.16.0/html/manifests";
-#elif UNITY_EDITOR_OSX
-        public const string defaultAssetBundleOutputPath = "/Users/fongwang/Documents/Workspace/UnityFramework/LocalServer/AssetBundles";
-        public const string defaultManifestOutputPath = "/Users/fongwang/Documents/Workspace/UnityFramework/LocalServer/Manifests";
-#else
-        public const string defaultAssetBundleOutputPath = "assetbundles";
-        public const string defaultManifestOutputPath = "manifests";
-#endif
-        // ディレクトリ名とAssetBundle名が同じだとエラーになるので拡張子をつける
-        private const string assetBundleExtension = "";//".a";
-
-        private static string assetRootDirectory = "Assets/Project/Resources/";
-
-        private static string assetBundleCacheDirectory = "AssetBundles/";
-        const string assetbundleManifestName = "manifest.asset";
+        // AssetBundleビルド中のエラー出力判定用
+        static string error = null;
 
         [MenuItem("Framework/AssetBundle/Build AssetBundle")]
         static void BuildAllAssetBundles()
@@ -67,13 +51,17 @@ namespace Framework
 #if UNITY_EDITOR_OSX
             target = BuildTarget.StandaloneOSX;
 #endif
-            BuildAllWithVariant(assetBundleCacheDirectory, builds, null, target);
+            BuildAllWithVariant(AssetBundleDefine.assetBundleCacheDirectory, builds, null, target);
 
             // 一時退避用ディレクトリ作成
             //Directory.CreateDirectory(tempDirectoryPath);
 
             AssetDatabase.Refresh();
 
+            using (new DebugTimer("FinalizeAssets"))
+            {
+                FinalizeAssets(target, true);
+            }
         }
 
         private static Dictionary<string, AssetBundleFile> GetAssetBundleFiles()
@@ -82,10 +70,10 @@ namespace Framework
             {
                 Dictionary<string, AssetBundleFile> assetList = new Dictionary<string, AssetBundleFile>();
 
-                string sceneDirectory = assetRootDirectory + "Scene";
+                string sceneDirectory = AssetBundleDefine.assetRootDirectory + "Scene";
 
                 // 1ファイル＝1AssetBundle
-                var files = Directory.GetFiles(assetRootDirectory, "*.*", SearchOption.AllDirectories);
+                var files = Directory.GetFiles(AssetBundleDefine.assetRootDirectory, "*.*", SearchOption.AllDirectories);
                 List<KeyValuePair<string, string>> allDependencies = new List<KeyValuePair<string, string>>();
                 foreach (var f in files)
                 {
@@ -106,7 +94,7 @@ namespace Framework
                         continue;
                     }
 
-                    AddAssetBundleFile(path, "", assetList, assetRootDirectory, sceneDirectory);
+                    AddAssetBundleFile(path, "", assetList, AssetBundleDefine.assetRootDirectory, sceneDirectory);
 
                     var dependencies = AssetDatabase.GetDependencies(path);
                     foreach (var d in dependencies)
@@ -124,7 +112,7 @@ namespace Framework
 
                 foreach (var dependency in allDependencies)
                 {
-                    AddAssetBundleFile(dependency.Key, dependency.Value, assetList, assetRootDirectory, sceneDirectory);
+                    AddAssetBundleFile(dependency.Key, dependency.Value, assetList, AssetBundleDefine.assetRootDirectory, sceneDirectory);
                 }
 
                 return assetList;
@@ -352,12 +340,12 @@ namespace Framework
 
                 foreach (var asset in list)
                 {
-                    var index = builds.FindIndex(b => b.assetBundleName == asset.assetBundleName + assetBundleExtension);
+                    var index = builds.FindIndex(b => b.assetBundleName == asset.assetBundleName + AssetBundleDefine.assetBundleExtension);
                     if (index < 0)
                     {
                         builds.Add(new AssetBundleBuild()
                         {
-                            assetBundleName = asset.assetBundleName + assetBundleExtension,
+                            assetBundleName = asset.assetBundleName + AssetBundleDefine.assetBundleExtension,
                             assetBundleVariant = "",
                             assetNames = new string[] { asset.baseAssetPath },
                         });
@@ -394,7 +382,7 @@ namespace Framework
             }
 
             // シェーダーを再読込
-            var shader = builds.Where(a => a.assetBundleName == "shader" + assetBundleExtension).FirstOrDefault();
+            var shader = builds.Where(a => a.assetBundleName == "shader" + AssetBundleDefine.assetBundleExtension).FirstOrDefault();
             if (!string.IsNullOrEmpty(shader.assetBundleName))
             {
                 foreach (var build in shader.assetNames)
@@ -404,7 +392,7 @@ namespace Framework
             }
 
             // cgincだけ更新した際にAssetBundleがビルドされない対策
-            DeleteFileIfExists(buildPath + "shader" + assetBundleExtension + ".manifest");
+            DeleteFileIfExists(buildPath + "shader" + AssetBundleDefine.assetBundleExtension + ".manifest");
 
             // 旧バージョンフォルダを削除
             if (Directory.Exists(sceneBuildPath))
@@ -486,170 +474,280 @@ namespace Framework
         }
 
 
-        ///// <summary>
-        ///// カテゴリビルドされたファイルを移動＆統合マニフェスト作成
-        ///// RawAssetのコピーもここで行う
-        ///// </summary>
-        //private static void FinalizeAssets(BuildTarget target, bool isBuildVariants)
-        //{
-        //    string outputPath = defaultAssetBundleOutputPath;// ProjectPrefs.GetString(AssetBundleOutputPath, DefaultAssetBundleOutputPath);
-        //    string scriptableObjectManifestPath = AssetDatabase.GenerateUniqueAssetPath("Assets/" + assetbundleManifestName);
-        //    string outputManifestDirectory = defaultManifestOutputPath;// ProjectPrefs.GetString(AssetBundleManifestOutputPath, DefaultManifestOutputPath);
+        /// <summary>
+        /// カテゴリビルドされたファイルを移動＆統合マニフェスト作成
+        /// RawAssetのコピーもここで行う
+        /// </summary>
+        private static void FinalizeAssets(BuildTarget target, bool isBuildVariants)
+        {
+            string outputPath = AssetBundleDefine.defaultAssetBundleOutputPath;// ProjectPrefs.GetString(AssetBundleOutputPath, DefaultAssetBundleOutputPath);
+            string scriptableObjectManifestPath = AssetDatabase.GenerateUniqueAssetPath("Assets/" + AssetBundleDefine.assetbundleManifestName);
+            string outputManifestDirectory = AssetBundleDefine.defaultManifestOutputPath;// ProjectPrefs.GetString(AssetBundleManifestOutputPath, DefaultManifestOutputPath);
 
-        //    // 変更がないファイルは残したほうが早いかもしれないが、大した差はなさそうなので毎回クリア
-        //    if (Directory.Exists(outputPath))
-        //    {
-        //        DeleteDirectory(outputPath);
-        //    }
-        //    Directory.CreateDirectory(outputPath);
-        //    if (Directory.Exists(outputManifestDirectory))
-        //    {
-        //        DeleteDirectory(outputManifestDirectory);
-        //    }
-        //    Directory.CreateDirectory(outputManifestDirectory);
+            // 変更がないファイルは残したほうが早いかもしれないが、大した差はなさそうなので毎回クリア
+            if (Directory.Exists(outputPath))
+            {
+                DeleteDirectory(outputPath);
+            }
+            Directory.CreateDirectory(outputPath);
+            if (Directory.Exists(outputManifestDirectory))
+            {
+                DeleteDirectory(outputManifestDirectory);
+            }
+            Directory.CreateDirectory(outputManifestDirectory);
 
-        //    // RawAssetのvariantリスト
-        //    var variants = GetRawAssetVariants(isBuildVariants);
+            // RawAssetのvariantリスト
+            var variants = GetRawAssetVariants(isBuildVariants);
 
-        //    // ビルド済みのvariantディレクトリをリストアップ
-        //    var categoryDirectories = Directory.GetDirectories(assetBundleCacheDirectory);
-        //    foreach (var categoryDirectory in categoryDirectories)
-        //    {
-        //        var variantDirectories = Directory.GetDirectories(categoryDirectory);
-        //        foreach (var d in variantDirectories)
-        //        {
-        //            // ファイル名ではないがちょうどいいので
-        //            var directory = Path.GetFileName(d);
-        //            if (directory.IndexOf(".") < 0)
-        //            {
-        //                variants.Add("");
-        //            }
-        //            else if (isBuildVariants)
-        //            {
-        //                variants.Add(directory.Split('.')[1]);
-        //            }
-        //        }
-        //    }
+            // ビルド済みのvariantディレクトリをリストアップ
+            var categoryDirectories = Directory.GetDirectories(AssetBundleDefine.assetBundleCacheDirectory);
+            foreach (var categoryDirectory in categoryDirectories)
+            {
+                var variantDirectories = Directory.GetDirectories(categoryDirectory);
+                foreach (var d in variantDirectories)
+                {
+                    // ファイル名ではないがちょうどいいので
+                    var directory = Path.GetFileName(d);
+                    if (directory.IndexOf(".") < 0)
+                    {
+                        variants.Add("");
+                    }
+                    else if (isBuildVariants)
+                    {
+                        variants.Add(directory.Split('.')[1]);
+                    }
+                }
+            }
 
-        //    HashSet<string> basePaths = null;
-        //    foreach (var variant in variants)
-        //    {
-        //        string outputManifestPath;
-        //        string rawAssetRootDirectory;
+            HashSet<string> basePaths = null;
+            foreach (var variant in variants)
+            {
+                string outputManifestPath;
+                string rawAssetRootDirectory;
 
-        //        if (variant != "")
-        //        {
-        //            outputManifestPath = outputManifestDirectory + "/" + AssetDownloader.ManifestName + "." + variant + AssetDownloader.ManifestExtension;
-        //            rawAssetRootDirectory = ProjectPrefs.GetString(RawAssetManager.RawAssetVariantDirectory) + variant + "/";
-        //        }
-        //        else
-        //        {
-        //            outputManifestPath = outputManifestDirectory + "/" + AssetDownloader.ManifestName + AssetDownloader.ManifestExtension;
-        //            rawAssetRootDirectory = ProjectPrefs.GetString(RawAssetManager.RawAssetRootDirectory);
-        //        }
+                if (variant != "")
+                {
+                    //outputManifestPath = outputManifestDirectory + "/" + AssetDownloader.ManifestName + "." + variant + AssetDownloader.ManifestExtension;
+                    outputManifestPath = outputManifestDirectory + "/" + Path.GetFileNameWithoutExtension(AssetBundleDefine.assetbundleManifestName) + "." + variant + Path.GetExtension(AssetBundleDefine.assetbundleManifestName);
+                    rawAssetRootDirectory = AssetBundleDefine.rawAssetVariantDirectory + variant + "/";// ProjectPrefs.GetString(RawAssetManager.RawAssetVariantDirectory) + variant + "/";
+                }
+                else
+                {
+                    outputManifestPath = outputManifestDirectory + "/" + AssetBundleDefine.assetbundleManifestName;
+                    rawAssetRootDirectory = AssetBundleDefine.rawAssetVariantDirectory;// ProjectPrefs.GetString(RawAssetManager.RawAssetRootDirectory);
+                }
 
-        //        foreach (var categoryDirectory in categoryDirectories)
-        //        {
-        //            var buildPath = categoryDirectory + "/build";
-        //            var sceneBuildPath = categoryDirectory + "/scene_build";
-        //            if (variant != "")
-        //            {
-        //                buildPath += "." + variant;
-        //                sceneBuildPath += "." + variant;
-        //            }
-        //            var category = Path.GetFileName(categoryDirectory);
+                foreach (var categoryDirectory in categoryDirectories)
+                {
+                    var buildPath = categoryDirectory;// + "/build";
+                    //var sceneBuildPath = categoryDirectory;// + "/scene_build";
+                    if (variant != "")
+                    {
+                        buildPath += "." + variant;
+                        //sceneBuildPath += "." + variant;
+                    }
+                    var category = Path.GetFileName(categoryDirectory);
 
-        //            CreateManifestAndCopyAssetBundle(category, buildPath, outputPath, scriptableObjectManifestPath);
-        //            CreateManifestAndCopyAssetBundle(category, sceneBuildPath, outputPath, scriptableObjectManifestPath);
-        //        }
+                    CreateManifestAndCopyAssetBundle(category, buildPath, outputPath, scriptableObjectManifestPath);
+                    //CreateManifestAndCopyAssetBundle(category, sceneBuildPath, outputPath, scriptableObjectManifestPath);
+                }
 
-        //        // RawAssetを出力
-        //        if (Directory.Exists(rawAssetRootDirectory))
-        //        {
-        //            var scriptableObjectManifest = CreateManifestAndRawAssetCopy(rawAssetRootDirectory, outputPath, scriptableObjectManifestPath, basePaths);
+                // RawAssetを出力
+                //if (Directory.Exists(rawAssetRootDirectory))
+                {
+                    //var scriptableObjectManifest = CreateManifestAndRawAssetCopy(rawAssetRootDirectory, outputPath, scriptableObjectManifestPath, basePaths);
 
-        //            if (variant == "")
-        //            {
-        //                basePaths = new HashSet<string>();
-        //                // variantなしRawAssetsマニフェスト取得
-        //                foreach (var r in scriptableObjectManifest.rawAssets)
-        //                {
-        //                    basePaths.Add(r.name);
-        //                }
-        //            }
-        //        }
+                    //if (variant == "")
+                    //{
+                    //    basePaths = new HashSet<string>();
+                    //    // variantなしRawAssetsマニフェスト取得
+                    //    foreach (var r in scriptableObjectManifest.rawAssets)
+                    //    {
+                    //        basePaths.Add(r.name);
+                    //    }
+                    //}
+                }
 
-        //        CreateManifestAssetBundle(scriptableObjectManifestPath, outputManifestPath, target);
+                CreateManifestAssetBundle(scriptableObjectManifestPath, outputManifestPath, target);
 
-        //        // チェック用のマニフェストcsvも出力
-        //        ManifestToCsv.OutputCsvFromManifest(outputManifestPath, outputManifestPath + ".csv");
+                //// チェック用のマニフェストcsvも出力
+                //ManifestToCsv.OutputCsvFromManifest(outputManifestPath, outputManifestPath + ".csv");
 
-        //        // マニフェストをjson化
-        //        ManifestToCsv.OutputJsonFromManifest(outputManifestPath, outputManifestPath + ".txt");
-        //    }
-        //}
+                //// マニフェストをjson化
+                ManifestToCsv.OutputJsonFromManifest(outputManifestPath, outputManifestPath + ".txt");
+            }
+        }
 
-        //public static void CreateManifestAssetBundle(string scriptableObjectManifestPath, string outputManifestPath, BuildTarget target)
-        //{
-        //    // マニフェストのAssetBundle化
-        //    AssetBundleBuild[] manifestBuild = new AssetBundleBuild[] { new AssetBundleBuild() { assetBundleName = assetbundleManifestName, assetNames = new string[] { scriptableObjectManifestPath } } };
-        //    string manifestBuildPath = "manifestbuild";
-        //    if (!Directory.Exists(manifestBuildPath))
-        //    {
-        //        Directory.CreateDirectory(manifestBuildPath);
-        //    }
+        public static void CreateManifestAssetBundle(string scriptableObjectManifestPath, string outputManifestPath, BuildTarget target)
+        {
+            // マニフェストのAssetBundle化
+            AssetBundleBuild[] manifestBuild = new AssetBundleBuild[] { new AssetBundleBuild() { assetBundleName = AssetBundleDefine.assetbundleManifestName, assetNames = new string[] { scriptableObjectManifestPath } } };
+            string manifestBuildPath = "manifestbuild";
+            if (!Directory.Exists(manifestBuildPath))
+            {
+                Directory.CreateDirectory(manifestBuildPath);
+            }
 
-        //    BuildPipeline.BuildAssetBundles(manifestBuildPath, manifestBuild, BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
-        //    AssetDatabase.DeleteAsset(scriptableObjectManifestPath);
+            BuildPipeline.BuildAssetBundles(manifestBuildPath, manifestBuild, BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
+            AssetDatabase.DeleteAsset(scriptableObjectManifestPath);
 
-        //    if (error != null)
-        //    {
-        //        throw new Exception(error);
-        //    }
+            if (error != null)
+            {
+                throw new Exception(error);
+            }
 
-        //    // マニフェストを暗号化
-        //    var bytes = File.ReadAllBytes(manifestBuildPath + "/" + assetbundleManifestName);
-        //    var encrypted = GetEncryptionFunction()(bytes);
-        //    // 暗号化したマニフェストを出力
-        //    AssetBundleCreater.SaveManifestWithHash(encrypted, outputManifestPath);
-        //}
+            // マニフェストを暗号化
+            var bytes = File.ReadAllBytes(manifestBuildPath + "/" + AssetBundleDefine.assetbundleManifestName);
+            //var encrypted = GetEncryptionFunction()(bytes);
+            // 暗号化したマニフェストを出力
+            //AssetBundleCreater.SaveManifestWithHash(encrypted, outputManifestPath);
+            AssetBundleCreator.SaveManifestWithHash(bytes, outputManifestPath);
+        }
 
-        //private static UnityEngine.AssetBundleManifest GetAssetBundleManifest(string manifestPath)
-        //{
-        //    var assetbundle = UnityEngine.AssetBundle.LoadFromFile(manifestPath);
-        //    var manifest = assetbundle.LoadAllAssets()[0] as UnityEngine.AssetBundleManifest;
-        //    assetbundle.Unload(false);
-        //    return manifest;
-        //}
+        private static UnityEngine.AssetBundleManifest GetAssetBundleManifest(string manifestPath)
+        {
+            var assetbundle = UnityEngine.AssetBundle.LoadFromFile(manifestPath);
+            var manifest = assetbundle.LoadAllAssets()[0] as UnityEngine.AssetBundleManifest;
+            assetbundle.Unload(false);
+            return manifest;
+        }
 
-        //private static HashSet<string> GetRawAssetVariants(bool isBuildVariants)
-        //{
-        //    using (new DebugTimer("GetRawAssetVariants"))
-        //    {
-        //        string rawAssetVaiantDirectory = ProjectPrefs.GetString(RawAssetManager.RawAssetVariantDirectory);
+        private static HashSet<string> GetRawAssetVariants(bool isBuildVariants)
+        {
+            using (new DebugTimer("GetRawAssetVariants"))
+            {
+                string rawAssetVaiantDirectory = AssetBundleDefine.rawAssetVariantDirectory;// ProjectPrefs.GetString(RawAssetManager.RawAssetVariantDirectory);
 
-        //        HashSet<string> variants = new HashSet<string>();
-        //        // RawAssetRootDirectory用
-        //        variants.Add("");
+                HashSet<string> variants = new HashSet<string>();
+                // RawAssetRootDirectory用
+                variants.Add("");
 
-        //        if (!isBuildVariants || string.IsNullOrEmpty(rawAssetVaiantDirectory))
-        //        {
-        //            return variants;
-        //        }
+                if (!isBuildVariants || string.IsNullOrEmpty(rawAssetVaiantDirectory))
+                {
+                    return variants;
+                }
 
-        //        var variantsDirectories = Directory.GetDirectories(rawAssetVaiantDirectory);
-        //        foreach (var d in variantsDirectories)
-        //        {
-        //            var variantDirectory = d.Replace("\\", "/");
+                var variantsDirectories = Directory.GetDirectories(rawAssetVaiantDirectory);
+                foreach (var d in variantsDirectories)
+                {
+                    var variantDirectory = d.Replace("\\", "/");
 
-        //            string variantName = variantDirectory.Replace(rawAssetVaiantDirectory, "").Replace("/", "");
+                    string variantName = variantDirectory.Replace(rawAssetVaiantDirectory, "").Replace("/", "");
 
-        //            variants.Add(variantName);
-        //        }
+                    variants.Add(variantName);
+                }
 
-        //        return variants;
-        //    }
-        //}
+                return variants;
+            }
+        }
+
+        /// <summary>マニフェスト生成＆AssetBundleをリネームしつつコピー</summary>
+        private static void CreateManifestAndCopyAssetBundle(string categoryName, string buildPath, string outputPath, string scriptableObjectManifestPath)
+        {
+            string manifestPath = buildPath + "/" + Path.GetFileName(buildPath);
+            if (!File.Exists(manifestPath))
+            {
+                return;
+            }
+
+            var manifest = GetAssetBundleManifest(manifestPath);
+            var scriptableObjectManifest = GetScriptableManifest(scriptableObjectManifestPath);
+
+            //var isEncryptionFunction = GetEncryptionCheckFunction();
+            //var encryptionFunction = GetEncryptionFunction();
+            //var groupFunction = GetGroupFunction();
+
+            //AssetDatabase.StartAssetEditing();
+
+            var category = scriptableObjectManifest.GetCategory(categoryName);
+
+            List<ScriptableManifest.Asset> assetList = new List<ScriptableManifest.Asset>(category.assets);
+            List<ScriptableManifest.Asset> cryptedAssetList = new List<ScriptableManifest.Asset>(category.encryptedAssets);
+
+            var assetBundleNames = manifest.GetAllAssetBundles();
+
+            foreach (var assetBundleName in assetBundleNames)
+            {
+                ScriptableManifest.Asset asset = new ScriptableManifest.Asset();
+
+                var path = buildPath + "/" + assetBundleName;
+
+                var assetName = assetBundleName.ToLower();
+
+                asset.name = assetName.Substring(0, assetName.Length - AssetBundleDefine.assetBundleExtension.Length);
+                var fileInfo = new FileInfo(path);
+                asset.size = (int)fileInfo.Length;
+                //asset.group = asset.name;// groupFunction(asset.name);
+
+                // 暗号化するかどうか
+                bool isEncryption = false;// IsEncryption(assetBundleName, isEncryptionFunction);
+
+                if (isEncryption)
+                {
+                    //var bytes = File.ReadAllBytes(path);
+                    //var encrypted = encryptionFunction(bytes);
+                    //asset.hash = Hash.ComputeSha256Hash(encrypted, Hash.EncodeType.Base32NoPadding);
+                    //string directory = outputPath + "/" + AssetDownloader.GetSubDirectoryPath(asset.hash) + "/";
+                    //Directory.CreateDirectory(directory);
+                    //string dst = directory + asset.hash;
+                    //if (!File.Exists(dst))
+                    //{
+                    //    File.WriteAllBytes(dst, encrypted);
+                    //}
+
+                    //cryptedAssetList.Add(asset);
+                }
+                else
+                {
+                    //asset.hash = Hash.ComputeSha256HashOfFile(path, Hash.EncodeType.Base32NoPadding);
+                    // use assetBundle's own hash128.
+                    asset.hash = manifest.GetAssetBundleHash(assetBundleName).ToString();
+                    string directory = outputPath + "/" + AssetDownloader.GetSubDirectoryPath(asset.hash) + "/";
+                    Directory.CreateDirectory(directory);
+                    string dst = directory + asset.hash;
+                    if (!File.Exists(dst))
+                    {
+                        File.Copy(path, dst, true);
+                    }
+
+                    assetList.Add(asset);
+                }
+
+                if (path.Contains(buildPath + "atlas"))
+                {
+                    // Atlas化されたSpriteはひとまとめに扱う
+                }
+                else
+                {
+                    asset.dependencies = manifest.GetDirectDependencies(assetName)
+                        .Select(d => d.Substring(0, d.Length - AssetBundleDefine.assetBundleExtension.Length))
+                        .ToArray();
+                }
+            }
+
+            category.assets = assetList.ToArray();
+            category.encryptedAssets = cryptedAssetList.ToArray();
+
+            //AssetDatabase.StopAssetEditing();
+
+            EditorUtility.SetDirty(scriptableObjectManifest);
+        }
+
+        /// <summary>
+        /// ScriptableObjectManifestを取得する
+        /// BuildAssetBundleをすると参照が切れるので、都度取得すること
+        /// </summary>
+        private static ScriptableManifest GetScriptableManifest(string manifestPath)
+        {
+            var scriptableObjectManifest = AssetDatabase.LoadAssetAtPath<ScriptableManifest>(manifestPath);
+            if (scriptableObjectManifest == null)
+            {
+                scriptableObjectManifest = ScriptableObject.CreateInstance<ScriptableManifest>();
+                scriptableObjectManifest.categories = new ScriptableManifest.Category[0];
+                AssetDatabase.CreateAsset(scriptableObjectManifest, manifestPath);
+            }
+            return scriptableObjectManifest;
+        }
     }
 
 }

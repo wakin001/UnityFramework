@@ -25,27 +25,27 @@ namespace Framework
             }
         }
 
-        private AssetBundleManifest _manifest = null;
-        public AssetBundleManifest manifest
+        private ScriptableManifest _scriptableManifest = null;
+        public ScriptableManifest scriptableManifest
         {
             get
             {
-                if (_manifest == null)
+                if (_scriptableManifest == null)
                 {
-                    string manifestName = Path.GetFileNameWithoutExtension(assetBundleManafestName);
-                    AssetBundle manifestBundle = AssetBundle.LoadFromFile(savePath + manifestName);
-                    if (manifestBundle == null)
+                    AssetBundle bundle = AssetBundle.LoadFromFile(savePath + AssetBundleDefine.assetbundleManifestName);
+                    if (bundle == null)
                     {
                         Debug.LogWarning("Cannot load manifest file");
                         return null;
                     }
-                    _manifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+                    _scriptableManifest = bundle.LoadAllAssets<ScriptableManifest>()[0];
+                    bundle.Unload(false);
                 }
-                return _manifest;
+                return _scriptableManifest;
             }
             private set
             {
-                _manifest = value;
+                _scriptableManifest = value;
             }
         }
 
@@ -53,7 +53,6 @@ namespace Framework
         public string assetUrlPath { get; set; }
         // manifest file path.
         public string savePath { get; set; }
-        private const string assetBundleManafestName = "build.manifest";
 
         public Action onCompleted = null;
 
@@ -62,7 +61,7 @@ namespace Framework
             this.assetUrlPath = assetUrlPath;
             this.savePath = toPath;
 
-            string manifestName = Path.GetFileNameWithoutExtension(assetBundleManafestName);
+            string manifestName = Path.GetFileNameWithoutExtension(AssetBundleDefine.assetbundleManifestName);
 
             // remove old files.
             string manifestPath = toPath + manifestName;
@@ -70,7 +69,7 @@ namespace Framework
             {
                 File.Delete(manifestPath);
             }
-            string manifestBundlePath = toPath + assetBundleManafestName;
+            string manifestBundlePath = toPath + AssetBundleDefine.assetbundleManifestName;
             if (File.Exists(manifestBundlePath))
             {
                 File.Delete(manifestBundlePath);
@@ -78,37 +77,45 @@ namespace Framework
 
             // Always use Download to download manifest files.
             var downloader = new Downloader();
-            var bundleDownloader = new Downloader();
-            yield return downloader.Download(urlPath, assetBundleManafestName, new Hash128(), toPath);
-            yield return bundleDownloader.Download(urlPath, manifestName, new Hash128(), toPath);
+            yield return downloader.Download(urlPath, AssetBundleDefine.assetbundleManifestName, new Hash128(), toPath);
 
-            if (downloader.errorType == DownloadErrorType.None && bundleDownloader.errorType == DownloadErrorType.None)
+            if (downloader.errorType == DownloadErrorType.None)
             {
-                AssetBundle manifestBundle = AssetBundle.LoadFromFile(manifestPath);
-                if (manifestBundle == null)
-                {
-                    Debug.LogWarning("Cannot load manifest file");
-                    yield break;
-                }
-                manifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
-
-                StartCoroutine(DownloadAllAssets(assetUrlPath, toPath, manifest));
+                StartCoroutine(DownloadAllAssets(assetUrlPath, toPath, scriptableManifest));
             }
         }
 
-        public IEnumerator DownloadAllAssets(string urlPath, string toPath, AssetBundleManifest manifest)
+        public IEnumerator DownloadAllAssets(string urlPath, string toPath, ScriptableManifest manifest)
         {
             if (manifest == null)
             {
                 Debug.LogError("manifest is null in " + toPath);
                 yield break;
             }
-            string[] allAssets = manifest.GetAllAssetBundles();
-            foreach (string assetName in allAssets)
+
+            // download all categories.
+            for (int i = 0; i < manifest.categories.Length; ++i)
+            {
+                var category = manifest.categories[i];
+                // assets.
+                foreach (var asset in category.assets)
+                {
+                    var downloader = GetDownloader();
+                    yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
+                }
+                // encrpted assets.
+                foreach (var asset in category.encryptedAssets)
+                {
+                    var downloader = GetDownloader();
+                    yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
+                }
+            }
+
+            // download rawAssets.
+            foreach (var asset in manifest.rawAssets)
             {
                 var downloader = GetDownloader();
-                Hash128 hash = manifest.GetAssetBundleHash(assetName);
-                yield return downloader.Download(assetUrlPath, assetName, hash, toPath);
+                yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
             }
 
             if (onCompleted != null)
@@ -127,6 +134,15 @@ namespace Framework
             {
                 return new Downloader();
             }
+        }
+
+        /// <summary>
+        /// ファイルを1ディレクトリにまとめると性能劣化するので別ディレクトリに分散して保存する
+        /// そのディレクトリ名を取得する
+        /// </summary>
+        public static string GetSubDirectoryPath(string filename)
+        {
+            return filename.Substring(0, 2);
         }
     }
 }
