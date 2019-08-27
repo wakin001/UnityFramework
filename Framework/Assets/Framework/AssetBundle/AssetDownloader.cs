@@ -56,6 +56,7 @@ namespace Framework
 
         public Action onCompleted = null;
 
+
         public IEnumerator DownloadManifest(string urlPath, string assetUrlPath, string toPath)
         {
             this.assetUrlPath = assetUrlPath;

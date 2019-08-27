@@ -206,12 +206,8 @@ namespace Framework
         }
 
         /// <summary>
-        /// Cache a file
+        /// Cache a object.
         /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="hash"></param>
-        /// <param name="asset"></param>
-        /// <param name="obj"></param>
         private static void AddToAssetCache(string filename, Hash128 hash, AssetBundle asset, Object obj = null)
         {
             AssetCache cache = null;
@@ -242,6 +238,9 @@ namespace Framework
             }
         }
 
+        /// <summary>
+        /// Get a Cached object from its name.
+        /// </summary>
         private static Object GetCachedObject(string fileName)
         {
             AssetCache cache = null;
