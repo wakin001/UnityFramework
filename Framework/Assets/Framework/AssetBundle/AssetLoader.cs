@@ -16,8 +16,6 @@ namespace Framework
             public Hash128 hash;
             // the asset name to load
             public string assetFileName = "";
-            // asset bundle that hold the object.
-            public AssetBundle asset = null;
             // loaded object.
             public Object obj = null;
         }
@@ -160,6 +158,10 @@ namespace Framework
             yield return LoadAsset<T>(fileName, hash, bundle, isAsync, onCompleted);
         }
 
+        /// <summary>
+        /// Load the file from a assetbundle and cache all files.
+        /// Unload the assetbundle after cached all files.
+        /// </summary>
         private static IEnumerator LoadAsset<T>(string fileName, Hash128 hash, AssetBundle bundle, bool isAsync, System.Action<T> onCompleted) where T : Object
         {
             if (bundle == null)
@@ -196,7 +198,6 @@ namespace Framework
 
             // unload assetbundle.
             bundle.Unload(false);
-            bundle = null;
 
             if (onCompleted != null)
             {
@@ -204,6 +205,13 @@ namespace Framework
             }
         }
 
+        /// <summary>
+        /// Cache a file
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="hash"></param>
+        /// <param name="asset"></param>
+        /// <param name="obj"></param>
         private static void AddToAssetCache(string filename, Hash128 hash, AssetBundle asset, Object obj = null)
         {
             AssetCache cache = null;
@@ -220,7 +228,7 @@ namespace Framework
                 {
                     if (cache == null)
                     {
-                        cache = new AssetCache() { assetFileName = name, asset = asset, hash = hash, obj = asset.LoadAsset(name) };
+                        cache = new AssetCache() { assetFileName = name, hash = hash, obj = asset.LoadAsset(name) };
                     }
                     else
                     {
@@ -241,30 +249,7 @@ namespace Framework
             {
                 return null;
             }
-            if (cache.obj == null)
-            {
-                if (cache.asset == null)
-                {
-                    return null;
-                }
-                string fullFileName = "";
-                var names = cache.asset.GetAllAssetNames();
-                foreach (string name in names)
-                {
-                    string refinedName = GetRefinedAssetFileName(name);
-                    if (refinedName.Contains(fileName))
-                    {
-                        fullFileName = name;
-                        break;
-                    }
-                }
-                cache.obj = cache.asset.LoadAsset(fullFileName);
-            }
-            if (cache.obj != null)
-            {
-                return cache.obj;
-            }
-            return null;
+            return cache.obj;
         }
 
         public static string GetRefinedAssetFileName(string fullName)
@@ -287,10 +272,6 @@ namespace Framework
             if (!assetCaches.TryGetValue(assetName, out cache))
             {
                 return;
-            }
-            if (cache.asset != null)
-            {
-                cache.asset.Unload(false);
             }
             assetCaches.Remove(assetName);
         }
