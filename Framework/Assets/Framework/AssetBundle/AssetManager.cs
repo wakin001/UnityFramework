@@ -6,23 +6,34 @@ using UnityEngine.Networking;
 
 namespace Framework
 {
-    public class AssetLoader
+    /// <summary>
+    /// yield return StartCoroutineを使うともれなく次の処理が1フレーム遅れる!! ご注意！！
+    /// </summary>
+    public class AssetManager : SingletonComponent<AssetManager>
     {
         public static bool useAssetBundle = true;
 
+        /// <summary>
+        /// AssetBundle Cache.
+        /// Don't need cache all assets in assetbundle. Seems it is not too slow to load an asset if we have its assetbundle.
+        /// And if we use assetbundle.UnLoad(false), all these assets need to be deleted by yourself.
+        /// </summary>
         public class AssetCache
         {
             // assetBundle's hash
-            public Hash128 hash;
-            // the asset name to load
+            public string hash;
+            // the refined asset name to load
             public string assetFileName = "";
-            // loaded object.
-            public Object obj = null;
+            // assetbundle.
+            public AssetBundle bundle = null;
+            // Is loading the assetbundle? Avoid from duplicated loading.
+            public bool isLoading = false;
         }
 
-        // Store all assets information. <assetName, AssetCache object>
+        // Store all assets information. <hash string of the asset, AssetCache object>
         // When loading a asset, search this dictionary to get the assetBundle name and hash, then use UnityWebRequestAssetBundle.GetAssetBundle to load.
-        private static Dictionary<string, AssetCache> assetCaches = new Dictionary<string, AssetCache>();
+        private Dictionary<string, AssetCache> assetCaches = new Dictionary<string, AssetCache>();
+
 
         /// <summary>
         /// Load Object from asset's name. In case asset name equals file name.
@@ -47,49 +58,33 @@ namespace Framework
             {
                 fileName = assetName;
             }
-            // find in cache.
-            Object obj = GetCachedObject(fileName);
-            if (obj != null)
-            {
-                if (onCompleted != null)
-                {
-                    onCompleted.Invoke(obj as T);
-                }
-                return;
-            }
 
+            // local
             if (!useAssetBundle)
             {
-                obj = Resources.Load(fileName);
+                T obj = Resources.Load<T>(fileName);
                 if (onCompleted != null)
                 {
-                    onCompleted.Invoke(obj as T);
+                    onCompleted.Invoke(obj);
                 }
                 return;
             }
 
-            if (AssetDownloader.instance.useCaching)
-            {
-                SingletonMonoBehaviour.instance.StartCoroutine(LoadFromCacheCoroutine<T>(assetName, assetFileName, false, onCompleted));
-            }
-            else
-            {
-                AssetBundle asset = AssetBundle.LoadFromFile(AssetDownloader.instance.savePath + assetName);
-                SingletonMonoBehaviour.instance.StartCoroutine(LoadAsset<T>(fileName, new Hash128(), asset, true, onCompleted));
-            }
+            // assetbundle
+            AssetManager.instance.StartCoroutine(AssetManager.instance.LoadFromCacheCoroutine<T>(assetName, assetFileName, false, onCompleted));
         }
 
         public static void LoadAsync<T>(string assetName, System.Action<T> onCompleted) where T : Object
         {
-            SingletonMonoBehaviour.instance.StartCoroutine(LoadAsyncCoroutine<T>(assetName, null, onCompleted));
+            AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAsyncCoroutine<T>(assetName, null, onCompleted));
         }
 
         public static void LoadAsync<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
         {
-            SingletonMonoBehaviour.instance.StartCoroutine(LoadAsyncCoroutine<T>(assetName, assetFileName, onCompleted));
+            AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAsyncCoroutine<T>(assetName, assetFileName, onCompleted));
         }
 
-        private static IEnumerator LoadAsyncCoroutine<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
+        private IEnumerator LoadAsyncCoroutine<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
         {
             assetName = assetName.ToLower();
             if (assetFileName != null)
@@ -101,17 +96,8 @@ namespace Framework
             {
                 fileName = assetName;
             }
-            // find in cache.
-            Object obj = GetCachedObject(fileName);
-            if (obj != null)
-            {
-                if (onCompleted != null)
-                {
-                    onCompleted.Invoke(obj as T);
-                }
-                yield break;
-            }
 
+            // local
             if (!useAssetBundle)
             {
                 var request = Resources.LoadAsync<T>(fileName);
@@ -122,47 +108,73 @@ namespace Framework
                     onCompleted.Invoke(request.asset as T);
                 }
             }
-            else if (AssetDownloader.instance.useCaching)
+            else    // assetBundle
             {
                 yield return LoadFromCacheCoroutine<T>(assetName, assetFileName, true, onCompleted);
             }
-            else
-            {
-                var asyncRequest = AssetBundle.LoadFromFileAsync(AssetDownloader.instance.savePath + assetName);
-                yield return asyncRequest;
-
-                yield return LoadAsset<T>(fileName, new Hash128(), asyncRequest.assetBundle, true, onCompleted);
-            }
         }
 
-        public static IEnumerator LoadFromCacheCoroutine<T>(string assetName, string assetFileName, bool isAsync, System.Action<T> onCompleted) where T : Object
+        public IEnumerator LoadFromCacheCoroutine<T>(string assetName, string assetFileName, bool isAsync, System.Action<T> onCompleted) where T : Object
         {
-            if (!AssetDownloader.instance.useCaching)
+            // load all dependent assets.
+            // load dependent assets.
+            var dependencies = AssetDownloader.instance.scriptableManifest.GetAllDependencies(assetName);
+            foreach (string dependence in dependencies)
             {
-                if (onCompleted != null)
+                AssetCache dependenceCache = GetOrCreateCachedAssetBundle(dependence);
+                if (dependenceCache.bundle == null)
                 {
-                    onCompleted.Invoke(default(T));
+                    if (dependenceCache.isLoading)
+                    {
+                        yield return new WaitWhile(() => dependenceCache.isLoading);
+                    }
+                    yield return LoadAssetBundle(dependenceCache);
                 }
-                yield break;
             }
-            Hash128 hash = AssetDownloader.instance.scriptableManifest.GetHash(assetName);
-            UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(AssetDownloader.instance.assetUrlPath + assetName, hash, 0);
-            yield return request.SendWebRequest();
+
+            // find in cache.
+            AssetCache cache = GetOrCreateCachedAssetBundle(assetName);
+            if (cache.bundle == null)
+            {
+                if (cache.isLoading)
+                {
+                    yield return new WaitWhile(() => cache.isLoading);
+                }
+                yield return LoadAssetBundle(cache);
+            }
 
             string fileName = assetFileName;
             if (string.IsNullOrEmpty(fileName))
             {
                 fileName = assetName;
             }
-            var bundle = DownloadHandlerAssetBundle.GetContent(request);
-            yield return LoadAsset<T>(fileName, hash, bundle, isAsync, onCompleted);
+            yield return LoadAsset<T>(fileName, Hash128.Parse(cache.hash), cache.bundle, isAsync, onCompleted);
         }
 
         /// <summary>
-        /// Load the file from a assetbundle and cache all files.
+        /// Load an assetBundle and save it into cache.
+        /// </summary>
+        private IEnumerator LoadAssetBundle(AssetCache cache)
+        {
+            if (cache == null)
+            {
+                yield break;
+            }
+            cache.isLoading = true;
+            UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(AssetDownloader.instance.assetUrlPath + cache.assetFileName, Hash128.Parse(cache.hash), 0);
+            yield return request.SendWebRequest();
+            var bundle = DownloadHandlerAssetBundle.GetContent(request);
+            cache.bundle = bundle;
+
+            // reset isloading flag.
+            cache.isLoading = false;
+        }
+
+        /// <summary>
+        /// Load an asset file from a assetbundle and cache all files.
         /// Unload the assetbundle after cached all files.
         /// </summary>
-        private static IEnumerator LoadAsset<T>(string fileName, Hash128 hash, AssetBundle bundle, bool isAsync, System.Action<T> onCompleted) where T : Object
+        private IEnumerator LoadAsset<T>(string fileName, Hash128 hash, AssetBundle bundle, bool isAsync, System.Action<T> onCompleted) where T : Object
         {
             if (bundle == null)
             {
@@ -178,9 +190,7 @@ namespace Framework
                 if (refinedName.Contains(fileName))
                 {
                     fullFileName = name;
-
-                    // add to cache.
-                    AddToAssetCache(refinedName, hash, bundle, null);
+                    break;
                 }
             }
             if (isAsync)
@@ -193,11 +203,6 @@ namespace Framework
             {
                 obj = bundle.LoadAsset(fullFileName);
             }
-            // add to cache.
-            AddToAssetCache(fileName, hash, bundle, obj);
-
-            // unload assetbundle.
-            bundle.Unload(false);
 
             if (onCompleted != null)
             {
@@ -206,49 +211,19 @@ namespace Framework
         }
 
         /// <summary>
-        /// Cache a object.
-        /// </summary>
-        private static void AddToAssetCache(string filename, Hash128 hash, AssetBundle asset, Object obj = null)
-        {
-            AssetCache cache = null;
-            assetCaches.TryGetValue(filename, out cache);
-            if (cache != null && cache.hash == hash)
-            {
-                return;
-            }
-
-            var names = asset.GetAllAssetNames();
-            foreach (string name in names)
-            {
-                if (name.Contains(filename))
-                {
-                    if (cache == null)
-                    {
-                        cache = new AssetCache() { assetFileName = name, hash = hash, obj = asset.LoadAsset(name) };
-                    }
-                    else
-                    {
-                        cache.hash = hash;
-                        cache.obj = asset.LoadAsset(name);
-                        cache.assetFileName = name;
-                    }
-                    assetCaches[filename] = cache;
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
         /// Get a Cached object from its name.
         /// </summary>
-        private static Object GetCachedObject(string fileName)
+        private AssetCache GetOrCreateCachedAssetBundle(string assetName)
         {
+            string hash = AssetDownloader.instance.scriptableManifest.GetHash(assetName);
             AssetCache cache = null;
-            if (!assetCaches.TryGetValue(fileName, out cache))
+            if (assetCaches.TryGetValue(hash, out cache))
             {
-                return null;
+                return cache;
             }
-            return cache.obj;
+            // create new cache.
+            cache = new AssetCache() { hash = hash, assetFileName = assetName, bundle = null, isLoading = false };
+            return cache;
         }
 
         public static string GetRefinedAssetFileName(string fullName)
@@ -265,7 +240,7 @@ namespace Framework
         /// <summary>
         /// UnLoad asset.
         /// </summary>
-        public static void UnLoad(string assetName)
+        public void UnLoad(string assetName)
         {
             AssetCache cache = null;
             if (!assetCaches.TryGetValue(assetName, out cache))

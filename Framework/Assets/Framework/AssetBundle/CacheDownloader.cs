@@ -15,7 +15,7 @@ namespace Framework
 
         private List<Hash128> listOfCachedVersions = new List<Hash128>();
 
-        IEnumerator IDownloader.Download(string path, string name, Hash128 hash, string toPath)
+        public IEnumerator Download(string path, string name, Hash128 hash, string toPath)
         {
             // Wait for caching is ready.
             if (!Caching.ready)

@@ -9,22 +9,10 @@ namespace Framework
 {
     /// <summary>
     /// Asset downloader.
+    /// Use Unity Caching system to cache assetbundles.
     /// </summary>
     public class AssetDownloader : SingletonComponent<AssetDownloader>
     {
-        /// <summary>
-        /// Using Caching to cache assetbundles?
-        /// </summary>
-        private bool _useCaching = true;
-        public bool useCaching
-        {
-            get { return _useCaching; }
-            set
-            {
-                _useCaching = value;
-            }
-        }
-
         private ScriptableManifest _scriptableManifest = null;
         public ScriptableManifest scriptableManifest
         {
@@ -101,13 +89,13 @@ namespace Framework
                 // assets.
                 foreach (var asset in category.assets)
                 {
-                    var downloader = GetDownloader();
+                    var downloader = new CacheDownloader();
                     yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
                 }
                 // encrpted assets.
                 foreach (var asset in category.encryptedAssets)
                 {
-                    var downloader = GetDownloader();
+                    var downloader = new CacheDownloader();
                     yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
                 }
             }
@@ -115,25 +103,13 @@ namespace Framework
             // download rawAssets.
             foreach (var asset in manifest.rawAssets)
             {
-                var downloader = GetDownloader();
+                var downloader = new CacheDownloader();
                 yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
             }
 
             if (onCompleted != null)
             {
                 onCompleted.Invoke();
-            }
-        }
-
-        private IDownloader GetDownloader()
-        {
-            if (instance.useCaching)
-            {
-                return new CacheDownloader();
-            }
-            else
-            {
-                return new Downloader();
             }
         }
 

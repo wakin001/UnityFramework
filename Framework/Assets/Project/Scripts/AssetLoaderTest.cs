@@ -7,11 +7,11 @@ public class AssetLoaderTest : MonoBehaviour
 {
     private string[] loadFiles = new string[]
     {
-        "Prefabs/Views/View1",
-        "Prefabs/Views/View2",
+        //"Prefabs/Views/View1",
+        //"Prefabs/Views/View2",
         "Prefabs/Views/View3",
-        "Sprite/Tulips",
-        "AnimationCtrls/View1"
+        //"Sprite/Tulips",
+        //"AnimationCtrls/View1"
     };
 
     // Start is called before the first frame update
@@ -24,7 +24,7 @@ public class AssetLoaderTest : MonoBehaviour
         for (int i = 0; i < loadFiles.Length; ++i)
         {
             // sync
-            AssetLoader.Load<GameObject>(loadFiles[i], (prefab) =>
+            AssetManager.LoadAsync<GameObject>(loadFiles[i], (prefab) =>
             {
                 if (prefab != null)
                 {

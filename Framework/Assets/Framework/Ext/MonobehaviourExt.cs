@@ -5,6 +5,23 @@ using UnityEngine;
 
 namespace Framework
 {
+    /// <summary>
+    /// How to use?
+    /// 
+    /// IEnumerator Start () {
+    ///    var routine = StartCoroutine<int>(TestNewRoutine()); //Start our new routine
+    ///    yield return routine.coroutine; // wait as we normally can
+    ///	   Debug.Log(routine.returnVal); // print the result now that it is finished.
+    ///	}
+    ///
+    /// IEnumerator TestNewRoutine()
+    /// {
+    ///    yield return null;
+    ///    yield return new WaitForSeconds(2f);
+    ///    yield return 10;
+    /// }
+    ///
+    /// </summary>
     public class Coroutine<T>
     {
         public T Value

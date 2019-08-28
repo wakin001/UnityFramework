@@ -9,13 +9,9 @@ namespace Framework
     public class ScriptableManifest : ScriptableObject
     {
         [System.Serializable]
-        public class Asset
+        public class Asset : RawAsset
         {
-            public string name;
-            public string hash;
             public string[] dependencies;
-            public int size;
-            public int group;
         }
 
         [System.Serializable]
@@ -37,6 +33,40 @@ namespace Framework
 
         public Category[] categories;
         public RawAsset[] rawAssets;
+
+        private Dictionary<string, RawAsset> _assetsDic = new Dictionary<string, RawAsset>();
+        public Dictionary<string, RawAsset> assetsDic
+        {
+            get
+            {
+                if (_assetsDic.Count == 0)
+                {
+                    // Initialize
+                    for (int i = 0; i < categories.Length; ++i)
+                    {
+                        var category = categories[i];
+                        // assets.
+                        foreach (var asset in category.assets)
+                        {
+                            _assetsDic.Add(asset.name, asset);
+                        }
+                        // encrpted assets.
+                        foreach (var asset in category.encryptedAssets)
+                        {
+                            _assetsDic.Add(asset.name, asset);
+                        }
+                    }
+
+                    // download rawAssets.
+                    foreach (var asset in rawAssets)
+                    {
+                        _assetsDic.Add(asset.name, asset);
+                    }
+                }
+                return _assetsDic;
+            }
+        }
+
 
         public void CopyFrom(ScriptableManifest src)
         {
@@ -84,39 +114,43 @@ namespace Framework
             }
         }
 
-        public Hash128 GetHash(string assetName)
+        /// <summary>
+        /// Get the hash of asset.
+        /// </summary>
+        public string GetHash(string assetName)
         {
-            for (int i = 0; i < categories.Length; ++i)
+            RawAsset asset = null;
+            if (assetsDic.TryGetValue(assetName, out asset))
             {
-                var category = categories[i];
-                // assets.
-                foreach (var asset in category.assets)
+                return asset.hash;
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// Find all dependencies of the asset.
+        /// </summary>
+        public HashSet<string> GetAllDependencies(string assetName, HashSet<string> dependencies = null)
+        {
+            if (dependencies == null)
+            {
+                dependencies = new HashSet<string>();
+            }
+            RawAsset rawAsset = null;
+            if (assetsDic.TryGetValue(assetName, out rawAsset))
+            {
+                Asset asset = rawAsset as Asset;
+                if (asset != null)
                 {
-                    if (asset.name == assetName)
+                    foreach (string dependence in asset.dependencies)
                     {
-                        return Hash128.Parse(asset.hash);
-                    }
-                }
-                // encrpted assets.
-                foreach (var asset in category.encryptedAssets)
-                {
-                    if (asset.name == assetName)
-                    {
-                        return Hash128.Parse(asset.hash);
+                        dependencies.Add(dependence);
+                        // Find iteratively.
+                        GetAllDependencies(dependence, dependencies);
                     }
                 }
             }
-
-            // download rawAssets.
-            foreach (var asset in rawAssets)
-            {
-                if (asset.name == assetName)
-                {
-                    return Hash128.Parse(asset.hash);
-                }
-            }
-
-            return new Hash128();
+            return dependencies;
         }
 
 #if UNITY_EDITOR
