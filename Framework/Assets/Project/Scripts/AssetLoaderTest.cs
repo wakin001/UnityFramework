@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Framework;
+using UnityEngine.SceneManagement;
 
 public class AssetLoaderTest : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class AssetLoaderTest : MonoBehaviour
     void Start()
     {
         // set
-        AssetDownloader.instance.assetUrlPath = AssetBrowserTester.assetUrlPath;
+        AssetDownloader.instance.assetUrlPath = AssetDownloaderTest.assetUrlPath;
         AssetDownloader.instance.savePath = Application.dataPath + "/../AssetBundlesDownload/";
 
         for (int i = 0; i < loadFiles.Length; ++i)

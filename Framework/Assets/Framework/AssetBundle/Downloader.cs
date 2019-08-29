@@ -18,7 +18,7 @@ namespace Framework
 
     public interface IDownloader
     {
-        IEnumerator Download(string path, string name, Hash128 hash, string savePath);
+        IEnumerator Download(string path, string name, Hash128 hash, string savePath, Action<string, DownloadErrorType, string> onCompleted = null);
         string error { get; }
 
         DownloadErrorType errorType { get; }
@@ -38,9 +38,10 @@ namespace Framework
         /// <param name="name">Name.</param>
         /// <param name="hash">Hash.</param> Ignore hash.
         /// <param name="toPath">To path.</param> Save file to toPath.
-        public IEnumerator Download(string path, string name, Hash128 hash, string toPath)
+        public IEnumerator Download(string path, string name, Hash128 hash, string toPath, Action<string, DownloadErrorType, string> onCompleted = null)
         {
-            using (UnityWebRequest request = UnityWebRequest.Get(path + name))
+            string uri = $"{path}{name}";
+            using (UnityWebRequest request = UnityWebRequest.Get(uri))
             {
                 yield return request.SendWebRequest();
 
@@ -50,7 +51,7 @@ namespace Framework
 
                     try
                     {
-                        FileUtil.Save(toPath + name, data);
+                        FileUtil.Save($"{toPath}{name}", data);
                     }
                     catch (IOException e)
                     {
@@ -77,6 +78,10 @@ namespace Framework
                 }
             }
 
+            if (onCompleted != null)
+            {
+                onCompleted.Invoke(error, errorType, hash.ToString());
+            }
         }
     }
 

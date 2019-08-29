@@ -44,20 +44,15 @@ namespace Framework
 
         public Action onCompleted = null;
 
+        // download file's hashs
+        private HashSet<ScriptableManifest.RawAsset> downloadList = new HashSet<ScriptableManifest.RawAsset>();
 
         public IEnumerator DownloadManifest(string urlPath, string assetUrlPath, string toPath)
         {
             this.assetUrlPath = assetUrlPath;
             this.savePath = toPath;
 
-            string manifestName = Path.GetFileNameWithoutExtension(AssetBundleDefine.assetbundleManifestName);
-
             // remove old files.
-            string manifestPath = toPath + manifestName;
-            if (File.Exists(manifestPath))
-            {
-                File.Delete(manifestPath);
-            }
             string manifestBundlePath = toPath + AssetBundleDefine.assetbundleManifestName;
             if (File.Exists(manifestBundlePath))
             {
@@ -70,7 +65,11 @@ namespace Framework
 
             if (downloader.errorType == DownloadErrorType.None)
             {
-                StartCoroutine(DownloadAllAssets(assetUrlPath, toPath, scriptableManifest));
+                yield return DownloadAllAssets(assetUrlPath, toPath, scriptableManifest);
+            }
+            else
+            {
+                Debug.LogError("Error in downloading manifest file: " + downloader.error);
             }
         }
 
@@ -82,6 +81,14 @@ namespace Framework
                 yield break;
             }
 
+            if (!Caching.ready)
+            {
+                yield return null;
+            }
+
+            // get all file paths to download.
+            downloadList.Clear();
+
             // download all categories.
             for (int i = 0; i < manifest.categories.Length; ++i)
             {
@@ -89,23 +96,53 @@ namespace Framework
                 // assets.
                 foreach (var asset in category.assets)
                 {
-                    var downloader = new CacheDownloader();
-                    yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
+                    Hash128 hash = Hash128.Parse(asset.hash);
+                    if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                    {
+                        downloadList.Add(asset);
+                    }
                 }
                 // encrpted assets.
                 foreach (var asset in category.encryptedAssets)
                 {
-                    var downloader = new CacheDownloader();
-                    yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
+                    Hash128 hash = Hash128.Parse(asset.hash);
+                    if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                    {
+                        downloadList.Add(asset);
+                    }
                 }
             }
 
             // download rawAssets.
             foreach (var asset in manifest.rawAssets)
             {
-                var downloader = new CacheDownloader();
-                yield return downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath);
+                Hash128 hash = Hash128.Parse(asset.hash);
+                if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                {
+                    downloadList.Add(asset);
+                }
             }
+
+            // download
+            Debug.Log("download count: " + downloadList.Count);
+            foreach (var asset in downloadList)
+            {
+                var downloader = new CacheDownloader();
+                StartCoroutine(downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath, (error, errorType, hash) =>
+                {
+                    if (errorType != DownloadErrorType.None)
+                    {
+                        Debug.Log("Error in downloading ... " + error);
+                        return;
+                    }
+                    downloadList.RemoveWhere((item) =>
+                    {
+                        return (item.hash == hash);
+                    });
+                }));
+            }
+
+            yield return new WaitWhile(() => downloadList.Count > 0);
 
             if (onCompleted != null)
             {

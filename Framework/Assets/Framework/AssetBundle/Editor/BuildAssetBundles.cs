@@ -40,7 +40,7 @@ namespace Framework
             var allAssetFiles = GetAssetBundleFiles();
 
             // AssetBundle化対象シーンリストを生成
-            //GetSceneList(buildFiles, allAssetList);
+            GetSceneList(null, allAssetFiles);   // build all.
             var builds = CreateBuildList(allAssetFiles);
 
             // variantリスト生成
@@ -84,10 +84,10 @@ namespace Framework
                         continue;
                     }
 
-                    //if (path.StartsWith(sceneDirectory))
-                    //{
-                    //    continue;
-                    //}
+                    if (path.StartsWith(sceneDirectory))
+                    {
+                        continue;
+                    }
 
                     if (path.EndsWith(".unity"))
                     {
@@ -183,10 +183,10 @@ namespace Framework
             }
 
             // Scene内はGetSceneListで処理済みなのでここでは無視する
-            //if (path.Contains(sceneDirectory))
-            //{
-            //    return;
-            //}
+            if (path.Contains(sceneDirectory))
+            {
+                return;
+            }
 
             //BuildPipelineで失敗するため無視
             if (pathExtension == ".mask" || pathExtension == ".giparams")
@@ -757,6 +757,142 @@ namespace Framework
                 AssetDatabase.CreateAsset(scriptableObjectManifest, manifestPath);
             }
             return scriptableObjectManifest;
+        }
+
+        /// <summary>
+        /// AssetBundle化対象シーンのリストを生成
+        /// shaderを別AssetBundle化すると表示がおかしくなるので、共有データはTextureのみとする
+        /// </summary>
+        private static void GetSceneList(string[] buildFiles, Dictionary<string, AssetBundleFile> assetList)
+        {
+            using (new DebugTimer("GetSceneList"))
+            {
+                string rootDirectory = AssetBundleDefine.assetRootDirectory;
+                string sceneDirectory = rootDirectory + "Scene";
+
+                //var filterFunction = GetFilterFunction();
+                // 1ファイル＝1AssetBundle
+                var files = buildFiles != null ? buildFiles : Directory.GetFiles(rootDirectory, "*.unity", SearchOption.AllDirectories);
+                List<string> allDependencies = new List<string>();
+                foreach (var f in files)
+                {
+                    var path = f.Replace("\\", "/");
+                    if (!IsValidFile(path))
+                    {
+                        continue;
+                    }
+
+                    if (!path.StartsWith(sceneDirectory))
+                    {
+                        continue;
+                    }
+
+                    if (!path.EndsWith(".unity"))
+                    {
+                        continue;
+                    }
+
+                    assetList.Add(path, new AssetBundleFile()
+                    {
+                        assetPath = path,
+                        assetBundleName = path.Replace(Path.GetExtension(path), "").Replace(rootDirectory, ""),
+                        baseAssetPath = path,
+                        guid = AssetDatabase.AssetPathToGUID(path),
+                        auto = false,
+                    });
+
+                    var dependencies = AssetDatabase.GetDependencies(path)
+                        .Where(d =>
+                        {
+                            // 自身は含まない
+                            if (d == path) return false;
+
+                            //if (!filterFunction(d))
+                            //{
+                            //    return false;
+                            //}
+                            var extension = Path.GetExtension(d);
+                            // シェーダーは別AssetBundle
+                            if (extension == ".shader")
+                            {
+                                return true;
+                            }
+                            // テクスチャは個別AssetBundle化
+                            return IsTexture(extension);
+                        });
+                    allDependencies.AddRange(dependencies);
+                }
+
+                foreach (var dependency in allDependencies)
+                {
+                    AddAssetBundleNameForScene(dependency, assetList, rootDirectory);
+                }
+            }
+        }
+
+        /// <summary>テクスチャファイルかどうか</summary>
+        static bool IsTexture(string extension)
+        {
+            // TextureImporter.GetAtPathしてTextureかどうか見たほうが確実だが、こちらのほうが早い
+            switch (extension)
+            {
+                case ".png":
+                case ".tga":
+                case ".jpg":
+                case ".gif":
+                case ".psd":
+                case ".tif":
+                case ".tiff":
+                case ".bmp":
+                case ".iff":
+                case ".pict":
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>シーンが参照してるTextureをAssetBundle化対象に振り分ける</summary>
+        private static void AddAssetBundleNameForScene(string path, Dictionary<string, AssetBundleFile> assetList, string rootDirectory)
+        {
+            var pathExtension = Path.GetExtension(path);
+            if (string.IsNullOrEmpty(pathExtension))
+            {
+                throw new Exception("拡張子がないファイル、ディレクトリはビルドできません:" + path);
+            }
+            if (path.Replace(pathExtension, "").EndsWith(" "))
+            {
+                throw new Exception("ファイル名の末尾に空白が含まれています:" + path);
+            }
+
+            AssetBundleFile asset = null;
+            if (!assetList.TryGetValue(path, out asset))
+            {
+                asset = new AssetBundleFile() { assetPath = path, baseAssetPath = path, guid = AssetDatabase.AssetPathToGUID(path), assetBundleName = null, auto = true };
+                // まだ名前設定されていないので、とりあえず親と同じAssetBundle
+                assetList.Add(path, asset);
+                if (pathExtension == ".shader")
+                {
+                    // shaderは全て1AssetBundleにまとめる
+                    asset.assetBundleName = "shader";
+                    asset.auto = false;
+                }
+                return;
+            }
+
+            asset.auto = false;
+
+            if (pathExtension == ".shader")
+            {
+                // shaderは全て1AssetBundleにまとめる
+                asset.assetBundleName = "shader";
+                return;
+            }
+
+            // 他のAssetからも参照されてるので、テクスチャ毎にAssetBundle化
+            if (asset.assetBundleName == null)
+            {
+                asset.assetBundleName = AssetBundleDefine.sceneAssetNamePrefix + path.Replace(pathExtension, "").Replace(rootDirectory, "");
+            }
         }
     }
 

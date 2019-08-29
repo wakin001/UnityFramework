@@ -29,5 +29,7 @@ namespace Framework
         public const string assetbundleManifestName = "manifest.asset";
 
         public const string rawAssetVariantDirectory = "";
+
+        public const string sceneAssetNamePrefix = "s/";
     }
 }

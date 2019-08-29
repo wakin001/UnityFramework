@@ -15,41 +15,34 @@ namespace Framework
 
         private List<Hash128> listOfCachedVersions = new List<Hash128>();
 
-        public IEnumerator Download(string path, string name, Hash128 hash, string toPath)
+        public IEnumerator Download(string path, string name, Hash128 hash, string toPath, Action<string, DownloadErrorType, string> onCompleted = null)
         {
-            // Wait for caching is ready.
-            if (!Caching.ready)
+            string uri = $"{path}{name}";
+            using (UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(uri, hash, 0))
             {
-                yield return null;
-            }
-            string uri = path + name;
-            if (Caching.IsVersionCached(uri, hash))
-            {
-                // aleady cached.
-                Debug.Log("Find cache for " + name);
-                yield break;
-            }
+                yield return request.SendWebRequest();
 
-            Debug.Log("Cannot find cache for " + name + ", then download..");
-
-            UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(uri, hash, 0);
-            yield return request.SendWebRequest();
-
-            if (!request.isHttpError && !request.isNetworkError)
-            {
-                // remove other caches.
-                Caching.ClearOtherCachedVersions(name, hash);
-            }
-            else
-            {
-                error = request.error;
-                if (request.error.Contains("timeout"))
+                if (!request.isHttpError && !request.isNetworkError)
                 {
-                    errorType = DownloadErrorType.TimeoutError;
+                    // remove other caches.
+                    Caching.ClearOtherCachedVersions(name, hash);
                 }
                 else
                 {
-                    errorType = DownloadErrorType.ConnectError;
+                    error = request.error;
+                    if (request.error.Contains("timeout"))
+                    {
+                        errorType = DownloadErrorType.TimeoutError;
+                    }
+                    else
+                    {
+                        errorType = DownloadErrorType.ConnectError;
+                    }
+                }
+
+                if (onCompleted != null)
+                {
+                    onCompleted.Invoke(error, errorType, hash.ToString());
                 }
             }
         }

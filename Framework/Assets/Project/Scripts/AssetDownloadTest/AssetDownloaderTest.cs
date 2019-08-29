@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Cannot load dependencies automatically!!!
@@ -12,16 +13,16 @@ using UnityEngine.Networking;
 /// 2. 在assets下载之后，把所有manifest文件都解析一遍，然后把所有的dependencies都保存在一个cache中
 /// 3. 当通过文件名load asset时，先load当前asset，然后把所有dependencies的asset都load进来
 /// </summary>
-public class AssetBrowserTester : MonoBehaviour
+public class AssetDownloaderTest : MonoBehaviour
 {
     private string _prefabName = "Prefabs/Views/View1";
 
 #if UNITY_EDITOR_OSX
-    public const string manifestUrlPath = "http://localhost:1234/";
-    public const string assetUrlPath = "http://localhost:1234/";
+    public const string manifestUrlPath = "http://localhost:1234/manifests/";
+    public const string assetUrlPath = "http://localhost:1234/AssetBundles/";
 #else
-    public const string manifestUrlPath = "http://localhost/manifests/";
-    public const string assetUrlPath = "http://localhost/AssetBundles/";
+    public const string manifestUrlPath = "http://localhost:4321/manifests/";
+    public const string assetUrlPath = "http://localhost:4321/AssetBundles/";
 #endif
     public string savePath = "";
 
@@ -43,6 +44,7 @@ public class AssetBrowserTester : MonoBehaviour
 
         Framework.AssetDownloader.instance.onCompleted = () =>
         {
+            SceneManager.LoadScene("Glass", LoadSceneMode.Additive);
             Framework.AssetManager.LoadAsync<GameObject>(_prefabName, (prefab) =>
             {
                 if (prefab != null)
