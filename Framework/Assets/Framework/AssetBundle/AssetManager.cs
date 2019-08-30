@@ -223,6 +223,7 @@ namespace Framework
             }
             // create new cache.
             cache = new AssetCache() { hash = hash, assetFileName = assetName, bundle = null, isLoading = false };
+            assetCaches.Add(hash, cache);
             return cache;
         }
 
@@ -238,16 +239,50 @@ namespace Framework
         }
 
         /// <summary>
-        /// UnLoad asset.
+        /// Unload an asset. 
+        /// Use AssetBundle.Unload(true) to make sure the objects cannot be copied.
         /// </summary>
         public void UnLoad(string assetName)
         {
+            string hash = AssetDownloader.instance.scriptableManifest.GetHash(assetName.ToLower());
             AssetCache cache = null;
-            if (!assetCaches.TryGetValue(assetName, out cache))
+            if (!assetCaches.TryGetValue(hash, out cache))
             {
                 return;
             }
-            assetCaches.Remove(assetName);
+            if (cache.bundle != null)
+            {
+                if (cache.isLoading)
+                {
+                    Debug.Log("Cannot unload a assetbundle which is loading.");
+                    return;
+                }
+                // Use AssetBundle.Unload(true) to make sure the objects cannot be copied.
+                cache.bundle.Unload(true);
+            }
+            assetCaches.Remove(hash);
+        }
+
+        /// <summary>
+        /// Unload all assetbundles.
+        /// </summary>
+        public void UnloadAll()
+        {
+            foreach (var pair in assetCaches)
+            {
+                AssetCache cache = pair.Value;
+                if (cache.bundle != null)
+                {
+                    if (cache.isLoading)
+                    {
+                        Debug.Log("Cannot unload a assetbundle which is loading.");
+                        continue;
+                    }
+                    // Use AssetBundle.Unload(true) to make sure the objects cannot be copied.
+                    cache.bundle.Unload(true);
+                }
+            }
+            assetCaches.Clear();
         }
     }
 

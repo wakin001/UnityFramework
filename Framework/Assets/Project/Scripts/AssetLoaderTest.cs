@@ -22,17 +22,7 @@ public class AssetLoaderTest : MonoBehaviour
         AssetDownloader.instance.assetUrlPath = AssetDownloaderTest.assetUrlPath;
         AssetDownloader.instance.savePath = Application.dataPath + "/../AssetBundlesDownload/";
 
-        for (int i = 0; i < loadFiles.Length; ++i)
-        {
-            // sync
-            AssetManager.LoadAsync<GameObject>(loadFiles[i], (prefab) =>
-            {
-                if (prefab != null)
-                {
-                    Instantiate(prefab);
-                }
-            });
-        }
+        OnButtonLoadTouched();
         //// async
         //AssetLoader.LoadAsync<GameObject>("view1", (prefab) =>
         //{
@@ -45,4 +35,45 @@ public class AssetLoaderTest : MonoBehaviour
 
     }
 
+    public void OnButtonLoadTouched()
+    {
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            // sync
+            AssetManager.Load<GameObject>(loadFiles[i], (prefab) =>
+            {
+                if (prefab != null)
+                {
+                    Instantiate(prefab);
+                }
+            });
+        }
+    }
+
+    public void OnButtonUnLoadFalseTouched()
+    {
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            // sync
+            AssetManager.instance.UnLoad(loadFiles[i]);
+        }
+    }
+    public void OnButtonUnLoadTrueTouched()
+    {
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            // sync
+            AssetManager.instance.UnLoad(loadFiles[i]);
+        }
+    }
+
+    public void OnButtonUnLoadAllFalseTouched()
+    {
+        AssetBundle.UnloadAllAssetBundles(false);
+    }
+
+    public void OnButtonUnLoadAllTrueTouched()
+    {
+        AssetBundle.UnloadAllAssetBundles(true);
+    }
 }
