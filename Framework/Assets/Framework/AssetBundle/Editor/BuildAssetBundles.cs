@@ -425,8 +425,7 @@ namespace Framework
             // 空のディレクトリを削除してビルド成功率をあげる
             //DeleteEmptyDirectory(buildPath);
 
-            BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
-
+            BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle, target);
             //if (error != null)
             //{
             //    throw new Exception(error);
@@ -588,7 +587,7 @@ namespace Framework
                 Directory.CreateDirectory(manifestBuildPath);
             }
 
-            BuildPipeline.BuildAssetBundles(manifestBuildPath, manifestBuild, BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
+            BuildPipeline.BuildAssetBundles(manifestBuildPath, manifestBuild, BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle, target);
             AssetDatabase.DeleteAsset(scriptableObjectManifestPath);
 
             if (error != null)

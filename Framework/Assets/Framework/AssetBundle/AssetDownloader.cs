@@ -96,8 +96,8 @@ namespace Framework
                 // assets.
                 foreach (var asset in category.assets)
                 {
-                    Hash128 hash = Hash128.Parse(asset.hash);
-                    if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                    //Hash128 hash = Hash128.Parse(asset.hash);
+                    //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
                     {
                         downloadList.Add(asset);
                     }
@@ -105,8 +105,8 @@ namespace Framework
                 // encrpted assets.
                 foreach (var asset in category.encryptedAssets)
                 {
-                    Hash128 hash = Hash128.Parse(asset.hash);
-                    if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                    //Hash128 hash = Hash128.Parse(asset.hash);
+                    //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
                     {
                         downloadList.Add(asset);
                     }
@@ -116,8 +116,8 @@ namespace Framework
             // download rawAssets.
             foreach (var asset in manifest.rawAssets)
             {
-                Hash128 hash = Hash128.Parse(asset.hash);
-                if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                //Hash128 hash = Hash128.Parse(asset.hash);
+                //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
                 {
                     downloadList.Add(asset);
                 }
@@ -128,6 +128,78 @@ namespace Framework
             foreach (var asset in downloadList)
             {
                 var downloader = new CacheDownloader();
+                StartCoroutine(downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath, (error, errorType, hash) =>
+                {
+                    if (errorType != DownloadErrorType.None)
+                    {
+                        Debug.Log("Error in downloading ... " + error);
+                        return;
+                    }
+                    downloadList.RemoveWhere((item) =>
+                    {
+                        return (item.hash == hash);
+                    });
+                }));
+            }
+
+            yield return new WaitWhile(() => downloadList.Count > 0);
+
+            if (onCompleted != null)
+            {
+                onCompleted.Invoke();
+            }
+        }
+
+        public IEnumerator DownloadAllAssetsToLocal(string urlPath, string toPath, ScriptableManifest manifest)
+        {
+            if (manifest == null)
+            {
+                Debug.LogError("manifest is null in " + toPath);
+                yield break;
+            }
+
+            // get all file paths to download.
+            downloadList.Clear();
+
+            // download all categories.
+            for (int i = 0; i < manifest.categories.Length; ++i)
+            {
+                var category = manifest.categories[i];
+                // assets.
+                foreach (var asset in category.assets)
+                {
+                    //Hash128 hash = Hash128.Parse(asset.hash);
+                    //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                    {
+                        downloadList.Add(asset);
+                    }
+                }
+                // encrpted assets.
+                foreach (var asset in category.encryptedAssets)
+                {
+                    //Hash128 hash = Hash128.Parse(asset.hash);
+                    //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                    {
+                        downloadList.Add(asset);
+                    }
+                }
+            }
+
+            // download rawAssets.
+            foreach (var asset in manifest.rawAssets)
+            {
+                //Hash128 hash = Hash128.Parse(asset.hash);
+                //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                {
+                    downloadList.Add(asset);
+                }
+            }
+
+            // download
+            Debug.Log("download count: " + downloadList.Count);
+            foreach (var asset in downloadList)
+            {
+                var downloader = new Downloader();
                 StartCoroutine(downloader.Download(assetUrlPath, asset.name, Hash128.Parse(asset.hash), toPath, (error, errorType, hash) =>
                 {
                     if (errorType != DownloadErrorType.None)

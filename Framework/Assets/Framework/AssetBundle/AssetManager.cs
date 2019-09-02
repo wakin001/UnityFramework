@@ -9,7 +9,7 @@ namespace Framework
     /// <summary>
     /// yield return StartCoroutineを使うともれなく次の処理が1フレーム遅れる!! ご注意！！
     /// </summary>
-    public class AssetManager : SingletonComponent<AssetManager>
+    public partial class AssetManager : SingletonComponent<AssetManager>
     {
         public static bool useAssetBundle = true;
 
@@ -148,7 +148,7 @@ namespace Framework
             {
                 fileName = assetName;
             }
-            yield return LoadAsset<T>(fileName, Hash128.Parse(cache.hash), cache.bundle, isAsync, onCompleted);
+            yield return LoadAsset<T>(fileName, cache.bundle, isAsync, onCompleted);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Framework
         /// Load an asset file from a assetbundle and cache all files.
         /// Unload the assetbundle after cached all files.
         /// </summary>
-        private IEnumerator LoadAsset<T>(string fileName, Hash128 hash, AssetBundle bundle, bool isAsync, System.Action<T> onCompleted) where T : Object
+        private IEnumerator LoadAsset<T>(string fileName, AssetBundle bundle, bool isAsync, System.Action<T> onCompleted) where T : Object
         {
             if (bundle == null)
             {
