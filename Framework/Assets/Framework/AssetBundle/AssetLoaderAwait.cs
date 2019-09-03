@@ -7,6 +7,9 @@ using UniRx.Async;
 
 namespace Framework
 {
+    /// <summary>
+    /// Use await/async to load assetbundle.
+    /// </summary>
     public partial class AssetManager
     {
         /// <summary>

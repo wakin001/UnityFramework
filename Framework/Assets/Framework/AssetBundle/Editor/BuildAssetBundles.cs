@@ -50,6 +50,8 @@ namespace Framework
             BuildTarget target = BuildTarget.StandaloneWindows;
 #if UNITY_EDITOR_OSX
             target = BuildTarget.StandaloneOSX;
+#elif UNITY_ANDROID
+            target = BuildTarget.Android;
 #endif
             BuildAllWithVariant(AssetBundleDefine.assetBundleCacheDirectory, builds, null, target);
 
@@ -425,7 +427,7 @@ namespace Framework
             // 空のディレクトリを削除してビルド成功率をあげる
             //DeleteEmptyDirectory(buildPath);
 
-            BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle, target);
+            BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
             //if (error != null)
             //{
             //    throw new Exception(error);
@@ -587,7 +589,7 @@ namespace Framework
                 Directory.CreateDirectory(manifestBuildPath);
             }
 
-            BuildPipeline.BuildAssetBundles(manifestBuildPath, manifestBuild, BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle, target);
+            BuildPipeline.BuildAssetBundles(manifestBuildPath, manifestBuild, BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
             AssetDatabase.DeleteAsset(scriptableObjectManifestPath);
 
             if (error != null)

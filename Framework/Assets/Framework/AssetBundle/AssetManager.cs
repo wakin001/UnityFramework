@@ -285,7 +285,7 @@ namespace Framework
                         continue;
                     }
                     // Use AssetBundle.Unload(true) to make sure the objects cannot be copied.
-                    cache.bundle.Unload(true);
+                    cache.bundle.Unload(false);
                 }
             }
             assetCaches.Clear();

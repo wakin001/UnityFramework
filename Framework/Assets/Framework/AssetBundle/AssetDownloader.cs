@@ -47,6 +47,9 @@ namespace Framework
         // download file's hashs
         private HashSet<ScriptableManifest.RawAsset> downloadList = new HashSet<ScriptableManifest.RawAsset>();
 
+        // Download files to local path? or cache?
+        public bool downloadToLocalPath { get; set; } = false;
+
         public IEnumerator DownloadManifest(string urlPath, string assetUrlPath, string toPath)
         {
             this.assetUrlPath = assetUrlPath;
@@ -62,14 +65,51 @@ namespace Framework
             // Always use Download to download manifest files.
             var downloader = new Downloader();
             yield return downloader.Download(urlPath, AssetBundleDefine.assetbundleManifestName, new Hash128(), toPath);
-
             if (downloader.errorType == DownloadErrorType.None)
             {
-                yield return DownloadAllAssets(assetUrlPath, toPath, scriptableManifest);
+                if (downloadToLocalPath)
+                {
+                    yield return DownloadAllAssetsToLocal(assetUrlPath, toPath, scriptableManifest);
+                }
+                else
+                {
+                    yield return DownloadAllAssets(assetUrlPath, toPath, scriptableManifest);
+                }
             }
             else
             {
                 Debug.LogError("Error in downloading manifest file: " + downloader.error);
+            }
+        }
+
+        public IEnumerator DownloadManifestFromStreamAssets(string urlPath, string assetUrlPath, string toPath)
+        {
+            this.assetUrlPath = assetUrlPath;
+            this.savePath = toPath;
+
+            string uri = $"{urlPath}{AssetBundleDefine.assetbundleManifestName}";
+            using (UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(uri))
+            {
+                yield return request.SendWebRequest();
+
+                if (!request.isHttpError && !request.isNetworkError)
+                {
+                    var bundle = DownloadHandlerAssetBundle.GetContent(request);
+                    _scriptableManifest = bundle.LoadAllAssets<ScriptableManifest>()[0];
+
+                    if (downloadToLocalPath)
+                    {
+                        yield return DownloadAllAssetsToLocal(assetUrlPath, toPath, scriptableManifest);
+                    }
+                    else
+                    {
+                        yield return DownloadAllAssets(assetUrlPath, toPath, scriptableManifest);
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Error in downloading manifest file: " + request.error);
+                }
             }
         }
 
@@ -96,8 +136,8 @@ namespace Framework
                 // assets.
                 foreach (var asset in category.assets)
                 {
-                    //Hash128 hash = Hash128.Parse(asset.hash);
-                    //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                    Hash128 hash = Hash128.Parse(asset.hash);
+                    if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
                     {
                         downloadList.Add(asset);
                     }
@@ -105,8 +145,8 @@ namespace Framework
                 // encrpted assets.
                 foreach (var asset in category.encryptedAssets)
                 {
-                    //Hash128 hash = Hash128.Parse(asset.hash);
-                    //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                    Hash128 hash = Hash128.Parse(asset.hash);
+                    if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
                     {
                         downloadList.Add(asset);
                     }
@@ -116,8 +156,8 @@ namespace Framework
             // download rawAssets.
             foreach (var asset in manifest.rawAssets)
             {
-                //Hash128 hash = Hash128.Parse(asset.hash);
-                //if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
+                Hash128 hash = Hash128.Parse(asset.hash);
+                if (!Caching.IsVersionCached($"{assetUrlPath}{asset.name}", hash))
                 {
                     downloadList.Add(asset);
                 }

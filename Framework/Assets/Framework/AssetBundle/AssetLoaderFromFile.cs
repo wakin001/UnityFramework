@@ -7,6 +7,9 @@ using UniRx.Async;
 
 namespace Framework
 {
+    /// <summary>
+    /// Use AssetBundle.LoadFromFile() to load assetbundle.
+    /// </summary>
     public partial class AssetManager
     {
         /// <summary>
@@ -97,7 +100,7 @@ namespace Framework
                     {
                         yield return new WaitWhile(() => dependenceCache.isLoading);
                     }
-                    LoadAssetBundleFromFile(dependenceCache);
+                    yield return LoadAssetBundleFromFileAsync(dependenceCache);
                 }
             }
 

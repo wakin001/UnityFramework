@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Profiling;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// Cannot load dependencies automatically!!!
@@ -26,99 +29,132 @@ public class AssetDownloaderTest : MonoBehaviour
 #endif
     public string savePath = "";
 
+    string localUri = "";
+
+    [SerializeField]
+    private Text informationText = null;
+
+    [SerializeField]
+    private Transform parent = null;
+
+    private string[] loadFiles = new string[]
+    {
+        "Prefabs/Views/View1",
+        "Prefabs/Views/View2",
+        "Prefabs/Views/View3",
+    };
+
     private void Awake()
     {
-        savePath = Application.dataPath + "/../AssetBundlesDownload/";
+        savePath = Application.dataPath + "/AssetBundlesDownload/";
+        localUri = "file:///" + Application.dataPath + "/AssetBundles/";
+
+        AssetDownloader.instance.assetUrlPath = localUri;
+        AssetDownloader.instance.savePath = savePath;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(LoadAssets("window1"));
-
-        //string manifestPath = Application.dataPath + "/../AssetBundles/build/build";
-        //string uri = "file:///" + Application.dataPath + "/../AssetBundles/build/" + _bundleName;
-        //StartCoroutine(DownloadAndCacheAssetBundle(uri, manifestPath, _bundleName));
-
-        StartCoroutine(Framework.AssetDownloader.instance.DownloadManifest(manifestUrlPath, assetUrlPath, savePath));
+        //StartCoroutine(Framework.AssetDownloader.instance.DownloadManifestFromStreamAssets(manifestUrlPath, assetUrlPath, savePath));
 
         Framework.AssetDownloader.instance.onCompleted = () =>
         {
-            SceneManager.LoadScene("Glass", LoadSceneMode.Additive);
-            StartCoroutine(Framework.AssetManager.LoadAsyncCoroutine<GameObject>(_prefabName, (prefab) =>
-            {
-                if (prefab != null)
-                {
-                    Instantiate(prefab);
-                }
-            }));
+            informationText.text = "downloading completed.";
         };
     }
 
-    T LoadAsset<T>(string name) where T : UnityEngine.Object
+    public void DownloadToLocal()
     {
-        AssetBundle asset = AssetBundle.LoadFromFile(savePath + name);
-        return asset.LoadAsset<T>(name);
+        //informationText.text = "downloading...";
+        //Framework.AssetDownloader.instance.downloadToLocalPath = true;
+        //StartCoroutine(Framework.AssetDownloader.instance.DownloadManifestFromStreamAssets(localUri, localUri, savePath));
     }
 
-
-
-    IEnumerator DownloadAndCacheAssetBundle(string uri, string manifestBundlePath, string bundleName)
+    public void DownloadToCache()
     {
-        //Load the manifest
-        AssetBundle manifestBundle = AssetBundle.LoadFromFile(manifestBundlePath);
-        AssetBundleManifest manifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+        localUri = Application.streamingAssetsPath + "/AssetBundles/";
+        informationText.text = "downloading...";
+        Framework.AssetDownloader.instance.downloadToLocalPath = false;
+        StartCoroutine(Framework.AssetDownloader.instance.DownloadManifestFromStreamAssets(localUri, localUri, savePath));
+    }
 
-        //Create new cache
-        string today = DateTime.Today.ToLongDateString();
-        Directory.CreateDirectory(today);
-        Cache newCache = Caching.AddCache(today);
-
-        //Set current cache for writing to the new cache if the cache is valid
-        if (newCache.valid)
-            Caching.currentCacheForWriting = newCache;
-
-        //Download the bundle
-        Hash128 hash = manifest.GetAssetBundleHash(bundleName);
-        UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(uri, hash, 0);
-        yield return request.SendWebRequest();
-        AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(request);
-
-        //Get all the cached versions
-        List<Hash128> listOfCachedVersions = new List<Hash128>();
-        Caching.GetCachedVersions(bundle.name, listOfCachedVersions);
-
-        GameObject assetObj = AssetBundleContainsAssetIWantToLoad(bundle);
-        if (assetObj == null)     //Or any conditions you want to check on your new asset bundle
+    public void LoadFromFile()
+    {
+        DebugTimer timer = new DebugTimer("Load asset from local files");
+        AssetDownloader.instance.savePath = Application.streamingAssetsPath + "/AssetBundles/";
+        //Profiler.BeginSample("Load asset from local files");
+        for (int i = 0; i < loadFiles.Length; ++i)
         {
-            //If our criteria wasn't met, we can remove the new cache and revert back to the most recent one
-            Caching.currentCacheForWriting = Caching.GetCacheAt(Caching.cacheCount);
-            Caching.RemoveCache(newCache);
-
-            for (int i = listOfCachedVersions.Count - 1; i > 0; i--)
+            // sync
+            var prefab = AssetManager.LoadFromFile<GameObject>(loadFiles[i]);
+            if (prefab != null)
             {
-                //Load a different bundle from a different cache
-                request = UnityWebRequestAssetBundle.GetAssetBundle(uri, listOfCachedVersions[i], 0);
-                yield return request.SendWebRequest();
-                bundle = DownloadHandlerAssetBundle.GetContent(request);
-
-                //Check and see if the newly loaded bundle from the cache meets your criteria
-                if (AssetBundleContainsAssetIWantToLoad(bundle))
-                    break;
+                Instantiate(prefab, parent);
             }
         }
-        else
-        {
-            //This is if we only want to keep 5 local caches at any time
-            if (Caching.cacheCount > 5)
-                Caching.RemoveCache(Caching.GetCacheAt(1));     //Removes the oldest user created cache
-
-            GameObject.Instantiate(assetObj);
-        }
+        //Profiler.EndSample();
+        timer.Dispose();
     }
 
-    GameObject AssetBundleContainsAssetIWantToLoad(AssetBundle bundle)
+    public void LoadWithCoroutine()
     {
-        return bundle.LoadAsset<GameObject>(_prefabName);     //this could be any conditional
+        AssetDownloader.instance.savePath = Application.streamingAssetsPath + "/AssetBundles/";
+        var manifest = AssetDownloader.instance.scriptableManifest;
+        StartCoroutine(LoadFromCache());
+    }
+
+    public IEnumerator LoadFromCache()
+    {
+        DebugTimer timer = new DebugTimer("Load asset with coroutine");
+        //Profiler.BeginSample("Load asset with coroutine");
+        int count = 0;
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            GameObject prefab = null;
+            // sync
+            yield return (AssetManager.LoadCoroutine<GameObject>(loadFiles[i], (obj) =>
+            {
+                ++count;
+                prefab = obj;
+            }));
+            if (prefab != null)
+            {
+                Instantiate(prefab, parent);
+            }
+        }
+        yield return new WaitWhile(() => count < loadFiles.Length);
+        //Profiler.EndSample();
+        timer.Dispose();
+    }
+
+    public async void LoadFromCacheWithAwait()
+    {
+        AssetDownloader.instance.savePath = Application.streamingAssetsPath + "/AssetBundles/";
+        var manifest = AssetDownloader.instance.scriptableManifest;
+        DebugTimer timer = new DebugTimer("Load asset with coroutine");
+        //Profiler.BeginSample("Load asset With Await");
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            // sync
+            var prefab = await AssetManager.LoadWithAwait<GameObject>(loadFiles[i]);
+            if (prefab != null)
+            {
+                Instantiate(prefab, parent);
+            }
+        }
+        //Profiler.EndSample();
+        timer.Dispose();
+    }
+
+    public void ClearAll()
+    {
+        for (int i = 0; i < parent.childCount; ++i)
+        {
+            GameObject.Destroy(parent.GetChild(i));
+        }
+
+
+        AssetManager.instance.UnloadAll();
     }
 }
