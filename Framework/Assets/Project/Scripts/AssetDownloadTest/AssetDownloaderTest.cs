@@ -45,13 +45,13 @@ public class AssetDownloaderTest : MonoBehaviour
         Framework.AssetDownloader.instance.onCompleted = () =>
         {
             SceneManager.LoadScene("Glass", LoadSceneMode.Additive);
-            Framework.AssetManager.LoadAsync<GameObject>(_prefabName, (prefab) =>
+            StartCoroutine(Framework.AssetManager.LoadAsyncCoroutine<GameObject>(_prefabName, (prefab) =>
             {
                 if (prefab != null)
                 {
                     Instantiate(prefab);
                 }
-            });
+            }));
         };
     }
 

@@ -34,8 +34,8 @@ public class AssetLoaderTest : MonoBehaviour
         //});
 
         //LoadWithAwait();
-        //StartCoroutine(LoadWithCoroutine());
-        LoadFromLocal();
+        StartCoroutine(LoadWithCoroutine());
+        //LoadFromLocal();
     }
 
     public async void LoadWithAwait()
@@ -55,28 +55,26 @@ public class AssetLoaderTest : MonoBehaviour
 
     public IEnumerator LoadWithCoroutine()
     {
-        Profiler.BeginSample("Load asset");
-        int loadedCount = 0;
+        Profiler.BeginSample("Load asset with coroutine");
         for (int i = 0; i < loadFiles.Length; ++i)
         {
+            GameObject prefab = null;
             // sync
-            AssetManager.Load<GameObject>(loadFiles[i], (prefab) =>
+            yield return (AssetManager.LoadCoroutine<GameObject>(loadFiles[i], (obj) =>
             {
-                ++loadedCount;
-                if (prefab != null)
-                {
-                    Instantiate(prefab);
-                }
-            });
+                prefab = obj;
+            }));
+            if (prefab != null)
+            {
+                Instantiate(prefab);
+            }
         }
-        yield return new WaitWhile(() => loadedCount < loadFiles.Length);
         Profiler.EndSample();
     }
 
     public void LoadFromLocal()
     {
         Profiler.BeginSample("Load asset from local files");
-        int loadedCount = 0;
         for (int i = 0; i < loadFiles.Length; ++i)
         {
             // sync
