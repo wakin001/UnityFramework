@@ -1,0 +1,16 @@
+Step:
+1. Download MasterMemory.Generator.zip and MasterMemory.Unity.unitypackage
+	https://github.com/Cysharp/MasterMemory/releases
+2. Download MessagePack.Unity.1.7.3.5.unitypackage and MessagePackUniversalCodeGenerator.zip
+	https://github.com/neuecc/MessagePack-CSharp/releases
+3. Import MasterMemory.Unity.unitypackage and MessagePack.Unity.1.7.3.5.unitypackage 
+4. Unzip MasterMemory.Generator.zip and MessagePackUniversalCodeGenerator.zip to /Assets/../GeneratorTools
+5. Create test table "Person"
+6. Create file Assets/Editor/CodeGenerator.cs
+7. Execute ÅuMasterMemory>CodeGenerateÅv to generate C# codes.
+8. Create Assets/Scripts/Initializer.cs file.
+
+
+
+Reference:
+https://matcha-choco010.net/2019/08/22/unity%E3%81%AE%E3%83%9E%E3%82%B9%E3%82%BF%E3%83%87%E3%83%BC%E3%82%BF%E3%81%ABmastermemory%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%82%8B/
