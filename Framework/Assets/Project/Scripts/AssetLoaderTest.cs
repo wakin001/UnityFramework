@@ -78,7 +78,7 @@ public class AssetLoaderTest : MonoBehaviour
         for (int i = 0; i < loadFiles.Length; ++i)
         {
             // sync
-            var prefab = AssetManager.LoadFromFile<GameObject>(loadFiles[i]);
+            var prefab = AssetManager.Load<GameObject>(loadFiles[i]);
             if (prefab != null)
             {
                 Instantiate(prefab);

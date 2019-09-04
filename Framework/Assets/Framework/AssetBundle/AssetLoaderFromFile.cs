@@ -15,15 +15,15 @@ namespace Framework
         /// <summary>
         /// Load Object from asset's name. In case asset name equals file name.
         /// </summary>
-        public static T LoadFromFile<T>(string assetName) where T : Object
+        public static Object Load(string assetName)
         {
-            return LoadFromFile<T>(assetName, null);
+            return Load<Object>(assetName, null);
         }
 
         /// <summary>
         /// Load Object from asset's name and file name. One asset may contains multiple files.
         /// </summary>
-        public static T LoadFromFile<T>(string assetName, string assetFileName) where T : Object
+        public static T Load<T>(string assetName, string assetFileName = null) where T : Object
         {
             assetName = assetName.ToLower();
             if (assetFileName != null)
@@ -47,17 +47,17 @@ namespace Framework
             return AssetManager.instance.LoadAssetBundleFromFile<T>(assetName, assetFileName);
         }
 
-        public static void LoadFromFileAsync<T>(string assetName, System.Action<T> onCompleted) where T : Object
+        public static void LoadAsync<T>(string assetName, System.Action<T> onCompleted) where T : Object
         {
             AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAssetBundleFromFileAsync<T>(assetName, null, onCompleted));
         }
 
-        public static void LoadFromFileAsync<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
+        public static void LoadAsync<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
         {
             AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAssetBundleFromFileAsync<T>(assetName, assetFileName, onCompleted));
         }
 
-        public T LoadAssetBundleFromFile<T>(string assetName, string assetFileName) where T : Object
+        private T LoadAssetBundleFromFile<T>(string assetName, string assetFileName) where T : Object
         {
             // load all dependent assets.
             // load dependent assets.
@@ -86,7 +86,7 @@ namespace Framework
             return LoadAssetFromFile<T>(fileName, cache.bundle);
         }
 
-        public IEnumerator LoadAssetBundleFromFileAsync<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
+        private IEnumerator LoadAssetBundleFromFileAsync<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
         {
             // load all dependent assets.
             // load dependent assets.
