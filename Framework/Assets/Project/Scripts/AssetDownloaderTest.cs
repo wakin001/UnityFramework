@@ -46,7 +46,7 @@ public class AssetDownloaderTest : MonoBehaviour
 
     private void Awake()
     {
-        savePath = Application.dataPath + "/AssetBundlesDownload/";
+        savePath = Application.dataPath + "/../AssetBundlesDownload/";
         localUri = "file:///" + Application.dataPath + "/AssetBundles/";
 
         AssetDownloader.instance.assetUrlPath = localUri;
@@ -56,7 +56,8 @@ public class AssetDownloaderTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(Framework.AssetDownloader.instance.DownloadManifestFromStreamAssets(manifestUrlPath, assetUrlPath, savePath));
+        Framework.AssetDownloader.instance.downloadToLocalPath = true;
+        StartCoroutine(Framework.AssetDownloader.instance.DownloadManifest(manifestUrlPath, assetUrlPath, savePath));
 
         Framework.AssetDownloader.instance.onCompleted = () =>
         {

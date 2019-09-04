@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 3861670376
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e8da685b2042efa10e85897c16980bd0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 09c38d40d7e900380682b2264713750e
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: 42aa22b0dafdbd443ac6e26913f37ab7, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/manifest.asset
+Dependencies: []
