@@ -13,7 +13,7 @@ public class UITest : MonoBehaviour
 
     void CreatePopup()
     {
-        var testPopup = PopupBase.Create<TestPopup>("Prefabs/TestPopup");
+        var testPopup = PopupBase.Create<TestPopup>("Prefabs/TestPopup", useAssetLoader: false);
         if (testPopup != null)
         {
             Debug.Log("Created test popup.");

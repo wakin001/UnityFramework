@@ -119,8 +119,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackLayer: {fileID: 1000010298360076}
   touchGuard: {fileID: 1307214466942614}
-  frontTouchGuard: {fileID: 1838477283001372}
-  initialTouchGuard: {fileID: 1000013729271268}
+  frontTouchGuard: {fileID: 0}
+  initialTouchGuard: {fileID: 0}
   showOnBaseCanvas: 0
   _isErrorPopupCanvas: 0
   doNotRegisterBackKey: 0

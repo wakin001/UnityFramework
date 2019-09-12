@@ -201,7 +201,7 @@ namespace Framework
         public static PopupCanvas Create(bool showBlackLayer = false, bool showOnBaseCanvas = false, bool showStartAnimation = true, bool isErrorPopupCanvas = false, bool isIndependentTime = false)
         {
             // _GluonResources ではなく _Gluon 以下のリソースから作る
-            string path = "UI/Popup/PopupCanvas";
+            string path = "Prefabs/Popup/PopupCanvas";
             GameObject popupCanvas = null;
 
             //if (!showOnBaseCanvas || BaseCanvas.IsInstanceEmpty())

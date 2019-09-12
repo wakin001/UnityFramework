@@ -173,7 +173,10 @@ namespace Framework
                     onCompleted.Invoke();
                 }
 
-                if (popupCanvasComponent != null) popupCanvasComponent.ShowFrontTouchGuard(false); // 前面タッチガードOFF
+                if (popupCanvasComponent != null)
+                {
+                    popupCanvasComponent.ShowFrontTouchGuard(false); // 前面タッチガードOFF
+                }
             };
 
             switch (animationType)
