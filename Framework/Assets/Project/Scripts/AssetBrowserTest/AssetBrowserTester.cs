@@ -39,13 +39,13 @@ public class AssetBrowserTester : MonoBehaviour
 
         Framework.AssetDownloader.instance.onCompleted = () =>
         {
-            StartCoroutine(Framework.AssetLoader.Load<GameObject>(_bundleName, (prefab) =>
+            Framework.AssetManager.LoadAsync<GameObject>(_bundleName, (prefab) =>
             {
                 if (prefab != null)
                 {
                     Instantiate(prefab);
                 }
-            }));
+            });
         };
     }
 
