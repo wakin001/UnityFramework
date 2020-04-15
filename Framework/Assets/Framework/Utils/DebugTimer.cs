@@ -15,6 +15,7 @@ namespace Framework
             this.name = name;
             DateTime start = DateTime.Now;
             System.Console.WriteLine("timer start " + name + ":" + start.ToString());
+            Debug.Log("timer start " + name + ":" + start.ToString());
             sw.Start();
         }
 
@@ -22,6 +23,7 @@ namespace Framework
         {
             sw.Stop();
             System.Console.WriteLine("timer end " + name + ":" + sw.Elapsed);
+            Debug.Log("timer end " + name + ":" + sw.Elapsed);
         }
     }
 

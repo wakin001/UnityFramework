@@ -27,5 +27,15 @@ namespace Framework
 
             private set { _instance = value as T; }
         }
+
+        public bool IsInstanceEmpty()
+        {
+            return _instance == null;
+        }
+
+        protected virtual void Awake()
+        {
+
+        }
     }
 }
