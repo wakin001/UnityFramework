@@ -19,7 +19,7 @@ namespace Framework
         public ViewBase curView { get; private set; }
 
         // Viewを切り替え時次のViewが表示する前のDelay時間（Frame）
-        private int _delayFrame = UIAnimationPublisher.defaultMaximumCutoffDurationInFrame;
+        private int _delayFrame = 0;// UIAnimationPublisher.defaultMaximumCutoffDurationInFrame;
         public int delayFrame
         {
             set { _delayFrame = value; }
@@ -146,7 +146,7 @@ namespace Framework
                 float delayTime = 0f;
                 if (delayEnterAnimation)
                 {
-                    delayTime = (float)delayFrame / Common.Parameters.slowFrameRate;
+                    //delayTime = (float)delayFrame / Common.Parameters.slowFrameRate;
                 }
                 StartCoroutine(WaitForStartingEnterAnimation(delayTime, enterPattern, exitPattern, lastView, view, model, deactivateLastView));
             });

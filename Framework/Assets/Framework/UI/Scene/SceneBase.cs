@@ -199,7 +199,7 @@ namespace Framework
         protected virtual void OnExitAnimationCompleted()
         {
             RemoveTouchGuard();
-            SceneController.instance.isOnAnimation = false;
+            //SceneController.instance.isOnAnimation = false;
         }
 
         /// <summary>

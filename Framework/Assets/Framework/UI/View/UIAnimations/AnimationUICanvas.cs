@@ -42,11 +42,11 @@ namespace Framework
 
         public void RegisterToManager()
         {
-            if (AnimationUICanvasManager.IsInstanceEmpty())
-            {
-                StartCoroutine(RegisterToManagerCoroutine());
-            }
-            else
+            //if (AnimationUICanvasManager.IsInstanceEmpty())
+            //{
+            //    StartCoroutine(RegisterToManagerCoroutine());
+            //}
+            //else
             {
                 AnimationUICanvasManager.instance.Register(this);
             }
@@ -54,8 +54,8 @@ namespace Framework
 
         private IEnumerator RegisterToManagerCoroutine()
         {
-            yield return new WaitWhile(() => AnimationUICanvasManager.IsInstanceEmpty());
-
+            //yield return new WaitWhile(() => AnimationUICanvasManager.IsInstanceEmpty());
+            yield return null;
             AnimationUICanvasManager.instance.Register(this);
         }
 
@@ -65,7 +65,7 @@ namespace Framework
         /// <returns></returns>
         public void RecollectAnimationUIs()
         {
-            animationPublishers = GetComponentsInChildren<UIAnimationPublisher>();
+            //animationPublishers = GetComponentsInChildren<UIAnimationPublisher>();
         }
 
         /// <summary>
@@ -231,10 +231,10 @@ namespace Framework
 
         protected virtual void OnDestroy()
         {
-            if (!AnimationUICanvasManager.IsInstanceEmpty())
-            {
-                AnimationUICanvasManager.instance.UnRegister(this);
-            }
+            //if (!AnimationUICanvasManager.IsInstanceEmpty())
+            //{
+            //    AnimationUICanvasManager.instance.UnRegister(this);
+            //}
         }
     }
 }
