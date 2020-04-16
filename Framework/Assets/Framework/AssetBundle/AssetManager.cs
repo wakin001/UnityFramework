@@ -9,7 +9,7 @@ namespace Framework
     /// <summary>
     /// yield return StartCoroutineを使うともれなく次の処理が1フレーム遅れる!! ご注意！！
     /// </summary>
-    public class AssetManager : SingletonComponent<AssetManager>
+    public partial class AssetManager : SingletonComponent<AssetManager>
     {
         public static bool useAssetBundle = true;
 
@@ -38,15 +38,15 @@ namespace Framework
         /// <summary>
         /// Load Object from asset's name. In case asset name equals file name.
         /// </summary>
-        public static void Load<T>(string assetName, System.Action<T> onCompleted) where T : Object
+        public static IEnumerator LoadCoroutine<T>(string assetName, System.Action<T> onCompleted) where T : Object
         {
-            Load<T>(assetName, null, onCompleted);
+            yield return LoadCoroutine<T>(assetName, null, onCompleted);
         }
 
         /// <summary>
         /// Load Object from asset's name and file name. One asset may contains multiple files.
         /// </summary>
-        public static void Load<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
+        public static IEnumerator LoadCoroutine<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
         {
             assetName = assetName.ToLower();
             if (assetFileName != null)
@@ -67,24 +67,27 @@ namespace Framework
                 {
                     onCompleted.Invoke(obj);
                 }
-                return;
+                yield break;
             }
 
             // assetbundle
-            AssetManager.instance.StartCoroutine(AssetManager.instance.LoadFromCacheCoroutine<T>(assetName, assetFileName, false, onCompleted));
+            yield return AssetManager.instance.LoadFromCacheCoroutine<T>(assetName, assetFileName, false, onCompleted);
         }
 
-        public static void LoadAsync<T>(string assetName, System.Action<T> onCompleted) where T : Object
+        /// <summary>
+        /// Async load.
+        /// Load Object from asset's name. In case asset name equals file name.
+        /// </summary>
+        public static IEnumerator LoadAsyncCoroutine<T>(string assetName, System.Action<T> onCompleted) where T : Object
         {
-            AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAsyncCoroutine<T>(assetName, null, onCompleted));
+            yield return LoadAsyncCoroutine<T>(assetName, null, onCompleted);
         }
 
-        public static void LoadAsync<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
-        {
-            AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAsyncCoroutine<T>(assetName, assetFileName, onCompleted));
-        }
-
-        private IEnumerator LoadAsyncCoroutine<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
+        /// <summary>
+        /// Async load.
+        /// Load Object from asset's name and file name. One asset may contains multiple files.
+        /// </summary>
+        public static IEnumerator LoadAsyncCoroutine<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
         {
             assetName = assetName.ToLower();
             if (assetFileName != null)
@@ -110,10 +113,13 @@ namespace Framework
             }
             else    // assetBundle
             {
-                yield return LoadFromCacheCoroutine<T>(assetName, assetFileName, true, onCompleted);
+                yield return AssetManager.instance.LoadFromCacheCoroutine<T>(assetName, assetFileName, true, onCompleted);
             }
         }
 
+        /// <summary>
+        /// Load assetBundle from cache if can, or load from server.
+        /// </summary>
         public IEnumerator LoadFromCacheCoroutine<T>(string assetName, string assetFileName, bool isAsync, System.Action<T> onCompleted) where T : Object
         {
             // load all dependent assets.
@@ -148,7 +154,7 @@ namespace Framework
             {
                 fileName = assetName;
             }
-            yield return LoadAsset<T>(fileName, Hash128.Parse(cache.hash), cache.bundle, isAsync, onCompleted);
+            yield return LoadAsset<T>(fileName, cache.bundle, isAsync, onCompleted);
         }
 
         /// <summary>
@@ -174,7 +180,7 @@ namespace Framework
         /// Load an asset file from a assetbundle and cache all files.
         /// Unload the assetbundle after cached all files.
         /// </summary>
-        private IEnumerator LoadAsset<T>(string fileName, Hash128 hash, AssetBundle bundle, bool isAsync, System.Action<T> onCompleted) where T : Object
+        private IEnumerator LoadAsset<T>(string fileName, AssetBundle bundle, bool isAsync, System.Action<T> onCompleted) where T : Object
         {
             if (bundle == null)
             {
@@ -279,7 +285,7 @@ namespace Framework
                         continue;
                     }
                     // Use AssetBundle.Unload(true) to make sure the objects cannot be copied.
-                    cache.bundle.Unload(true);
+                    cache.bundle.Unload(false);
                 }
             }
             assetCaches.Clear();

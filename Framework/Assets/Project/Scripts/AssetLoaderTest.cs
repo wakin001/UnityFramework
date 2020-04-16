@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Framework;
 using UnityEngine.SceneManagement;
+using UnityEngine.Profiling;
 
 public class AssetLoaderTest : MonoBehaviour
 {
     private string[] loadFiles = new string[]
     {
-        //"Prefabs/Views/View1",
-        //"Prefabs/Views/View2",
+        "Prefabs/Views/View1",
+        "Prefabs/Views/View2",
         "Prefabs/Views/View3",
         //"Sprite/Tulips",
         //"AnimationCtrls/View1"
@@ -22,7 +23,7 @@ public class AssetLoaderTest : MonoBehaviour
         AssetDownloader.instance.assetUrlPath = AssetDownloaderTest.assetUrlPath;
         AssetDownloader.instance.savePath = Application.dataPath + "/../AssetBundlesDownload/";
 
-        OnButtonLoadTouched();
+        //OnButtonLoadTouched();
         //// async
         //AssetLoader.LoadAsync<GameObject>("view1", (prefab) =>
         //{
@@ -32,22 +33,63 @@ public class AssetLoaderTest : MonoBehaviour
         //    }
         //});
 
+        //LoadWithAwait();
+        StartCoroutine(LoadWithCoroutine());
+        //LoadFromLocal();
+    }
 
+    public async void LoadWithAwait()
+    {
+        Profiler.BeginSample("Load asset With Await");
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            // sync
+            var prefab = await AssetManager.LoadWithAwait<GameObject>(loadFiles[i]);
+            if (prefab != null)
+            {
+                Instantiate(prefab);
+            }
+        }
+        Profiler.EndSample();
+    }
+
+    public IEnumerator LoadWithCoroutine()
+    {
+        Profiler.BeginSample("Load asset with coroutine");
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            GameObject prefab = null;
+            // sync
+            yield return (AssetManager.LoadCoroutine<GameObject>(loadFiles[i], (obj) =>
+            {
+                prefab = obj;
+            }));
+            if (prefab != null)
+            {
+                Instantiate(prefab);
+            }
+        }
+        Profiler.EndSample();
+    }
+
+    public void LoadFromLocal()
+    {
+        Profiler.BeginSample("Load asset from local files");
+        for (int i = 0; i < loadFiles.Length; ++i)
+        {
+            // sync
+            var prefab = AssetManager.Load<GameObject>(loadFiles[i]);
+            if (prefab != null)
+            {
+                Instantiate(prefab);
+            }
+        }
+        Profiler.EndSample();
     }
 
     public void OnButtonLoadTouched()
     {
-        for (int i = 0; i < loadFiles.Length; ++i)
-        {
-            // sync
-            AssetManager.Load<GameObject>(loadFiles[i], (prefab) =>
-            {
-                if (prefab != null)
-                {
-                    Instantiate(prefab);
-                }
-            });
-        }
+        StartCoroutine(LoadWithCoroutine());
     }
 
     public void OnButtonUnLoadFalseTouched()

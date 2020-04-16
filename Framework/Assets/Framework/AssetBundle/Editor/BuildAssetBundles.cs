@@ -47,10 +47,16 @@ namespace Framework
             //var variants = CreateVariantInfoList(allAssetList, isBuildVariants);
 
             // 通常版ビルド
+#if UNITY_EDITOR
+#if UNITY_EDITOR_WIN
             BuildTarget target = BuildTarget.StandaloneWindows;
-#if UNITY_EDITOR_OSX
+#elif UNITY_EDITOR_OSX
             target = BuildTarget.StandaloneOSX;
 #endif
+#elif UNITY_ANDROID
+            target = BuildTarget.Android;
+#endif
+
             BuildAllWithVariant(AssetBundleDefine.assetBundleCacheDirectory, builds, null, target);
 
             // 一時退避用ディレクトリ作成
@@ -426,7 +432,6 @@ namespace Framework
             //DeleteEmptyDirectory(buildPath);
 
             BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
-
             //if (error != null)
             //{
             //    throw new Exception(error);
