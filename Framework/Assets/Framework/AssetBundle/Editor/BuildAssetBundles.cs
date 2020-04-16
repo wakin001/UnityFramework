@@ -47,9 +47,10 @@ namespace Framework
             //var variants = CreateVariantInfoList(allAssetList, isBuildVariants);
 
             // 通常版ビルド
+            BuildTarget target = BuildTarget.iOS;
 #if UNITY_EDITOR
 #if UNITY_EDITOR_WIN
-            BuildTarget target = BuildTarget.StandaloneWindows;
+            target = BuildTarget.StandaloneWindows;
 #elif UNITY_EDITOR_OSX
             target = BuildTarget.StandaloneOSX;
 #endif
