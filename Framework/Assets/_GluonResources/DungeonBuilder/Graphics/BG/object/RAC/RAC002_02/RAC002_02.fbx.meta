@@ -1,0 +1,169 @@
+fileFormatVersion: 2
+guid: 5519e02b6a1ea56499c465f098f1fe4d
+timeCreated: 1469417087
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: grass
+    100002: jGameRoot
+    100004: jReaf1A
+    100006: jReaf1B
+    100008: jReaf2A
+    100010: jReaf2B
+    100012: jReaf3A
+    100014: jReaf3B
+    100016: jReaf4A
+    100018: jReaf4B
+    100020: jTrunkA
+    100022: jTrunkB
+    100024: leaf
+    100026: leaf_01
+    100028: leaf_02
+    100030: leaf_03
+    100032: leaf_04
+    100034: RAC002_02
+    100036: //RootNode
+    100038: stem
+    100040: model
+    100042: tree_ms_ac
+    100044: jLeaf1A
+    100046: jLeaf1B
+    100048: jLeaf2A
+    100050: jLeaf2B
+    100052: jLeaf3A
+    100054: jLeaf3B
+    100056: jStemA
+    100058: jStemB
+    100060: Leaf1_ms_ac
+    100062: Leaf2_ms_ac
+    100064: Leaf3_ms_ac
+    100066: stem_ms_ac
+    400000: grass
+    400002: jGameRoot
+    400004: jReaf1A
+    400006: jReaf1B
+    400008: jReaf2A
+    400010: jReaf2B
+    400012: jReaf3A
+    400014: jReaf3B
+    400016: jReaf4A
+    400018: jReaf4B
+    400020: jTrunkA
+    400022: jTrunkB
+    400024: leaf
+    400026: leaf_01
+    400028: leaf_02
+    400030: leaf_03
+    400032: leaf_04
+    400034: //RootNode
+    400036: RAC002_02
+    400038: stem
+    400040: model
+    400042: tree_ms_ac
+    400044: jLeaf1A
+    400046: jLeaf1B
+    400048: jLeaf2A
+    400050: jLeaf2B
+    400052: jLeaf3A
+    400054: jLeaf3B
+    400056: jStemA
+    400058: jStemB
+    400060: Leaf1_ms_ac
+    400062: Leaf2_ms_ac
+    400064: Leaf3_ms_ac
+    400066: stem_ms_ac
+    4300000: leaf_01
+    4300002: leaf_02
+    4300004: leaf_03
+    4300006: leaf_04
+    4300008: stem
+    4300010: grass
+    4300012: tree_ms_ac
+    4300014: stem_ms_ac
+    4300016: Leaf1_ms_ac
+    4300018: Leaf2_ms_ac
+    4300020: Leaf3_ms_ac
+    9500000: //RootNode
+    13700000: grass
+    13700002: leaf_01
+    13700004: leaf_02
+    13700006: leaf_03
+    13700008: leaf_04
+    13700010: stem
+    13700012: tree_ms_ac
+    13700014: Leaf1_ms_ac
+    13700016: Leaf2_ms_ac
+    13700018: Leaf3_ms_ac
+    13700020: stem_ms_ac
+  materials:
+    importMaterials: 1
+    materialName: 1
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - RAC002_02/jGameRoot
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 2
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

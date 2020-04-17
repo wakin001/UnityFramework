@@ -1,0 +1,132 @@
+﻿##########################################
+#                                        #
+#       人型_サイクロプス_防衛ザコAIスクリプト     #
+#       Last Updated by ishizuka         #
+#       Last Update:19-04-16             #
+#                                        #
+##########################################
+
+# 制御用初期化
+def init
+
+    # ステート遷移用
+    set state, 0
+    # 威嚇、驚き用
+    set isIntimidation, 0
+    # 接近済みフラグ
+    set isNearApproached, 0
+    # 行動制御用乱数
+    set rand, 0
+
+      #アクション定義
+	#サイクロプス_攻撃
+	set ATTACK,200310022
+	#サイクロプス_突進
+	set CHARGE,200310122
+	#サイクロプス_岩石投げ
+	set ROCK,200310521
+
+    # 攻撃間隔設定
+    recTimer true
+    set atkInterval, 3
+
+enddef
+
+# 更新処理
+def updateAttack
+
+    # 攻撃後のクールダウンが明けるまで行動しない
+    if _countTime < atkInterval
+        setTarget MYSELF_00
+
+        turnAction none
+        moveAction none
+        action 1
+        endScript
+    endif
+
+    if _isRage == 1
+        function NormalMode
+    else
+        function NormalMode
+    endif
+enddef
+
+# 通常時
+def NormalMode
+
+    # Phase実行
+    if state == 0
+        function ACT_ROCK
+
+    elseif state == 1
+        function ACT_ROCK
+
+    elseif state == 2
+        function ACT_ROCK
+
+    elseif state == 3
+        function ACT_ATTACK
+
+    elseif state == 4
+        function ACT_CHARGE
+
+    elseif state == 5
+        function ACT_CHARGE
+
+    elseif state == 6
+        # 繰り返し(最初の行動に戻る)
+        set state, 0
+    endif
+enddef
+
+
+
+def ACT_ATTACK
+
+    # 一番近くの敵
+    setTarget HOSTILE_DISTANCE_00
+    moveAction approch, 1
+    turnAction target
+    action ATTACK
+
+    # stateを次に進める
+    add state, 1
+
+    # 攻撃間隔設定
+    recTimer true
+    set atkInterval, 3
+enddef
+
+def ACT_CHARGE
+
+    # 一番近くの敵
+    setTarget HOSTILE_DISTANCE_00
+    moveAction approch, 4
+    turnAction target
+    action CHARGE
+
+    # stateを次に進める
+    add state, 1
+
+    # 攻撃間隔設定
+    recTimer true
+    set atkInterval, 3
+enddef
+
+def ACT_ROCK
+
+    # 一番遠くの敵
+    setTarget HOSTILE_DISTANCE_00
+    moveAction none
+    turnAction none
+    action ROCK
+
+    # stateを次に進める
+    add state, 1
+
+    # 攻撃間隔設定
+    recTimer true
+    set atkInterval, 3
+enddef
+

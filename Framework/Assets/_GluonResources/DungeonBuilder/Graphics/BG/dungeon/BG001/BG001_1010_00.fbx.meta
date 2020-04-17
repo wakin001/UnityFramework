@@ -1,0 +1,176 @@
+fileFormatVersion: 2
+guid: c85aea30225777d4c9506d95c894ff26
+timeCreated: 1473934555
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: ground_011_a
+    100004: polySurface624
+    100006: polySurface625
+    100008: ground_011_a_ms
+    100010: polySurface625_ms_ca
+    100012: polySurface754_ms
+    100014: polySurface625_ms_ac
+    100016: grass_ms_ac
+    100018: ground_ms
+    100020: wall_rock_ms
+    100022: grass_1010_ms_ac
+    100024: ground_1010_ms
+    100026: wall_1010_ms
+    100028: grass_1010_ms_ac_siloff
+    100030: grass_01_ms_ac
+    100032: grass_01_ms_ac 1
+    100034: ground_01_ms_opq
+    100036: lowoff
+    100038: wall_01_ms_opq
+    100040: grass_01_ms_ac_01
+    400000: //RootNode
+    400002: ground_011_a
+    400004: polySurface624
+    400006: polySurface625
+    400008: ground_011_a_ms
+    400010: polySurface625_ms_ca
+    400012: polySurface754_ms
+    400014: polySurface625_ms_ac
+    400016: grass_ms_ac
+    400018: ground_ms
+    400020: wall_rock_ms
+    400022: grass_1010_ms_ac
+    400024: ground_1010_ms
+    400026: wall_1010_ms
+    400028: grass_1010_ms_ac_siloff
+    400030: grass_01_ms_ac
+    400032: grass_01_ms_ac 1
+    400034: ground_01_ms_opq
+    400036: lowoff
+    400038: wall_01_ms_opq
+    400040: grass_01_ms_ac_01
+    2300000: ground_011_a
+    2300002: polySurface624
+    2300004: polySurface625
+    2300006: ground_011_a_ms
+    2300008: polySurface625_ms_ca
+    2300010: polySurface754_ms
+    2300012: polySurface625_ms_ac
+    2300014: grass_ms_ac
+    2300016: ground_ms
+    2300018: wall_rock_ms
+    2300020: grass_1010_ms_ac
+    2300022: ground_1010_ms
+    2300024: wall_1010_ms
+    2300026: grass_1010_ms_ac_siloff
+    2300028: grass_01_ms_ac
+    2300030: grass_01_ms_ac 1
+    2300032: ground_01_ms_opq
+    2300034: wall_01_ms_opq
+    2300036: grass_01_ms_ac_01
+    3300000: ground_011_a
+    3300002: polySurface624
+    3300004: polySurface625
+    3300006: ground_011_a_ms
+    3300008: polySurface625_ms_ca
+    3300010: polySurface754_ms
+    3300012: polySurface625_ms_ac
+    3300014: grass_ms_ac
+    3300016: ground_ms
+    3300018: wall_rock_ms
+    3300020: grass_1010_ms_ac
+    3300022: ground_1010_ms
+    3300024: wall_1010_ms
+    3300026: grass_1010_ms_ac_siloff
+    3300028: grass_01_ms_ac
+    3300030: grass_01_ms_ac 1
+    3300032: ground_01_ms_opq
+    3300034: wall_01_ms_opq
+    3300036: grass_01_ms_ac_01
+    4300000: polySurface624
+    4300002: polySurface625
+    4300004: ground_011_a
+    4300006: ground_011_a_ms
+    4300008: polySurface754_ms
+    4300010: polySurface625_ms_ca
+    4300012: polySurface625_ms_ac
+    4300014: grass_ms_ac
+    4300016: ground_ms
+    4300018: wall_rock_ms
+    4300020: wall_1010_ms
+    4300022: ground_1010_ms
+    4300024: grass_1010_ms_ac
+    4300026: grass_1010_ms_ac_siloff
+    4300028: wall_01_ms_opq
+    4300030: ground_01_ms_opq
+    4300032: grass_01_ms_ac
+    4300034: grass_01_ms_ac
+    4300036: grass_01_ms_ac_01
+  materials:
+    importMaterials: 1
+    materialName: 1
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 24
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 0
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,417 @@
+fileFormatVersion: 2
+guid: 2647198ae11797f4383602d053ca6799
+timeCreated: 1469195408
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: BG001_1018_00
+    100004: flower_c2
+    100006: flower_c2 1
+    100008: grass_a139
+    100010: grass_a139 1
+    100012: grass_a41
+    100014: grass_a41 1
+    100016: grass_a42
+    100018: grass_a42 1
+    100020: grass_a43
+    100022: grass_a43 1
+    100024: grass_b8
+    100026: grass_b8 1
+    100028: grass_c4
+    100030: grass_c4 1
+    100032: grass_c5
+    100034: grass_c5 1
+    100036: ground_006_a
+    100038: ground_006_a 1
+    100040: ground_006_b
+    100042: ground_006_b 1
+    100044: group_ap
+    100046: group_ap 1
+    100048: group_tr
+    100050: group_tr 1
+    100052: rock_c3
+    100054: rock_c3 1
+    100056: tr0_01
+    100058: tr0_01 1
+    100060: tr1_05
+    100062: tr1_05 1
+    100064: tr2_01
+    100066: tr2_01 1
+    100068: tr3_01
+    100070: tr3_01 1
+    100072: tr3_02
+    100074: tr3_02 1
+    100076: tree_leaf_a18
+    100078: tree_leaf_a18 1
+    100080: tree_leaf_a19
+    100082: tree_leaf_a19 1
+    100084: tree_leaf_a20
+    100086: tree_leaf_a20 1
+    100088: tree_leaf_a21
+    100090: tree_leaf_a21 1
+    100092: tree_leaf_b10
+    100094: tree_leaf_b10 1
+    100096: tree_leaf_b11
+    100098: tree_leaf_b11 1
+    100100: tree_leaf_b9
+    100102: tree_leaf_b9 1
+    100104: polySurface652
+    100106: polySurface653
+    100108: polySurface654
+    100110: polySurface653_ms_ca
+    100112: polySurface654_ms
+    100114: polySurface792_ms
+    100116: polySurface653_ms_ac
+    100118: grass_ms_ac
+    100120: ground_ms
+    100122: wall_rock_ms
+    100124: grass_1018_ms_ac
+    100126: ground_1018_ms
+    100128: wall_1018_ms
+    100130: grass_1018_ms_ac_siloff
+    100132: grass_01_ms_ac
+    100134: grass_01_ms_ac 1
+    100136: ground_01_ms_opq
+    100138: lowoff
+    100140: wall_01_ms_opq
+    100142: grass_01_ms_ac_01
+    400000: //RootNode
+    400002: BG001_1018_00
+    400004: flower_c2
+    400006: flower_c2 1
+    400008: grass_a139
+    400010: grass_a139 1
+    400012: grass_a41
+    400014: grass_a41 1
+    400016: grass_a42
+    400018: grass_a42 1
+    400020: grass_a43
+    400022: grass_a43 1
+    400024: grass_b8
+    400026: grass_b8 1
+    400028: grass_c4
+    400030: grass_c4 1
+    400032: grass_c5
+    400034: grass_c5 1
+    400036: ground_006_a
+    400038: ground_006_a 1
+    400040: ground_006_b
+    400042: ground_006_b 1
+    400044: group_ap
+    400046: group_ap 1
+    400048: group_tr
+    400050: group_tr 1
+    400052: rock_c3
+    400054: rock_c3 1
+    400056: tr0_01
+    400058: tr0_01 1
+    400060: tr1_05
+    400062: tr1_05 1
+    400064: tr2_01
+    400066: tr2_01 1
+    400068: tr3_01
+    400070: tr3_01 1
+    400072: tr3_02
+    400074: tr3_02 1
+    400076: tree_leaf_a18
+    400078: tree_leaf_a18 1
+    400080: tree_leaf_a19
+    400082: tree_leaf_a19 1
+    400084: tree_leaf_a20
+    400086: tree_leaf_a20 1
+    400088: tree_leaf_a21
+    400090: tree_leaf_a21 1
+    400092: tree_leaf_b10
+    400094: tree_leaf_b10 1
+    400096: tree_leaf_b11
+    400098: tree_leaf_b11 1
+    400100: tree_leaf_b9
+    400102: tree_leaf_b9 1
+    400104: polySurface652
+    400106: polySurface653
+    400108: polySurface654
+    400110: polySurface653_ms_ca
+    400112: polySurface654_ms
+    400114: polySurface792_ms
+    400116: polySurface653_ms_ac
+    400118: grass_ms_ac
+    400120: ground_ms
+    400122: wall_rock_ms
+    400124: grass_1018_ms_ac
+    400126: ground_1018_ms
+    400128: wall_1018_ms
+    400130: grass_1018_ms_ac_siloff
+    400132: grass_01_ms_ac
+    400134: grass_01_ms_ac 1
+    400136: ground_01_ms_opq
+    400138: lowoff
+    400140: wall_01_ms_opq
+    400142: grass_01_ms_ac_01
+    2300000: flower_c2
+    2300002: flower_c2 1
+    2300004: grass_a139
+    2300006: grass_a139 1
+    2300008: grass_a41
+    2300010: grass_a41 1
+    2300012: grass_a42
+    2300014: grass_a42 1
+    2300016: grass_a43
+    2300018: grass_a43 1
+    2300020: grass_b8
+    2300022: grass_b8 1
+    2300024: grass_c4
+    2300026: grass_c4 1
+    2300028: grass_c5
+    2300030: grass_c5 1
+    2300032: ground_006_a
+    2300034: ground_006_a 1
+    2300036: ground_006_b
+    2300038: ground_006_b 1
+    2300040: rock_c3
+    2300042: rock_c3 1
+    2300044: tr0_01
+    2300046: tr0_01 1
+    2300048: tr1_05
+    2300050: tr1_05 1
+    2300052: tr2_01
+    2300054: tr2_01 1
+    2300056: tr3_01
+    2300058: tr3_01 1
+    2300060: tr3_02
+    2300062: tr3_02 1
+    2300064: tree_leaf_a18
+    2300066: tree_leaf_a18 1
+    2300068: tree_leaf_a19
+    2300070: tree_leaf_a19 1
+    2300072: tree_leaf_a20
+    2300074: tree_leaf_a20 1
+    2300076: tree_leaf_a21
+    2300078: tree_leaf_a21 1
+    2300080: tree_leaf_b10
+    2300082: tree_leaf_b10 1
+    2300084: tree_leaf_b11
+    2300086: tree_leaf_b11 1
+    2300088: tree_leaf_b9
+    2300090: tree_leaf_b9 1
+    2300092: polySurface652
+    2300094: polySurface653
+    2300096: polySurface654
+    2300098: polySurface653_ms_ca
+    2300100: polySurface654_ms
+    2300102: polySurface792_ms
+    2300104: polySurface653_ms_ac
+    2300106: grass_ms_ac
+    2300108: ground_ms
+    2300110: wall_rock_ms
+    2300112: grass_1018_ms_ac
+    2300114: ground_1018_ms
+    2300116: wall_1018_ms
+    2300118: grass_1018_ms_ac_siloff
+    2300120: grass_01_ms_ac
+    2300122: grass_01_ms_ac 1
+    2300124: ground_01_ms_opq
+    2300126: wall_01_ms_opq
+    2300128: grass_01_ms_ac_01
+    3300000: flower_c2
+    3300002: flower_c2 1
+    3300004: grass_a139
+    3300006: grass_a139 1
+    3300008: grass_a41
+    3300010: grass_a41 1
+    3300012: grass_a42
+    3300014: grass_a42 1
+    3300016: grass_a43
+    3300018: grass_a43 1
+    3300020: grass_b8
+    3300022: grass_b8 1
+    3300024: grass_c4
+    3300026: grass_c4 1
+    3300028: grass_c5
+    3300030: grass_c5 1
+    3300032: ground_006_a
+    3300034: ground_006_a 1
+    3300036: ground_006_b
+    3300038: ground_006_b 1
+    3300040: rock_c3
+    3300042: rock_c3 1
+    3300044: tr0_01
+    3300046: tr0_01 1
+    3300048: tr1_05
+    3300050: tr1_05 1
+    3300052: tr2_01
+    3300054: tr2_01 1
+    3300056: tr3_01
+    3300058: tr3_01 1
+    3300060: tr3_02
+    3300062: tr3_02 1
+    3300064: tree_leaf_a18
+    3300066: tree_leaf_a18 1
+    3300068: tree_leaf_a19
+    3300070: tree_leaf_a19 1
+    3300072: tree_leaf_a20
+    3300074: tree_leaf_a20 1
+    3300076: tree_leaf_a21
+    3300078: tree_leaf_a21 1
+    3300080: tree_leaf_b10
+    3300082: tree_leaf_b10 1
+    3300084: tree_leaf_b11
+    3300086: tree_leaf_b11 1
+    3300088: tree_leaf_b9
+    3300090: tree_leaf_b9 1
+    3300092: polySurface652
+    3300094: polySurface653
+    3300096: polySurface654
+    3300098: polySurface653_ms_ca
+    3300100: polySurface654_ms
+    3300102: polySurface792_ms
+    3300104: polySurface653_ms_ac
+    3300106: grass_ms_ac
+    3300108: ground_ms
+    3300110: wall_rock_ms
+    3300112: grass_1018_ms_ac
+    3300114: ground_1018_ms
+    3300116: wall_1018_ms
+    3300118: grass_1018_ms_ac_siloff
+    3300120: grass_01_ms_ac
+    3300122: grass_01_ms_ac 1
+    3300124: ground_01_ms_opq
+    3300126: wall_01_ms_opq
+    3300128: grass_01_ms_ac_01
+    4300000: ground_006_a
+    4300002: ground_006_b
+    4300004: rock_c3
+    4300006: tree_leaf_a18
+    4300008: tree_leaf_a19
+    4300010: tree_leaf_a20
+    4300012: tree_leaf_b9
+    4300014: tree_leaf_b10
+    4300016: tree_leaf_b11
+    4300018: tree_leaf_a21
+    4300020: grass_c4
+    4300022: grass_a41
+    4300024: grass_a42
+    4300026: grass_a43
+    4300028: grass_b8
+    4300030: flower_c2
+    4300032: grass_c5
+    4300034: grass_a139
+    4300036: tr0_01
+    4300038: tr1_05
+    4300040: tr2_01
+    4300042: tr3_01
+    4300044: tr3_02
+    4300046: ground_006_a
+    4300048: ground_006_b
+    4300050: rock_c3
+    4300052: tree_leaf_a18
+    4300054: tree_leaf_a19
+    4300056: tree_leaf_a20
+    4300058: tree_leaf_b9
+    4300060: tree_leaf_b10
+    4300062: tree_leaf_b11
+    4300064: tree_leaf_a21
+    4300066: grass_c4
+    4300068: grass_a41
+    4300070: grass_a42
+    4300072: grass_a43
+    4300074: grass_b8
+    4300076: flower_c2
+    4300078: grass_c5
+    4300080: grass_a139
+    4300082: tr0_01
+    4300084: tr1_05
+    4300086: tr2_01
+    4300088: tr3_01
+    4300090: tr3_02
+    4300092: polySurface652
+    4300094: polySurface653
+    4300096: polySurface654
+    4300098: polySurface653_ms_ca
+    4300100: polySurface654_ms
+    4300102: polySurface792_ms
+    4300104: polySurface653_ms_ac
+    4300106: grass_ms_ac
+    4300108: ground_ms
+    4300110: wall_rock_ms
+    4300112: wall_1018_ms
+    4300114: ground_1018_ms
+    4300116: grass_1018_ms_ac
+    4300118: grass_1018_ms_ac_siloff
+    4300120: wall_01_ms_opq
+    4300122: ground_01_ms_opq
+    4300124: grass_01_ms_ac
+    4300126: grass_01_ms_ac
+    4300128: grass_01_ms_ac_01
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 1
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 24
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 0
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

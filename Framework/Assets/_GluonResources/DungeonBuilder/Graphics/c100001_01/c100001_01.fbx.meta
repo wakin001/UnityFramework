@@ -1,0 +1,179 @@
+fileFormatVersion: 2
+guid: 376b87f272f6eef449678b2898ac8994
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: jArmL
+    100004: jArmR
+    100006: jChest
+    100008: jElbowL
+    100010: jElbowR
+    100012: jGameRoot
+    100014: jHair
+    100016: jHandL
+    100018: jHandR
+    100020: jHead
+    100022: jHip
+    100024: jLegL
+    100026: jLegLE
+    100028: jLegR
+    100030: jLegRE
+    100032: jRobe
+    100034: jRobeB
+    100036: jRoot
+    100038: jSpine
+    100040: jThighL
+    100042: jThighR
+    100044: jWeaponL
+    100046: jWeaponR
+    100048: mBody
+    100050: model
+    100052: mBodyAll
+    400000: //RootNode
+    400002: jArmL
+    400004: jArmR
+    400006: jChest
+    400008: jElbowL
+    400010: jElbowR
+    400012: jGameRoot
+    400014: jHair
+    400016: jHandL
+    400018: jHandR
+    400020: jHead
+    400022: jHip
+    400024: jLegL
+    400026: jLegLE
+    400028: jLegR
+    400030: jLegRE
+    400032: jRobe
+    400034: jRobeB
+    400036: jRoot
+    400038: jSpine
+    400040: jThighL
+    400042: jThighR
+    400044: jWeaponL
+    400046: jWeaponR
+    400048: mBody
+    400050: model
+    400052: mBodyAll
+    2300000: mBody
+    3300000: mBody
+    4300000: mBody
+    4300002: mBodyAll
+    9500000: //RootNode
+    13700000: mBody
+    13700002: mBodyAll
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mtBodyAllCH
+    second: {fileID: 2100000, guid: 3ce5c921d2d23a649a9d2063ea0f813e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mtEyeCH
+    second: {fileID: 2100000, guid: 814394f56c5481c4a8ae4197065c6bc3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mtMouthCH
+    second: {fileID: 2100000, guid: 53d8e2f2edeace547aa28fd33d897e37, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 1
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - c100001_01
+    - c100001_01/jGameRoot/jRoot/jSpine/jChest/jArmL
+    - c100001_01/jGameRoot/jRoot/jSpine/jChest/jArmR
+    - c100001_01/jGameRoot
+    - c100001_01/jGameRoot/jRoot/jSpine/jChest/jArmL/jElbowL/jHandL
+    - c100001_01/jGameRoot/jRoot/jSpine/jChest/jArmR/jElbowR/jHandR
+    - c100001_01/jGameRoot/jRoot/jSpine/jChest/jHead
+    - c100001_01/jGameRoot/jRoot/jHip
+    - c100001_01/jGameRoot/jRoot
+    - c100001_01/jGameRoot/jRoot/jSpine/jChest/jArmL/jElbowL/jHandL/jWeaponL
+    - c100001_01/jGameRoot/jRoot/jSpine/jChest/jArmR/jElbowR/jHandR/jWeaponR
+    - c100001_01/model/mBodyAll
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 0
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 2
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
