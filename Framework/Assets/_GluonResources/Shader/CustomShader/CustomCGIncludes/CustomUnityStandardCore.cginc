@@ -323,13 +323,7 @@ inline FragmentCommonData SpecularSetup(TexcoordData texcoordData)
 #else
 	albedo = Albedo(texcoordData.mainTexcoord);
 
-#if defined(ENABLE_SUB_TEXTURE)
-	half4	subColor;
 
-	subColor = tex2D(_SubTexture, texcoordData.subTexcoord.xy);
-
-	albedo = lerp(albedo, subColor.rgb, _SubTextureAlpha);
-#endif
 #endif
 	return SpecularSetupCommon(texcoordData, albedo);
 }
@@ -357,14 +351,6 @@ inline FragmentCommonData MetallicSetup(TexcoordData texcoordData)
 #endif
 #else
 	albedo = Albedo(texcoordData.mainTexcoord);
-
-#if defined(ENABLE_SUB_TEXTURE)
-	half4	subColor;
-
-	subColor = tex2D(_SubTexture, texcoordData.subTexcoord.xy);
-
-	albedo = lerp(albedo, subColor.rgb, _SubTextureAlpha);
-#endif
 #endif
 
 	half3 diffColor = DiffuseAndSpecularFromMetallic(albedo, metallic, /*out*/ specColor, /*out*/ oneMinusReflectivity);
@@ -596,9 +582,18 @@ struct VertexOutputForwardBase
 #endif
 #endif
 
+	//  拡張用頂点シェーダセマンテック
+	//  TEXCOORD12～TEXCOORD15を使用すること
+#ifdef  EXPANSION_SHADER_VERTEX_OUTPUT
+	EXPANSION_SHADER_VERTEX_OUTPUT
+#endif
 
-	UNITY_VERTEX_OUTPUT_STEREO
+
+		UNITY_VERTEX_OUTPUT_STEREO
 };
+
+
+
 
 
 VertexOutputForwardBase vertForwardBase(VertexInput v)
@@ -607,7 +602,7 @@ VertexOutputForwardBase vertForwardBase(VertexInput v)
 
 	//	頂点揺れ使用
 #ifdef ENABLE_VERTEX_WAVE
-	float	wave_time = _Time.z * _WaveSpeed;
+	float	wave_time = _GameTime.z * _WaveSpeed;
 	float2	vec2;
 
 	vec2.xy = v.vertex.xz * _WaveFreq - wave_time;
@@ -618,7 +613,7 @@ VertexOutputForwardBase vertForwardBase(VertexInput v)
 
 	//	草揺れ
 #ifdef ENABLE_GRASS_WAVE
-	v.vertex.xz = v.vertex.xz + _GrassWaveDirection.xz*(sin((_Time.w - _GrassWaveStartTime.w + v.uv2.y*_GrassWaveOffsetRate) * _GrassWaveSpeed) * _GrassWavePower * (v.uv2.x * v.uv2.x));
+	v.vertex.xz = v.vertex.xz + _GrassWaveDirection.xz*(sin((_GameTime.w - _GrassWaveStartTime.w + v.uv2.y*_GrassWaveOffsetRate) * _GrassWaveSpeed) * _GrassWavePower * (v.uv2.x * v.uv2.x));
 #endif
 
 
@@ -729,22 +724,27 @@ VertexOutputForwardBase vertForwardBase(VertexInput v)
 	o.grabPos = ComputeGrabScreenPos(o.pos);
 
 	//水面疑似スペキュラ
-	o.waveOffset = sin(v.vertex.xz - (_Time.y / _SpecularCycle)) * 0.1h;
+	o.waveOffset = sin(v.vertex.xz - (_GameTime.y / _SpecularCycle)) * 0.1h;
 
 	//歪み
 	float2 distUV = (float2)TRANSFORM_TEX(v.uv0, _DistortionTex);
-	o.texcoordDis.xy = distUV + (_Time.x *_WaveMoveSpeed.xy);
-	o.texcoordDis.zw = distUV + (_Time.x *_WaveMoveSpeed.zw);
+	o.texcoordDis.xy = distUV + (_GameTime.x *_WaveMoveSpeed.xy);
+	o.texcoordDis.zw = distUV + (_GameTime.x *_WaveMoveSpeed.zw);
 
 	//水面ゆれ
 #endif
 
-	return o;
+	//  拡張用頂点シェーダのアウトプットデータの作成
+#ifdef EXPANSION_SHADER_CREATE_VERTEX_OUTPUT
+	EXPANSION_SHADER_CREATE_VERTEX_OUTPUT(o, v)
+#endif
+
+		return o;
 }
 
 half4 fragForwardBaseInternal(VertexOutputForwardBase i)
 {
-	return (0.5, 0.5, 1, 1);
+	return fixed4(0.5, 0.5, 0.5, 1);
 	FRAGMENT_SETUP(s)
 #if UNITY_OPTIMIZE_TEXCUBELOD
 		s.reflUVW = i.reflUVW;
@@ -753,7 +753,7 @@ half4 fragForwardBaseInternal(VertexOutputForwardBase i)
 #if !defined(DISABLE_NORMAL)
 	UnityLight mainLight = MainLight(s.normalWorld);
 #else
-	UnityLight mainLight = MainLight(half3(1.0, 0.0, 0.0));
+	UnityLight mainLight = MainLight(half3(0.0, 0.0, 0.0));
 #endif
 	half4 c;
 
@@ -782,25 +782,25 @@ half4 fragForwardBaseInternal(VertexOutputForwardBase i)
 
 
 #ifdef ENABLE_DISTORTION_TEXTURE
-	//水面ゆれ
+	////水面ゆれ
 
-	//歪み
-	half2	screenOffset1 = (tex2D(_DistortionTex, i.texcoordDis.xy) - half2(0.5h, 0.5h));
-	half2	screenOffset2 = (tex2D(_DistortionTex, i.texcoordDis.zw) - half2(0.5h, 0.5h));
+	////歪み
+	//half2	screenOffset1 = (tex2D(_DistortionTex, i.texcoordDis.xy) - half2(0.5h, 0.5h));
+	//half2	screenOffset2 = (tex2D(_DistortionTex, i.texcoordDis.zw) - half2(0.5h, 0.5h));
 
-	//キャプチャーした画面のスクリーン位置
-	half2	screenUV = (i.grabPos.xy / i.grabPos.w);
-	//歪みテクスチャの分、上下左右にずらして取得すると画面が歪む
-	half4	capturedColor = tex2D(_CapturedTexture, screenUV + half2((screenOffset1.x + screenOffset2.x) * _DistortionScaleX, (screenOffset1.y + screenOffset2.y) * _DistortionScaleY));
+	////キャプチャーした画面のスクリーン位置
+	//half2	screenUV = (i.grabPos.xy / i.grabPos.w);
+	////歪みテクスチャの分、上下左右にずらして取得すると画面が歪む
+	//half4	capturedColor = tex2D(_CapturedTexture, screenUV + half2((screenOffset1.x + screenOffset2.x) * _DistortionScaleX, (screenOffset1.y + screenOffset2.y) * _DistortionScaleY));
 
-	//水面疑似スペキュラ
-	half3 lightDir = normalize(_LightDir.rgb);
-	half3 normalDir = normalize(half3((screenOffset1.x + screenOffset2.x), (i.waveOffset.x + i.waveOffset.y), (screenOffset1.y + screenOffset2.y)));
-	half3 reflectVal = reflect(lightDir, normalDir);
-	//波の高さ(0.0～1.0)
-	half waveTop = shlick(max(0, dot(reflectVal, i.eyeVec)), _SpecularPower);
-	//色を取得して乗算色と加算色を乗っける
-	c = (capturedColor * _Color) + _ColorAdd + (clamp(waveTop + _SpecularOffset, 0, _SpecularMax) * _SpecularColor);
+	////水面疑似スペキュラ
+	//half3 lightDir = normalize(_LightDir.rgb);
+	//half3 normalDir = normalize(half3((screenOffset1.x + screenOffset2.x), (i.waveOffset.x + i.waveOffset.y), (screenOffset1.y + screenOffset2.y)));
+	//half3 reflectVal = reflect(lightDir, normalDir);
+	////波の高さ(0.0～1.0)
+	//half waveTop = shlick(max(0, dot(reflectVal, i.eyeVec)), _SpecularPower);
+	////色を取得して乗算色と加算色を乗っける
+	//c = (capturedColor * _Color) + _ColorAdd + (clamp(waveTop + _SpecularOffset, 0, _SpecularMax) * _SpecularColor);
 
 	//水面ゆれ
 #else
@@ -856,6 +856,21 @@ half4 fragForwardBaseInternal(VertexOutputForwardBase i)
 
 #endif
 
+
+#if defined(EXPANSION_SHADERING_COLOR)
+	{
+		//  拡張用シェーダの入力データの生成
+		ExpansionShaderingColorInput exInput;
+
+		exInput.srcColor = c.rgb;
+#ifdef EXPANSION_SHADERING_COLOR_INPUT
+		EXPANSION_SHADERING_COLOR_INPUT(exInput, i);
+#endif
+
+
+		c.rgb = ExpansionShaderingColor(exInput);
+	}
+#endif
 
 #ifdef ENABLE_LERP_RIMCOLOR
 	c.rgb = lerp(c.rgb, c.rgb + i.lerpRimColor.rgb, _LerpRimValue*_LerpRimEnable);
@@ -1134,12 +1149,12 @@ VertexOutputDeferred vertDeferred(VertexInput v)
 	o.grabPos = ComputeGrabScreenPos(o.pos);
 
 	//水面疑似スペキュラ
-	o.waveOffset = sin(v.vertex.xz - (_Time.y / _SpecularCycle)) * 0.1h;
+	o.waveOffset = sin(v.vertex.xz - (_GameTime.y / _SpecularCycle)) * 0.1h;
 
 	//歪み
 	float2 distUV = (float2)TRANSFORM_TEX(v.uv0, _DistortionTex);
-	o.texcoordDis.xy = distUV + (_Time.x *_WaveMoveSpeed.xy);
-	o.texcoordDis.zw = distUV + (_Time.x *_WaveMoveSpeed.zw);
+	o.texcoordDis.xy = distUV + (_GameTime.x *_WaveMoveSpeed.xy);
+	o.texcoordDis.zw = distUV + (_GameTime.x *_WaveMoveSpeed.zw);
 
 	//水面ゆれ
 #endif

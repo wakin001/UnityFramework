@@ -46,7 +46,7 @@
             #pragma skip_variants DIRLIGHTMAP_COMBINED DIRLIGHTMAP_SEPARATE
             #pragma skip_variants SHADOWS_SOFT SHADOWS_NATIVE SHADOWS_SCREEN
             #pragma skip_variants SHADOWS_SOFT DIRLIGHTMAP_COMBINED DIRLIGHTMAP_SEPARATE
-            #pragma multi_compile FOG_LINEAR _
+            #pragma multi_compile FOG_LINEAR FOG_EXP FOG_EXP2 _
             #pragma shader_feature DISABLE_LIGHTMAP _
             #pragma skip_variants LIGHTMAP_OFF
             #pragma multi_compile_fwdbase
@@ -61,7 +61,7 @@
 
             #define ENABLE_GLOBAL_BG_COLOR
             
-			#include "../../CustomCGIncludes/CustomUnityStandardCoreForward.cginc"
+            #include "../../CustomCGIncludes/CustomUnityStandardCoreForward.cginc"
             ENDCG
             
         }

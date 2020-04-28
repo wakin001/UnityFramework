@@ -17,7 +17,7 @@
         _NormalAdjustmentRimValue("Normal Adjustment Rim Value", Range(0,1)) = 1.0
         _LerpRimColor("Lerp Rim Color", Color) = (1,0,0,1)
         _LerpRimPower("Lerp Rim Power", Range(0.0,5.0)) = 1.0
-        [Toggle] _LerpRimEnable("Lerp Rim Enable", Float) = 0.0 
+        [Toggle] _LerpRimEnable("Lerp Rim Enable", Float) = 0.0
     }
 
     SubShader
@@ -54,7 +54,7 @@
             #pragma skip_variants DIRLIGHTMAP_COMBINED DIRLIGHTMAP_SEPARATE
             #pragma skip_variants SHADOWS_SOFT SHADOWS_NATIVE SHADOWS_SCREEN
             #pragma skip_variants SHADOWS_SOFT DIRLIGHTMAP_COMBINED DIRLIGHTMAP_SEPARATE
-            #pragma multi_compile FOG_LINEAR _
+            #pragma multi_compile FOG_LINEAR FOG_EXP FOG_EXP2 _
             #pragma shader_feature DISABLE_LIGHTMAP _
             #pragma skip_variants LIGHTMAP_ON
             #pragma multi_compile_fwdbase

@@ -4,10 +4,11 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: mtMouthCH
-  m_Shader: {fileID: 4800000, guid: 36c031e8d4531a54295bb314cd3ce073, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7539310d727d8e2468b8737cfa254b1d, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -28,11 +29,17 @@ Material:
     - _Cull: 2
     - _LerpRimEnable: 0
     - _LerpRimPower: 1
+    - _LightProbeEnable: 1
     - _LightProbeImpact: 1
     - _LightProbeLuminanceMax: 2
     - _LightProbeLuminanceMin: 0
     - _LightProbeOffset: 0
     - _LightProbeSaturationScale: 1
+    - _NormalAdjustmentRimValue: 1
+    - _OffsetFactor: 0
+    - _OffsetUnits: 0
+    - _SHLightingScale: 1
+    - _VertexColorImpact: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CoverColor: {r: 1, g: 1, b: 1, a: 1}
