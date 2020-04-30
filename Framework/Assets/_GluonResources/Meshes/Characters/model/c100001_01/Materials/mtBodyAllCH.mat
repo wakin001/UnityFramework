@@ -67,7 +67,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _LerpRimEnable: 0
-    - _LerpRimPower: 1.93
+    - _LerpRimPower: 0.91
     - _LightProbeEnable: 1
     - _LightProbeImpact: 1
     - _LightProbeLuminanceMax: 2
@@ -93,5 +93,5 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CoverColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _LerpRimColor: {r: 1, g: 0, b: 0, a: 1}
+    - _LerpRimColor: {r: 0.021626905, g: 0.509434, b: 0.27388746, a: 1}
     - _OutlineColor: {r: 0.09825563, g: 0.2421829, b: 0.9056604, a: 1}

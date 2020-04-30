@@ -45,6 +45,8 @@ Shader "Framework/Character"
 			struct v2f
 			{
 				float4 pos : POSITION;
+				float3 worldNormal : TEXCOORD0;
+				float3 worldView : TEXCOORD1;
 			};
 
 			fixed4 _LerpRimColor;
@@ -55,19 +57,27 @@ Shader "Framework/Character"
 				v2f o;
 
 				o.pos = UnityObjectToClipPos(v.vertex);
+				o.worldNormal = UnityObjectToWorldNormal(v.normal);
+				o.worldView = WorldSpaceViewDir(v.vertex);
 				return o;
 			}
 
 			half4 frag(v2f i) : COLOR
 			{
-				return _LerpRimColor * _LerpRimPower;
+				fixed3 normalizedWorldNormal = normalize(i.worldNormal);
+				fixed3 normalizedWorldView = normalize(i.worldView);
+				float border = (1 - abs(dot(normalizedWorldNormal, normalizedWorldView)));
+				/*fixed alpha = (border * (1 - _LerpRimPower) + _LerpRimPower);
+				_LerpRimColor.a = alpha;
+				return _LerpRimColor;*/
+				return border * _LerpRimColor * _LerpRimPower;
 			}
 			ENDCG
 		}
 
         Pass
         {
-			Name "GEOMETRYDEFAULT"
+			Name "CHARACTER"
 			Tags
 			{
 				"LightMode" = "ForwardBase"
@@ -75,7 +85,6 @@ Shader "Framework/Character"
 
 			Blend One Zero
 			ZWrite On
-			ColorMask RGBA
 			ZTest LEqual
 			Cull[_Cull]
 			Offset[_OffsetFactor],[_OffsetUnits]
@@ -96,17 +105,17 @@ Shader "Framework/Character"
             struct a2v
             {
                 float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-				float3 normal : NORMAL;
+                fixed2 uv : TEXCOORD0;
+				half3 normal : NORMAL;
             };
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
+                fixed2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
 #ifndef LIGHTMAP_OFF
-				half2 uvLM : TEXCOORD2;
+				fixed2 uvLM : TEXCOORD2;
 #endif 
 				// lightprobe
 				fixed3  SHLighting : COLOR;
@@ -143,7 +152,7 @@ Shader "Framework/Character"
 				col.rgb *= lm;
 #endif
 				col = col * _Color * _ColorPower;
-				//col.rgb *= i.SHLighting;
+				col.rgb *= i.SHLighting;
                 return col;
             }
             ENDCG

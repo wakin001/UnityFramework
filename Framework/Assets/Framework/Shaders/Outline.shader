@@ -27,7 +27,7 @@
 
 			struct v2f
 			{
-				float4 pos : POSITION;
+				float4 pos : SV_POSITION;
 			};
 
 			uniform float _OutlineWidth;
