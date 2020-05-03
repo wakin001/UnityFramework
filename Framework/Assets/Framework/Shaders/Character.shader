@@ -152,7 +152,7 @@ Shader "Framework/Character"
 				col.rgb *= lm;
 #endif
 				col = col * _Color * _ColorPower;
-				col.rgb *= i.SHLighting;
+				//col.rgb *= i.SHLighting;
                 return col;
             }
             ENDCG

@@ -1,93 +1,131 @@
-﻿Shader "Framework/NormalMapping"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Framework/NormalMapping"
 {
 	Properties
 	{
-		_MainTex("Texture", 2D) = "white" {}
-		_NormalTex("Normal Texture", 2D) = "white" {}
+		_Color("Color Tint", Color) = (1, 1, 1, 1)
+		_MainTex("Main Tex", 2D) = "white" {}
+		_Specular("Specular", Color) = (1, 1, 1, 1)
+		_Gloss("Gloss", Range(8.0, 256)) = 20
+
+		_BumpMap("Bump Map", 2D) = "bump" {}		// 注意默认值是 "bump"{}
+		_BumpScale("Bump Scale", Float) = 1.0
+
+		// 模拟的光照位置
+		_CustomLightPos("Custom Light Position", Vector) = (-0.1, -1.0, -0.3)
+		// 模拟的光照颜色
+		_CustomLightColor("Custom Light Color", Color) = (1, 1, 1, 1)
 	}
+
+
 	SubShader
 	{
-		Tags { "RenderType" = "Opaque" }
-		LOD 100
-
 		Pass
 		{
 			Tags { "LightMode" = "ForwardBase" }
 
 			CGPROGRAM
+
+			#include "UnityCG.cginc"	
+
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#include "UnityCG.cginc"
-			#include "Lighting.cginc"
-			#include "AutoLight.cginc"
+			sampler2D _MainTex;
+			float4 _MainTex_ST;
 
-			struct appdata
+			fixed4 _Color;
+			fixed4 _Specular;
+			float _Gloss;
+
+			sampler2D _BumpMap;
+			float4 _BumpMap_ST;
+			float _BumpScale;
+			fixed4 _CustomLightColor;
+			float4 _CustomLightPos;
+
+			struct a2v
 			{
 				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
-				float3 normal : NORMAL;
-				fixed4 tangent : TANGENT;
+				float4 texcoord : TEXCOORD0;
+				float3 normal : NORMAL;			// 注意：这里类型是NORMAL
+				float4 tangent : TANGENT;		// 切线
 			};
 
 			struct v2f
 			{
-				float2 uv : TEXCOORD0;
-				float4 vertex : SV_POSITION;
-				fixed3 worldNormal : TEXCOORD2;
-				fixed3 lightDir : TEXCOORD3;
-				fixed3 viewDir : TEXCOORD4;
+				float4 pos: SV_POSITION;			// pos是在裁剪空间下，
+				float4 uv : TEXCOORD0;				// 注意我们用float4，zw用来存bump的uv
+				float3 lightDir : TEXCOORD1;		// 在裁剪空间下
+				float3 viewDir : TEXCOORD2;			// 在裁剪空间下
 			};
 
-			sampler2D _MainTex;
-			float4 _MainTex_ST;
-			sampler2D _NormalTex;
+			float3 ObjSpaceLightDirCustom(in float4 v)
+			{
+				float3 objSpaceLightPos = mul(unity_WorldToObject, _CustomLightPos).xyz;
+#ifndef USING_LIGHT_MULTI_COMPILE
+				return objSpaceLightPos.xyz - v.xyz * _CustomLightPos.w;
+#else
+#ifndef USING_DIRECTIONAL_LIGHT
+				return objSpaceLightPos.xyz - v.xyz;
+#else
+				return objSpaceLightPos.xyz;
+#endif
+#endif
+			}
 
-			v2f vert(appdata v)
+			v2f vert(a2v v)
 			{
 				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				o.pos = UnityObjectToClipPos(v.vertex);
+				// o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+				o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+				o.uv.zw = v.texcoord.xy * _BumpMap_ST.xy + _BumpMap_ST.zw;
 
-				// 因为法线纹理是基于tangent space，所以光照向量也必须转换到tangent space中去计算。
-				//Create a rotation matrix for tangent space
-				TANGENT_SPACE_ROTATION;
+				// construct a matrix to transform vectors from object space to tangent space
+				// v.tangent.w is direction.
+				float3 binormal = cross(normalize(v.normal), normalize(v.tangent.xyz)) * v.tangent.w;
+				float3x3 rotation = float3x3(v.tangent.xyz, binormal, v.normal);
+				// Or just use build-in macro
+//				TANGENT_SPACE_ROTATION;
 
-				o.lightDir = mul(rotation, ObjSpaceLightDir(v.vertex));
-				o.viewDir = mul(rotation, ObjSpaceViewDir(v.vertex));
-
-				// pass lighting information to pixel shader
-				TRANSFER_VERTEX_TO_FRAGMENT(o);
+				// transform to tangent space
+				o.lightDir = mul(rotation, ObjSpaceLightDirCustom(v.vertex)).xyz;
+				o.viewDir = mul(rotation, ObjSpaceViewDir(v.vertex)).xyz;
 
 				return o;
 			}
 
 			fixed4 frag(v2f i) : SV_Target
 			{
-				// normal vector
-				fixed3 normalMapping = UnpackNormal(tex2D(_NormalTex, i.uv));
+				fixed3 tangentLightDir = normalize(i.lightDir);
+				fixed3 tangentViewDir = normalize(i.viewDir);
 
-				//// ambient
-				//fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
+				// get the texel in normal map.
+				fixed4 packedNormal = tex2D(_BumpMap, i.uv.zw);
 
-				//// sample the texture
-				//fixed4 col = tex2D(_MainTex, i.uv);
+				// 如果texture被设成 “Normal Map”，则可以用UnpackNormal函数，否则需要
+				// tangentNormal.xy = (packedNormal.xy * 2 - 1);
+				fixed3 tangentNormal = UnpackNormal(packedNormal);
+				tangentNormal.xy *= _BumpScale;
+				tangentNormal.z = sqrt(1.0 - saturate(dot(tangentNormal.xy, tangentNormal.xy)));
 
-				//fixed3 diffuse = _LightColor0.xyz * col.xyz * saturate(dot(normalMapping, i.lightDir));
 
-				//fixed4 color = fixed4(ambient + diffuse, col.a);
+				// 在切线空间下计算光照的各个分量
+				fixed3 halfDir = normalize(tangentLightDir + tangentViewDir);
 
-				//return color;
+				fixed3 specular = _CustomLightColor.rgb * _Specular.rgb * pow(max(0, dot(tangentNormal, halfDir)), _Gloss);
 
-				// sample the texture
-				fixed4 col = tex2D(_MainTex, i.uv);
-				
-				fixed3 lightDir = normalize(fixed3(0.5, 0.4, 0.3));
-				col.xyz = col.xyz * saturate(dot(normalMapping, lightDir));
-				return col;
+				fixed3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb;
+				fixed3 diffuse = _CustomLightColor.rgb * albedo * max(0, dot(tangentNormal, tangentLightDir));
+
+				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
+
+				return fixed4(specular + diffuse + ambient, 1.0);
 			}
-
 			ENDCG
 		}
 	}
+	FallBack "Specular"
 }
