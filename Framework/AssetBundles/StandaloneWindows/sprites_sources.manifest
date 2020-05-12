@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 3847143661
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: ba7bba646d2c07a65b950d212c358c9c
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a354baa3bcdaca8cba5e1ac053aaeade
+HashAppended: 0
+ClassTypes:
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 687078895
+  Script: {instanceID: 0}
+Assets:
+- Assets/Project/Sprites/Sources/ButtonBrakeOverSprite.png
+- Assets/Project/Sprites/Sources/ButtonResetSprite.png
+Dependencies: []

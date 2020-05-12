@@ -1,0 +1,22 @@
+ManifestFileVersion: 0
+CRC: 1633868137
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: c5e00c8f4f56cce3dee2a821d54217bc
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 192e690a6ab30273b050a05752742228
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 687078895
+  Script: {instanceID: 0}
+Assets:
+- Assets/Project/Resources/Atlas/CommonAtlas.spriteatlas
+Dependencies:
+- D:/Projects/Workspace/UnityFramework/Framework/AssetBundles/StandaloneWindows/sprites_sources
+- D:/Projects/Workspace/UnityFramework/Framework/AssetBundles/StandaloneWindows/buttonarrowupsprite

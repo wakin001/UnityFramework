@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+CRC: 2832919948
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: moveleft
+      Dependencies: {}
+    Info_1:
+      Name: prefabs/views/view2
+      Dependencies:
+        Dependency_0: sprites_sources
+    Info_2:
+      Name: sprites/tulips
+      Dependencies: {}
+    Info_3:
+      Name: atlas/commonatlas
+      Dependencies:
+        Dependency_0: sprites_sources
+        Dependency_1: buttonarrowupsprite
+    Info_4:
+      Name: sprites_sources
+      Dependencies: {}
+    Info_5:
+      Name: prefabs/views/view3
+      Dependencies:
+        Dependency_0: sprites_sources
+        Dependency_1: buttonarrowupsprite
+    Info_6:
+      Name: animationctrls/view1
+      Dependencies:
+        Dependency_0: moveleft
+    Info_7:
+      Name: prefabs/views/view1
+      Dependencies:
+        Dependency_0: animationctrls/view1
+        Dependency_1: buttonarrowupsprite
+    Info_8:
+      Name: redmat
+      Dependencies: {}
+    Info_9:
+      Name: glass
+      Dependencies: {}
+    Info_10:
+      Name: buttonarrowupsprite
+      Dependencies: {}

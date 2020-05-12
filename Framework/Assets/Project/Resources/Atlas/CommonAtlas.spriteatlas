@@ -43,13 +43,14 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: fa1607160ebf6584b9494e14b61f4270, type: 3}
-    totalSpriteSurfaceArea: 1081344
+    totalSpriteSurfaceArea: 1115560
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: fbce2f40100bfd441ad4f97826eb3a7d, type: 3}
   - {fileID: 21300000, guid: dcf4350197dcffd40bd3e9e79b873e61, type: 3}
   - {fileID: 21300000, guid: 2565e4c32e6fcbb4c8b86ff250b3b8dc, type: 3}
+  - {fileID: 21300000, guid: e167d1f31a6d8f14ba75529a33fef0e9, type: 3}
   - {fileID: 21300000, guid: 0aae19c4b3527df409aea2241a68755b, type: 3}
   - {fileID: 21300000, guid: 538262851499067459bb75b2a105ac74, type: 3}
   - {fileID: 21300000, guid: 2791a9f5fcc537e48a2ca746799db8e8, type: 3}
@@ -67,6 +68,7 @@ SpriteAtlas:
   - ButtonAcceleratorOverSprite
   - ButtonTimescaleFullUpSprite
   - ButtonAcceleratorUpSprite
+  - lab2020_popup_01
   - ButtonThumbstickUpSprite
   - ButtonSpacebarSprite
   - ButtonCameraCycleUpSprite
