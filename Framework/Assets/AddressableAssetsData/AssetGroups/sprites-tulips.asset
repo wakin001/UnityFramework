@@ -16,8 +16,14 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 6828f380a1ffc654285d317533db9f0a
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 13b7e20a963933d409a2a1d740444581
+    m_Address: Assets/Project/Resources/Sprite/Tulips.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 591e0f243421cec46981f3bd860f5f85, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 0ff31f09f0e7cd646a1c9f4a180f2930, type: 2}
+    - {fileID: 11400000, guid: db1011f9e24b74a49bb7e2e48d828518, type: 2}

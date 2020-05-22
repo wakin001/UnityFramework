@@ -16,7 +16,11 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: dd1feacd880fe8247afbe1b5880e44d1
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: ccfb74bb9866e7344baba88b232f7c09
+    m_Address: female_eyes_blue
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 591e0f243421cec46981f3bd860f5f85, type: 2}
   m_SchemaSet:

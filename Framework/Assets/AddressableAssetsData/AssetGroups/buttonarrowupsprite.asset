@@ -16,8 +16,18 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: c202686464f55094fb7cf1ac6c3ec657
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 0aae19c4b3527df409aea2241a68755b
+    m_Address: Assets/Project/Sprites/Sources/ButtonThumbstickUpSprite.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5b7e164a9c0e01e45aa1f9c831c2ed0d
+    m_Address: Assets/Project/Sprites/Sources/ButtonArrowUpSprite.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 591e0f243421cec46981f3bd860f5f85, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 93d66d5436624c740b81850500f5b49c, type: 2}
+    - {fileID: 11400000, guid: ada1be2ec92656c44b0749020d667704, type: 2}

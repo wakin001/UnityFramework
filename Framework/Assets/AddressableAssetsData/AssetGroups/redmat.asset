@@ -16,8 +16,14 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: a2313807999cbd04d86f6191ae551ae8
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 15b611314737a0843be8e5fb2a406bd7
+    m_Address: Assets/Project/Resources/Materials/RedMat.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 591e0f243421cec46981f3bd860f5f85, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 0ade64c19531dfd4d98c1c7e2af74588, type: 2}
+    - {fileID: 11400000, guid: 4f02fc3b555ab304fa381e89e34ed0f5, type: 2}

@@ -16,8 +16,18 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 9ed9bc788df425a408887eb23918c6b2
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 225fc0062936b964ea01fa70a5de0dd4
+    m_Address: Assets/Project/Sprites/Sources/ButtonBrakeOverSprite.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 6b14376ada9a4e743b6a0af510b581a9
+    m_Address: Assets/Project/Sprites/Sources/ButtonResetSprite.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 591e0f243421cec46981f3bd860f5f85, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 4a72a70b60cb2744fabd8754f7a56522, type: 2}
+    - {fileID: 11400000, guid: d1a64e43e13a4e746897f3e4c9f6b341, type: 2}

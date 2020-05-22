@@ -1,0 +1,35 @@
+-- Tencent is pleased to support the open source community by making xLua available.
+-- Copyright (C) 2016 THL A29 Limited, a Tencent company. All rights reserved.
+-- Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+-- http://opensource.org/licenses/MIT
+-- Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+require("Lua/LuaCommonClass")
+
+-- base class
+baseClass = BaseClass("Base class", nil)		-- 定义一个基类 base_type
+ 
+function baseClass:__init(x)	-- 定义 base_type 的构造函数
+	print("base_type ctor")
+	self.x=x
+end
+ 
+function baseClass:print_x()	-- 定义一个成员函数 base_type:print_x
+	print(baseClass.x)
+	print(self.x)
+end
+ 
+function baseClass:hello()	-- 定义另一个成员函数 base_type:hello
+	print("hello base_type")
+end
+
+-- 定义一个类 test 继承于 baseClass
+subClass = BaseClass("Inherit class", baseClass)	
+ 
+function subClass:__init()	-- 定义 test 的构造函数
+	print("test ctor")
+end
+ 
+function subClass:hello()	-- 重载 base_type:hello 为 test:hello
+	print("hello test")
+end

@@ -4,10 +4,31 @@
 -- http://opensource.org/licenses/MIT
 -- Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
+require("Lua/LuaScript")
+-- require("Lua/LuaShape")
+require("Lua/LuaClassInstance")
+-- require("Lua/LuaClass")
+
 local breakSocketHandle,debugXpCall = require("luadebug/LuaDebug")("localhost",7003)
 
+local x = 100;
+
 function start()
-	print("luaScript start...")
+    print("luaScript start...")
+
+    -- use LuaScript
+    local theClass = SubClass.new(10)
+    theClass:print_x()
+    theClass:hello()
+
+    -- -- use LuaClassInstance
+    -- local baseClass = baseClass.New()
+    -- baseClass:print_x()
+    -- baseClass:hello()
+
+    -- local subClass = subClass.New(10)
+    -- subClass:print_x()
+    -- subClass:hello()
 end
 
 function update()

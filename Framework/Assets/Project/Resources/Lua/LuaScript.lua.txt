@@ -4,16 +4,31 @@
 -- http://opensource.org/licenses/MIT
 -- Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-local breakSocketHandle,debugXpCall = require("luadebug/LuaDebug")("localhost",7003)
+require("Lua/LuaClass")
 
-function start()
-	print("luaScript start...")
+-- base class
+BaseClass = class()		-- 定义一个基类 base_type
+ 
+function BaseClass:ctor(x)	-- 定义 base_type 的构造函数
+	print("base_type ctor")
+	self.x=x
+end
+ 
+function BaseClass:print_x()	-- 定义一个成员函数 base_type:print_x
+	print(self.x)
+end
+ 
+function BaseClass:hello()	-- 定义另一个成员函数 base_type:hello
+	print("hello base_type")
 end
 
-function update()
+-- 定义一个类 test 继承于 baseClass
+SubClass = class(BaseClass)	
+ 
+function SubClass:ctor()	-- 定义 test 的构造函数
+	print("test ctor")
 end
-
-function ondestroy()
-    print("luaScript destroy")
+ 
+function SubClass:hello()	-- 重载 base_type:hello 为 test:hello
+	print("hello test")
 end
-
