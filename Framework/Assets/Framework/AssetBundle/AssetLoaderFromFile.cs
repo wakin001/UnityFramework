@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using UniRx.Async;
+using XLua;
 
 namespace Framework
 {

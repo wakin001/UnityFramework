@@ -10,6 +10,7 @@ using UnityEngine;
 using XLua;
 using System.Collections.Generic;
 using System;
+using UnityEngine.UI;
 
 namespace XLuaTest
 {
@@ -17,10 +18,12 @@ namespace XLuaTest
     {
         LuaEnv luaenv = null;
 
+        Button button;
         void Start()
         {
             luaenv = new LuaEnv();
             luaenv.DoString("require 'async_test'");
+            button.onClick.AddListener(() => { });
         }
 
         // Update is called once per frame

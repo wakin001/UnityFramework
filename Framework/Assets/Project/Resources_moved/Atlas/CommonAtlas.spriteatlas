@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CommonAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 1
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Standalone
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 2
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: fa1607160ebf6584b9494e14b61f4270, type: 3}
+    totalSpriteSurfaceArea: 1115560
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: fbce2f40100bfd441ad4f97826eb3a7d, type: 3}
+  - {fileID: 21300000, guid: dcf4350197dcffd40bd3e9e79b873e61, type: 3}
+  - {fileID: 21300000, guid: 2565e4c32e6fcbb4c8b86ff250b3b8dc, type: 3}
+  - {fileID: 21300000, guid: e167d1f31a6d8f14ba75529a33fef0e9, type: 3}
+  - {fileID: 21300000, guid: 0aae19c4b3527df409aea2241a68755b, type: 3}
+  - {fileID: 21300000, guid: 538262851499067459bb75b2a105ac74, type: 3}
+  - {fileID: 21300000, guid: 2791a9f5fcc537e48a2ca746799db8e8, type: 3}
+  - {fileID: 21300000, guid: 225fc0062936b964ea01fa70a5de0dd4, type: 3}
+  - {fileID: 21300000, guid: da1bd8760eef8be4eb0da94f7e0c2c4a, type: 3}
+  - {fileID: 21300000, guid: c2efa807d36fd294b9c5b4ffe8a15a57, type: 3}
+  - {fileID: 21300000, guid: 65d5732734e1c6442a7a8b3592deb8fa, type: 3}
+  - {fileID: 21300000, guid: 5b7e164a9c0e01e45aa1f9c831c2ed0d, type: 3}
+  - {fileID: 21300000, guid: 6b14376ada9a4e743b6a0af510b581a9, type: 3}
+  - {fileID: 21300000, guid: 2b434a8d65bc9574da8cedc625ed818e, type: 3}
+  - {fileID: 21300000, guid: 087f0dddc00e1054d9e471e9151bc827, type: 3}
+  - {fileID: 21300000, guid: 15d8cb2e3fe8add4d813f76569e279d8, type: 3}
+  - {fileID: 21300000, guid: 718eefdfc95b0354ca27fe24b75d6101, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - ButtonAcceleratorOverSprite
+  - ButtonTimescaleFullUpSprite
+  - ButtonAcceleratorUpSprite
+  - lab2020_popup_01
+  - ButtonThumbstickUpSprite
+  - ButtonSpacebarSprite
+  - ButtonCameraCycleUpSprite
+  - ButtonBrakeOverSprite
+  - TouchpadSprite
+  - ButtonTimescaleSlowUpSprite
+  - ButtonThumbstickOverSprite
+  - ButtonArrowUpSprite
+  - ButtonResetSprite
+  - SliderBackgroundSprite
+  - ButtonArrowOverSprite
+  - SliderHandleSprite
+  - ButtonBrakeUpSprite
+  m_Tag: CommonAtlas
+  m_IsVariant: 0

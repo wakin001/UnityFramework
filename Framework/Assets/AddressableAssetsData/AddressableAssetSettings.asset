@@ -13,26 +13,17 @@ MonoBehaviour:
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
   m_DefaultGroup: dd1feacd880fe8247afbe1b5880e44d1
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: 561e95c5a6c17ff40936524f0683e592
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: 561e95c5a6c17ff40936524f0683e592
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: da0f9e4722d347f4d9965ff670e1f8cf, type: 2}
   - {fileID: 11400000, guid: 2ac6a158d8dd6a54782fbef0c7d3427a, type: 2}
-  - {fileID: 11400000, guid: f791a698bd7f27b4ab7e403b020b1d65, type: 2}
-  - {fileID: 11400000, guid: 2d57d8b2b2158d5438e39782e7c1f925, type: 2}
-  - {fileID: 11400000, guid: d7078cd44891ea34eb9b30a6e7de19c5, type: 2}
-  - {fileID: 11400000, guid: f83d35b2b06496a44b3c765cffca911b, type: 2}
-  - {fileID: 11400000, guid: 44ee640f7868a4646ac3867d9dcb1013, type: 2}
-  - {fileID: 11400000, guid: 77666944f79a13445bff870c16f9b7f0, type: 2}
-  - {fileID: 11400000, guid: c0451c3b9ef6541449c0cd778e1320e3, type: 2}
-  - {fileID: 11400000, guid: a8251225d9c38bc4580c84fa062a0aa3, type: 2}
-  - {fileID: 11400000, guid: 6bdc2ba9b385202419bf8cb2517af35d, type: 2}
-  - {fileID: 11400000, guid: 66f73ffdc6533034d93f548315a3cd6f, type: 2}
-  - {fileID: 11400000, guid: b1d5a289ead107343847ddb3a69a6ee0, type: 2}
+  - {fileID: 11400000, guid: d43a43625c8c34f769fdc8fb40e7db16, type: 2}
+  - {fileID: 11400000, guid: 3fff242c32c5746bdab16165250e55b5, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -74,6 +65,8 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - my1
+    - my2
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 273c6a2a31284794b866e17ba8e90697, type: 2}

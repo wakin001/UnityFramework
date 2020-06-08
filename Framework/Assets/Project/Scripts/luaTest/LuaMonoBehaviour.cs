@@ -8,6 +8,8 @@ public class LuaMonoBehaviour : MonoBehaviour
 {
     public TextAsset mainLuaScript;
 
+    public Transform canvas;
+
     private LuaEnv luaEnv;
 
     private LuaTable scriptEnv;
@@ -31,7 +33,7 @@ public class LuaMonoBehaviour : MonoBehaviour
 
         scriptEnv.Set("self", this);
 
-        luaEnv.DoString(mainLuaScript.text, "LuaMain", scriptEnv);
+        luaEnv.DoString(mainLuaScript.text, "LuaGlobalEnv", scriptEnv);
 
         Action luaAwake = scriptEnv.Get<Action>("awake");
         scriptEnv.Get("start", out luaStart);

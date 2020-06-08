@@ -1,0 +1,111 @@
+-- Tencent is pleased to support the open source community by making xLua available.
+-- Copyright (C) 2016 THL A29 Limited, a Tencent company. All rights reserved.
+-- Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+-- http://opensource.org/licenses/MIT
+-- Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+require("Lua/LuaPackageTest2")
+require("Lua/LuaSingleton")
+require("Lua/Coroutine")
+
+local unityEngine = CS.UnityEngine
+local assetManager = CS.Framework.AssetManager
+
+function start()
+    assetManager.useAssetBundle = false
+    -- sync load
+    -- assetManager.LoadAsync<T>(string assetName, System.Action<T> onCompleted)
+    local prefab = assetManager.Load("Prefabs/prefab1")
+    local go = unityEngine.GameObject.Instantiate(prefab)
+
+    local pref = function(path) 
+        assetManager.LoadAsync(path)
+    end
+         
+    -- async load
+    assetManager.LoadAsync(
+        "Prefabs/prefab1",
+        pref = function()
+            unityEngine.GameObject.Instantiate(pref)
+        end
+    )
+
+    -- coroutine.waitforasyncop(
+    --     unityEngine.Resources.LoadAsync("Prefabs/prefab1"),
+    --     function(pref, progress)
+    --         assert(progress <= 1.0, "What's the funck!!!")
+
+    --         unityEngine.GameObject.Instantiate(pref)
+    --     end
+    -- )
+end
+
+function update()
+end
+
+function ondestroy()
+    print("luaScript destroy")
+end
+
+-- a = 1 -- create a global variable
+-- -- change current environment to a new empty table
+-- -- setfenv(1, {_G = _G})
+-- -- _G.print(a) --> nil
+-- -- _G.print(_G.a) --> 1
+-- print(a)
+-- print(_G.a)
+-- print(_G.print)
+-- local newgt = {} -- create new environment
+-- setmetatable(newgt, {__index = _G})
+-- setfenv(1, newgt) -- set it
+-- print(a) --> nil
+
+-- a = 10
+-- print(a) --- 10
+-- print(_G.a) -- nil
+-- _G.a = 20
+-- print(_G.a) -- 20
+-- --> 10 --> 1
+-- --> 20
+
+print(complex.sub(complex.i, complex.new(1, 2)).r)
+
+-- look up for `k' in list of tables 'plist'
+local function search(k, plist)
+    for i = 1, table.getn(plist) do
+        local v = plist[i][k] -- try 'i'-th superclass
+        if v then
+            return v
+        end
+    end
+end
+
+function createClass(...)
+    local c = {} -- new class
+    -- class will search for each method in the list of its -- parents (`arg' is the list of parents)
+    setmetatable(
+        c,
+        {
+            __index = function(t, k)
+                return search(k, arg)
+            end
+        }
+    )
+    -- prepare `c' to be the metatable of its instances
+    c.__index = c
+    -- define a new constructor for this new class
+    function c:new(o)
+        o = o or {}
+        setmetatable(o, c)
+        return o
+    end
+end
+
+--- test singleton
+singletonInstance = SingletonBase.GetInstnace()
+print(singletonInstance.x)
+singletonInstance.x = 10
+print(singletonInstance.x)
+
+singletonInstance2 = SingletonBase.GetInstnace()
+print(singletonInstance2.x)

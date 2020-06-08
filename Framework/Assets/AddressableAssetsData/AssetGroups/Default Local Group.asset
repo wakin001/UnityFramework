@@ -17,8 +17,24 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: dd1feacd880fe8247afbe1b5880e44d1
   m_SerializeEntries:
-  - m_GUID: ccfb74bb9866e7344baba88b232f7c09
-    m_Address: female_eyes_blue
+  - m_GUID: 11b6bb47100f5104facc6325fbc523dc
+    m_Address: Assets/Project/Csv
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 499420fe61684f74db6651e383d7682a
+    m_Address: Assets/Project/Models/frt_ap_tree_00.tga
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5121bb6cb407ee14896e70d38de8f7f7
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e8f04965b5613164a80b3b1266f586c5
+    m_Address: Assets/Project/Models/Cube.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: fa03cf3b2376a4143bab8708abb10fc9
+    m_Address: Assets/Project/Models/gro001_01.fbx
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

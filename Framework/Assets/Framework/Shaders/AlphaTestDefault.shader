@@ -17,7 +17,7 @@
         Tags 
 		{ 
 			"Queue" = "Geometry"
-			"RenderType" = "Transparent"
+			"RenderType" = "Transparent" 
 			"IgnoreProjector" = "True" 
 		}
         LOD 100
@@ -83,7 +83,6 @@
                 fixed4 col = tex2D(_MainTex, i.uv);
 				fixed3 alpha = tex2D(_OptionTex0, i.uv);
 				clip(alpha.r - _Cutoff);
-
 #ifndef LIGHTMAP_OFF
 				fixed3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.uvLM.xy));
 				col.rgb *= lm;

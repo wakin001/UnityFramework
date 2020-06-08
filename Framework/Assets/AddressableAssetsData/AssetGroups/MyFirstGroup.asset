@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: MyFirstGroup
+  m_EditorClassIdentifier: 
+  m_GroupName: MyFirstGroup
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 6c94ef51945784fd99657ae9a3ed3bb1
+  m_SerializeEntries:
+  - m_GUID: 06f03b43c74ed614abc37c943141c20e
+    m_Address: Assets/Project/Textures
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 10f045923a47b1141af1572a7f472735
+    m_Address: Assets/Project/Resources_moved/Prefabs
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 73f8bd82843232b48b94dbd2f43858df
+    m_Address: Assets/Project/Sprites/Penguins.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c75154f8fb206f746b7ff43bf5524529
+    m_Address: Assets/Project/Sprites/Koala.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d46cfd821bbfdc8468e970a06931e47b
+    m_Address: Assets/Project/Resources_moved/Atlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ea13a8ac23e48b84eb93d1326da04c34
+    m_Address: Assets/Project/Resources_moved/Materials
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ed9975e2016508f40b0485f18fa633ff
+    m_Address: Assets/Project/Sprites/Square.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: fa1607160ebf6584b9494e14b61f4270
+    m_Address: Assets/Project/Sprites/Sources
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 591e0f243421cec46981f3bd860f5f85, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6f613125524d045878943bae2a36b57c, type: 2}
+    - {fileID: 11400000, guid: d505b2f917eb140a59f0dc16f0bfdd38, type: 2}
+    - {fileID: 11400000, guid: dc9964f856b014386889e48bdb987eec, type: 2}

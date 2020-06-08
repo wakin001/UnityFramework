@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using XLua;
 
 namespace Framework
 {
     /// <summary>
     /// yield return StartCoroutineを使うともれなく次の処理が1フレーム遅れる!! ご注意！！
     /// </summary>
+    [LuaCallCSharp]
     public partial class AssetManager : SingletonComponent<AssetManager>
     {
         public static bool useAssetBundle = true;
@@ -18,6 +20,7 @@ namespace Framework
         /// Don't need cache all assets in assetbundle. Seems it is not too slow to load an asset if we have its assetbundle.
         /// And if we use assetbundle.UnLoad(false), all these assets need to be deleted by yourself.
         /// </summary>
+        [LuaCallCSharp]
         public class AssetCache
         {
             // assetBundle's hash

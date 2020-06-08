@@ -10,14 +10,14 @@
             "request": "attach",
             "runtimeType": "Unity",
             "localRoot": "${workspaceRoot}",
-            "fileExtname": ".txt",
+            "fileExtname": ".lua.txt",
             "port": 7003,
             "printType": 1
         },
         {
             "name": "Unity Editor",
             "type": "unity",
-            "path": "/d:/Projects/Workspace/UnityFramework/Framework/Library/EditorInstance.json",
+            "path": "/Users/fongwang/Documents/Workspace/UnityFramework/Framework/Library/EditorInstance.json",
             "request": "launch"
         },
         {
@@ -59,6 +59,6 @@
             "name": "SwitchPlayer",
             "type": "unity",
             "request": "launch"
-        },
+        }
     ]
 }
