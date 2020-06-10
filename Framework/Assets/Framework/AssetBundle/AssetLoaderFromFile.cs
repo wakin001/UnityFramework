@@ -26,17 +26,8 @@ namespace Framework
         /// </summary>
         public static T Load<T>(string assetName, string assetFileName = null) where T : Object
         {
-            assetName = assetName.ToLower();
-            if (assetFileName != null)
-            {
-                assetFileName = assetFileName.ToLower();
-            }
-            string fileName = assetFileName;
-            if (string.IsNullOrEmpty(fileName))
-            {
-                fileName = assetName;
-            }
-
+            string fileName = GetAssetFileName(assetName, assetFileName);
+ 
             // local
             if (!useAssetBundle)
             {
@@ -48,14 +39,39 @@ namespace Framework
             return AssetManager.instance.LoadAssetBundleFromFile<T>(assetName, assetFileName);
         }
 
+        public static void LoadAsync(string assetName, System.Action<Object> onCompleted)
+        {
+            LoadAsync<Object>(assetName, onCompleted);
+        }
+
         public static void LoadAsync<T>(string assetName, System.Action<T> onCompleted) where T : Object
         {
-            AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAssetBundleFromFileAsync<T>(assetName, null, onCompleted));
+            LoadAsync<T>(assetName, null, onCompleted);
         }
 
         public static void LoadAsync<T>(string assetName, string assetFileName, System.Action<T> onCompleted) where T : Object
         {
-            AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAssetBundleFromFileAsync<T>(assetName, assetFileName, onCompleted));
+            string fileName = GetAssetFileName(assetName, assetFileName);
+
+            if (!useAssetBundle)
+            {
+                AssetManager.instance.StartCoroutine(AssetManager.instance.LoadResourceAsync<T>(fileName, onCompleted));
+            }
+            else    // assetBundle
+            {
+                AssetManager.instance.StartCoroutine(AssetManager.instance.LoadAssetBundleFromFileAsync<T>(assetName, assetFileName, onCompleted));
+            }
+        }
+
+        private IEnumerator LoadResourceAsync<T>(string fileName, System.Action<T> onCompleted) where T : Object
+        {
+            var request = Resources.LoadAsync<T>(fileName);
+            yield return request;
+
+            if (onCompleted != null)
+            {
+                onCompleted.Invoke(request.asset as T);
+            }
         }
 
         private T LoadAssetBundleFromFile<T>(string assetName, string assetFileName) where T : Object
@@ -220,6 +236,21 @@ namespace Framework
             {
                 onCompleted.Invoke(obj as T);
             }
+        }
+
+        private static string GetAssetFileName(string assetName, string assetFileName)
+        {
+            assetName = assetName.ToLower();
+            if (assetFileName != null)
+            {
+                assetFileName = assetFileName.ToLower();
+            }
+            string fileName = assetFileName;
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = assetName;
+            }
+            return fileName;
         }
     }
 
