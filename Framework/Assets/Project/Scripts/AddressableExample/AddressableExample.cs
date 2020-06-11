@@ -41,10 +41,37 @@ public class AddressableExample : MonoBehaviour
         // 使用await/async 的加载方法
         //_instance = await _asset.InstantiateAsync().Task;
 
-        _instance = await Addressables.InstantiateAsync("Player").Task;
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+        _instance = await Addressables.InstantiateAsync("View1").Task;
+        sw.Stop();
+        Debug.Log("load view1: " + sw.ElapsedMilliseconds);
+
+        //LoadResource();
+        //StartCoroutine(LoadResourceAsync());
 
         Debug.Log("Instantiated finished");
         #endregion
+    }
+
+    private void LoadResource()
+    {
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+        Instantiate(Resources.Load("Prefabs/Views/View1"));
+        sw.Stop();
+        Debug.Log("load view1: " + sw.ElapsedMilliseconds);
+    }
+
+    private IEnumerator LoadResourceAsync()
+    {
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+        var request = Resources.LoadAsync("Prefabs/Views/View1");
+        yield return request;
+        Instantiate((GameObject)request.asset);
+        sw.Stop();
+        Debug.Log("load view1: " + sw.ElapsedMilliseconds);
     }
 
     private void OnInstantiatedCompleted(AsyncOperationHandle<GameObject> obj)
