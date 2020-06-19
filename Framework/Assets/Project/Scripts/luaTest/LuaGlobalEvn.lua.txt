@@ -18,17 +18,17 @@ function start()
     local prefab = assetManager.Load("Prefabs/prefab1")
     local go = unityEngine.GameObject.Instantiate(prefab)
 
-    local pref = function(path) 
+    local pref = function(path)
         assetManager.LoadAsync(path)
     end
-         
+
     -- async load
-    assetManager.LoadAsync(
-        "Prefabs/prefab1",
-        pref = function()
-            unityEngine.GameObject.Instantiate(pref)
-        end
-    )
+    -- assetManager.LoadAsync(
+    --     "Prefabs/prefab1",
+    --     pref = function()
+    --         unityEngine.GameObject.Instantiate(pref)
+    --     end
+    -- )
 
     -- coroutine.waitforasyncop(
     --     unityEngine.Resources.LoadAsync("Prefabs/prefab1"),

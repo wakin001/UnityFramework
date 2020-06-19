@@ -1,5 +1,4 @@
-﻿using MessagePack;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 namespace Framework

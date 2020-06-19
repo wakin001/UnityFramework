@@ -4,6 +4,7 @@ using System.IO;
 using ILRuntime.Runtime.Enviorment;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
+using ILRuntimeDemo;
 
 public class ILRuntimeTest : MonoBehaviour
 {
@@ -61,8 +62,13 @@ public class ILRuntimeTest : MonoBehaviour
         appdomain.DelegateManager.RegisterMethodDelegate<float, float, FloatOptions>();
         appdomain.DelegateManager.RegisterMethodDelegate<float>();
         appdomain.DelegateManager.RegisterFunctionDelegate<float>();
+        //appdomain.DelegateManager.RegisterFunctionDelegate<Person, MasterData.Tables.PersonTable, MasterData.Tables.PersonTable>();
         //public static TweenerCore<float, float, FloatOptions> To(DOGetter<float> getter, DOSetter<float> setter, float endValue, float duration);
         //appdomain.DelegateManager.RegisterFunctionDelegate<DOGetter<float>, DOSetter<float>, float, float, TweenerCore<float, float, FloatOptions>>();
+
+        appdomain.DelegateManager.RegisterMethodDelegate<MessagePackDataBase>();
+
+        //appdomain.DelegateManager.RegisterMethodDelegate<MyClass>();
 
         //ILRuntime内部是用Action和Func这两个系统内置的委托类型来创建实例的，所以其他的委托类型都需要写转换器
         appdomain.DelegateManager.RegisterDelegateConvertor<UnityEngine.Events.UnityAction>((act) =>
@@ -72,6 +78,11 @@ public class ILRuntimeTest : MonoBehaviour
                 ((System.Action)act)();
             });
         });
+
+        // 跨域继承
+        //appdomain.RegisterCrossBindingAdaptor(new MemoryDatabaseBaseAdapter());
+        appdomain.RegisterCrossBindingAdaptor(new MessagePackDataBaseAdapter());
+        appdomain.RegisterCrossBindingAdaptor(new ScriptableObjectAdapter());
 
         InitializeILRuntime();
         OnHotFixLoaded();
@@ -84,13 +95,31 @@ public class ILRuntimeTest : MonoBehaviour
         appdomain.UnityMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 #endif
         //这里做一些ILRuntime的注册，HelloWorld示例暂时没有需要注册的
+
+        // protobuf的注册
+        ProtoBuf.PType.RegisterFunctionCreateInstance(PType_CreateInstance);
+        ProtoBuf.PType.RegisterFunctionGetRealType(PType_GetRealType);
+    }
+
+    object PType_CreateInstance(string typeName)
+    {
+        return appdomain.Instantiate(typeName);
+    }
+    System.Type PType_GetRealType(object o)
+    {
+        var type = o.GetType();
+        if (type.FullName == "ILRuntime.Runtime.Intepreter.ILTypeInstance")
+        {
+            var ilo = o as ILRuntime.Runtime.Intepreter.ILTypeInstance;
+            type = ProtoBuf.PType.FindType(ilo.Type.FullName);
+        }
+        return type;
     }
 
     void OnHotFixLoaded()
     {
         //HelloWorld，第一次方法调用
         appdomain.Invoke("HotFix_Project.MainClass", "Launch", null, null);
-
     }
 
     private void OnDestroy()

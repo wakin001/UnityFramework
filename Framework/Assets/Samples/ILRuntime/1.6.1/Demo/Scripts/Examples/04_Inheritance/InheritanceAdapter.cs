@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ILRuntime.CLR.Method;
 using ILRuntime.Runtime.Enviorment;
 using ILRuntime.Runtime.Intepreter;
@@ -11,6 +12,7 @@ namespace ILRuntimeDemo
         static CrossBindingMethodInfo<System.Int32> mset_Value_1 = new CrossBindingMethodInfo<System.Int32>("set_Value");
         static CrossBindingMethodInfo<System.String> mTestVirtual_2 = new CrossBindingMethodInfo<System.String>("TestVirtual");
         static CrossBindingMethodInfo<System.Int32> mTestAbstract_3 = new CrossBindingMethodInfo<System.Int32>("TestAbstract");
+        static CrossBindingMethodInfo<Dictionary<string, int>, int, byte[]> mTestAbstractInit = new CrossBindingMethodInfo<Dictionary<string, int>, int, byte[]>("Init");
         public override Type BaseCLRType
         {
             get
@@ -93,6 +95,11 @@ namespace ILRuntimeDemo
                 }
                 else
                     return instance.Type.FullName;
+            }
+
+            protected override void Init(Dictionary<string, int> header, int headerOffset, byte[] databaseBinary)
+            {
+                mTestAbstractInit.Invoke(this.instance, header, headerOffset, databaseBinary);
             }
         }
     }

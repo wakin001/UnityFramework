@@ -17,6 +17,21 @@ namespace HotFix_Project
             // go to first view.
             View1 view1 = new View1("Prefabs/Views/View1");
             view1.Start();
+
+            //MessagePackTest msgpackTest = new MessagePackTest();
+            //msgpackTest.Test();
+
+            // test scriptableobject.
+            //MasterScriptableObjectTest scriptableTest = new MasterScriptableObjectTest();
+            //scriptableTest.Execute();
+
+            // test sqlite
+            //SqliteTest sqliteTest = new SqliteTest();
+            //sqliteTest.ExecuteQuery();
+
+            // test protobuf
+            ProtobufTest protoTest = new ProtobufTest();
+            protoTest.Test();
         }
 
         public static void LoadResource()

@@ -199,7 +199,6 @@ namespace System.Reflection
 
     public static class ReflectionExtensions
     {
-
 #if !NET_4_6 && !NET_STANDARD_2_0
 
         public static TypeInfo GetTypeInfo(this Type type)

@@ -409,7 +409,7 @@ namespace LitJson
 
                 AddArrayMetadata (inst_type);
                 ArrayMetadata t_data = array_metadata[inst_type];
-
+                
                 if (! t_data.IsArray && ! t_data.IsList)
                     throw new JsonException (String.Format (
                             "Type {0} can't act as an array",
@@ -978,6 +978,7 @@ namespace LitJson
         {
             foreach(var i in typeof(JsonMapper).GetMethods())
             {
+                UnityEngine.Debug.Log(i);
                 if(i.Name == "ToObject" && i.IsGenericMethodDefinition)
                 {
                     var param = i.GetParameters();

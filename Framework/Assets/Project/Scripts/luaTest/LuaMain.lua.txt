@@ -9,9 +9,9 @@ require("Lua/LuaScript")
 require("Lua/LuaClassInstance")
 -- require("Lua/LuaClass")
 
-local breakSocketHandle,debugXpCall = require("luadebug/LuaDebug")("localhost",7003)
+local breakSocketHandle, debugXpCall = require("luadebug/LuaDebug")("localhost", 7003)
 
-local x = 100;
+local x = 100
 
 function start()
     print("luaScript start...")
@@ -29,6 +29,11 @@ function start()
     -- local subClass = subClass.New(10)
     -- subClass:print_x()
     -- subClass:hello()
+
+    local myDic
+    myDic.x = 1
+    myDic.name = "wang"
+    print(myDic["name"])
 end
 
 function update()
@@ -37,4 +42,3 @@ end
 function ondestroy()
     print("luaScript destroy")
 end
-

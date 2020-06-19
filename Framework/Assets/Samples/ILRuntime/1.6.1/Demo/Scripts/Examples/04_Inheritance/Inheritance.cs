@@ -27,6 +27,8 @@ public abstract class TestClassBase
     }
 
     public abstract void TestAbstract(int gg);
+
+    protected abstract void Init(Dictionary<string, int> header, int headerOffset, byte[] databaseBinary);
 }
 public class Inheritance : MonoBehaviour
 {

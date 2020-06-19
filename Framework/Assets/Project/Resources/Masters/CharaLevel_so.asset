@@ -1,0 +1,255 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: CharaLevel_so
+  m_EditorClassIdentifier: Assembly-CSharp::CharaLevelScriptableObject
+  items:
+  - id: 1
+    necessary_exp: 30
+    total_exp: 0
+  - id: 2
+    necessary_exp: 50
+    total_exp: 30
+  - id: 3
+    necessary_exp: 70
+    total_exp: 80
+  - id: 4
+    necessary_exp: 90
+    total_exp: 150
+  - id: 5
+    necessary_exp: 110
+    total_exp: 240
+  - id: 6
+    necessary_exp: 150
+    total_exp: 350
+  - id: 7
+    necessary_exp: 190
+    total_exp: 500
+  - id: 8
+    necessary_exp: 230
+    total_exp: 690
+  - id: 9
+    necessary_exp: 270
+    total_exp: 920
+  - id: 10
+    necessary_exp: 310
+    total_exp: 1190
+  - id: 11
+    necessary_exp: 380
+    total_exp: 1500
+  - id: 12
+    necessary_exp: 450
+    total_exp: 1880
+  - id: 13
+    necessary_exp: 520
+    total_exp: 2330
+  - id: 14
+    necessary_exp: 590
+    total_exp: 2850
+  - id: 15
+    necessary_exp: 660
+    total_exp: 3440
+  - id: 16
+    necessary_exp: 780
+    total_exp: 4100
+  - id: 17
+    necessary_exp: 900
+    total_exp: 4880
+  - id: 18
+    necessary_exp: 1020
+    total_exp: 5780
+  - id: 19
+    necessary_exp: 1140
+    total_exp: 6800
+  - id: 20
+    necessary_exp: 1260
+    total_exp: 7940
+  - id: 21
+    necessary_exp: 1510
+    total_exp: 9200
+  - id: 22
+    necessary_exp: 1760
+    total_exp: 10710
+  - id: 23
+    necessary_exp: 2010
+    total_exp: 12470
+  - id: 24
+    necessary_exp: 2260
+    total_exp: 14480
+  - id: 25
+    necessary_exp: 2510
+    total_exp: 16740
+  - id: 26
+    necessary_exp: 2760
+    total_exp: 19250
+  - id: 27
+    necessary_exp: 3010
+    total_exp: 22010
+  - id: 28
+    necessary_exp: 3260
+    total_exp: 25020
+  - id: 29
+    necessary_exp: 3510
+    total_exp: 28280
+  - id: 30
+    necessary_exp: 3760
+    total_exp: 31790
+  - id: 31
+    necessary_exp: 4260
+    total_exp: 35550
+  - id: 32
+    necessary_exp: 4760
+    total_exp: 39810
+  - id: 33
+    necessary_exp: 5260
+    total_exp: 44570
+  - id: 34
+    necessary_exp: 5760
+    total_exp: 49830
+  - id: 35
+    necessary_exp: 6260
+    total_exp: 55590
+  - id: 36
+    necessary_exp: 6760
+    total_exp: 61850
+  - id: 37
+    necessary_exp: 7260
+    total_exp: 68610
+  - id: 38
+    necessary_exp: 7760
+    total_exp: 75870
+  - id: 39
+    necessary_exp: 8260
+    total_exp: 83630
+  - id: 40
+    necessary_exp: 8760
+    total_exp: 91890
+  - id: 41
+    necessary_exp: 9510
+    total_exp: 100650
+  - id: 42
+    necessary_exp: 10260
+    total_exp: 110160
+  - id: 43
+    necessary_exp: 11010
+    total_exp: 120420
+  - id: 44
+    necessary_exp: 11760
+    total_exp: 131430
+  - id: 45
+    necessary_exp: 12510
+    total_exp: 143190
+  - id: 46
+    necessary_exp: 13260
+    total_exp: 155700
+  - id: 47
+    necessary_exp: 14010
+    total_exp: 168960
+  - id: 48
+    necessary_exp: 14760
+    total_exp: 182970
+  - id: 49
+    necessary_exp: 15510
+    total_exp: 197730
+  - id: 50
+    necessary_exp: 16260
+    total_exp: 213240
+  - id: 51
+    necessary_exp: 17260
+    total_exp: 229500
+  - id: 52
+    necessary_exp: 18260
+    total_exp: 246760
+  - id: 53
+    necessary_exp: 19260
+    total_exp: 265020
+  - id: 54
+    necessary_exp: 20260
+    total_exp: 284280
+  - id: 55
+    necessary_exp: 21260
+    total_exp: 304540
+  - id: 56
+    necessary_exp: 22260
+    total_exp: 325800
+  - id: 57
+    necessary_exp: 23260
+    total_exp: 348060
+  - id: 58
+    necessary_exp: 24260
+    total_exp: 371320
+  - id: 59
+    necessary_exp: 25260
+    total_exp: 395580
+  - id: 60
+    necessary_exp: 26260
+    total_exp: 420840
+  - id: 61
+    necessary_exp: 27760
+    total_exp: 447100
+  - id: 62
+    necessary_exp: 29260
+    total_exp: 474860
+  - id: 63
+    necessary_exp: 30760
+    total_exp: 504120
+  - id: 64
+    necessary_exp: 32260
+    total_exp: 534880
+  - id: 65
+    necessary_exp: 33760
+    total_exp: 567140
+  - id: 66
+    necessary_exp: 35260
+    total_exp: 600900
+  - id: 67
+    necessary_exp: 36760
+    total_exp: 636160
+  - id: 68
+    necessary_exp: 38260
+    total_exp: 672920
+  - id: 69
+    necessary_exp: 39760
+    total_exp: 711180
+  - id: 70
+    necessary_exp: 41260
+    total_exp: 750940
+  - id: 71
+    necessary_exp: 43260
+    total_exp: 792200
+  - id: 72
+    necessary_exp: 45260
+    total_exp: 835460
+  - id: 73
+    necessary_exp: 47260
+    total_exp: 880720
+  - id: 74
+    necessary_exp: 49260
+    total_exp: 927980
+  - id: 75
+    necessary_exp: 51260
+    total_exp: 977240
+  - id: 76
+    necessary_exp: 53260
+    total_exp: 1028500
+  - id: 77
+    necessary_exp: 55260
+    total_exp: 1081760
+  - id: 78
+    necessary_exp: 57260
+    total_exp: 1137020
+  - id: 79
+    necessary_exp: 59260
+    total_exp: 1194280
+  - id: 80
+    necessary_exp: 0
+    total_exp: 1253540

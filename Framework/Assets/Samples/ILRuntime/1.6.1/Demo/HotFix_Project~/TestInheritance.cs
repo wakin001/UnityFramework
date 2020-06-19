@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using MessagePack;
 
 namespace HotFix_Project
 {
@@ -21,6 +23,11 @@ namespace HotFix_Project
         public static TestInheritance NewObject()
         {
             return new HotFix_Project.TestInheritance();
+        }
+
+        protected override void Init(Dictionary<string, int> header, int headerOffset, byte[] databaseBinary)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a82740ff2e0fe34494618f48d19293b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainLuaScript: {fileID: 4900000, guid: bc68ba3feed3741d5aa281b9a4c47a54, type: 3}
+  mainLuaScript: {fileID: 4900000, guid: f4318d27a2e34af468c4d73c226857c5, type: 3}
   canvas: {fileID: 1992190279}
 --- !u!1 &1204286373
 GameObject:

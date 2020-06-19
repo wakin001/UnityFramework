@@ -1,0 +1,14 @@
+﻿/// This file was created automatically.
+/// Don't edit this file manually!
+/// このファイルは自動生成されています。
+/// 手編集しないで下さい!
+
+namespace <%= enum[:namespace] %>
+{
+    public enum <%= enum[:name] %>
+    {
+<%- enum[:body].each do |key, value| -%>
+        <%= key %> = <%= value %>,
+<%- end -%>
+    };
+}
