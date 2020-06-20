@@ -150,7 +150,7 @@ namespace ProtoBuf.Reflection
                 if (!file.IncludeInOutput) continue;
 
                 var fileName = Path.ChangeExtension(file.Name, DefaultFileExtension);
-
+                
                 string generated;
                 using (var buffer = new StringWriter())
                 {
