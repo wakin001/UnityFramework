@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="UniRx">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Plugins/AsyncAwaitUtil/UniRx.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

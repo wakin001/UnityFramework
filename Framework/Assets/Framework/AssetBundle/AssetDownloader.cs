@@ -244,7 +244,7 @@ namespace Framework
                 {
                     if (errorType != DownloadErrorType.None)
                     {
-                        Debug.Log("Error in downloading ... " + error);
+                        Debug.Log("Error in downloading ... " + error + ", " + assetUrlPath + "/" + asset.name);
                         return;
                     }
                     downloadList.RemoveWhere((item) =>

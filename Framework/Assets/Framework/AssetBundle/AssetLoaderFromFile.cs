@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UniRx.Async;
 using XLua;
+using UnityEditor;
 
 namespace Framework
 {
@@ -27,16 +28,20 @@ namespace Framework
         public static T Load<T>(string assetName, string assetFileName = null) where T : Object
         {
             string fileName = GetAssetFileName(assetName, assetFileName);
- 
+
             // local
+
             if (!useAssetBundle)
             {
-                T obj = Resources.Load<T>(fileName);
+#if UNITY_EDITOR
+                //T obj = Resources.Load<T>(fileName);
+                T obj = AssetDatabase.LoadAssetAtPath<T>(fileName);
                 return obj;
+#endif
             }
 
             // assetbundle
-            return AssetManager.instance.LoadAssetBundleFromFile<T>(assetName, assetFileName);
+            return AssetManager.instance.LoadAssetBundleFromFile<T>(fileName, assetFileName);
         }
 
         public static void LoadAsync(string assetName, System.Action<Object> onCompleted)

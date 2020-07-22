@@ -13,7 +13,7 @@ namespace Framework
     [LuaCallCSharp]
     public partial class AssetManager : SingletonComponent<AssetManager>
     {
-        public static bool useAssetBundle = false;
+        public static bool useAssetBundle = true;
 
         /// <summary>
         /// AssetBundle Cache.

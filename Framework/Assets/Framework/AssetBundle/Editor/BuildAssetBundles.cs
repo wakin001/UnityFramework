@@ -433,6 +433,7 @@ namespace Framework
             //DeleteEmptyDirectory(buildPath);
 
             BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle, target);
+            //BuildPipeline.BuildAssetBundles(buildPath, builds.ToArray(), BuildAssetBundleOptions.UncompressedAssetBundle, target);
             //if (error != null)
             //{
             //    throw new Exception(error);

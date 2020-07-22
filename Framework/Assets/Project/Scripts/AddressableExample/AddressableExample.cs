@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Framework;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -41,17 +42,28 @@ public class AddressableExample : MonoBehaviour
         // 使用await/async 的加载方法
         //_instance = await _asset.InstantiateAsync().Task;
 
+
+        #endregion
+
+        AssetDownloader.instance.savePath = Application.dataPath + "/../AssetBundlesDownload/";
+        AssetDownloader.instance.assetUrlPath = Application.dataPath + "/../AssetBundlesDownload/";
+    }
+
+    private IEnumerator LoadAddressableAsset()
+    {
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         sw.Start();
-        _instance = await Addressables.InstantiateAsync("View1").Task;
+        for (int i = 1; i <= 10; ++i)
+        {
+            string name = $"View{i}";
+            var asyncTask = Addressables.InstantiateAsync(name);
+            yield return asyncTask;
+        }
+
         sw.Stop();
         Debug.Log("load view1: " + sw.ElapsedMilliseconds);
 
-        //LoadResource();
-        //StartCoroutine(LoadResourceAsync());
-
         Debug.Log("Instantiated finished");
-        #endregion
     }
 
     private void LoadResource()
@@ -65,11 +77,44 @@ public class AddressableExample : MonoBehaviour
 
     private IEnumerator LoadResourceAsync()
     {
+
+        var manifest = AssetDownloader.instance.scriptableManifest;
+
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         sw.Start();
-        var request = Resources.LoadAsync("Prefabs/Views/View1");
-        yield return request;
-        Instantiate((GameObject)request.asset);
+        for (int i = 1; i <= 10; ++i)
+        {
+
+            string name = $"Prefabs/Views/View{i}";
+            yield return AssetManager.LoadAsyncCoroutine<GameObject>(name, (prefab) =>
+            {
+                if (prefab != null)
+                {
+                    Instantiate(prefab);
+                }
+            });
+        }
+        sw.Stop();
+        Debug.Log("load view1: " + sw.ElapsedMilliseconds);
+    }
+
+    private void LoadResources()
+    {
+        var manifest = AssetDownloader.instance.scriptableManifest;
+
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+        for (int i = 1; i <= 10; ++i)
+        {
+
+            string name = $"Prefabs/Views/View{i}";
+            var prefab = AssetManager.Load<GameObject>(name);
+            //var prefab = Resources.Load<GameObject>(name);
+            if (prefab != null)
+            {
+                Instantiate(prefab);
+            }
+        }
         sw.Stop();
         Debug.Log("load view1: " + sw.ElapsedMilliseconds);
     }
@@ -117,5 +162,25 @@ public class AddressableExample : MonoBehaviour
                 , null, Addressables.MergeMode.None).Task;
         // 将返回的贴图赋值给加载的材质
         _instance.GetComponent<Renderer>().material.mainTexture = textures[0];
+    }
+
+    public void OnButtonLoadAddressableAssetTouched()
+    {
+        StartCoroutine(LoadAddressableAsset());
+    }
+
+    public void OnButtonLoadAsyncTouched()
+    {
+        StartCoroutine(LoadResourceAsync());
+    }
+
+    public void OnButtonReleaseAssetTouched()
+    {
+        //AssetBundle.Unload(true);
+    }
+
+    public void OnButtonLoadSyncTouched()
+    {
+        LoadResources();
     }
 }

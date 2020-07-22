@@ -21,34 +21,20 @@ MonoBehaviour:
     m_Address: Assets/Project/Textures
     m_ReadOnly: 0
     m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: 10f045923a47b1141af1572a7f472735
     m_Address: Assets/Project/Resources_moved/Prefabs
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 73f8bd82843232b48b94dbd2f43858df
-    m_Address: Assets/Project/Sprites/Penguins.jpg
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: c75154f8fb206f746b7ff43bf5524529
-    m_Address: Assets/Project/Sprites/Koala.jpg
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: d46cfd821bbfdc8468e970a06931e47b
-    m_Address: Assets/Project/Resources_moved/Atlas
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: ea13a8ac23e48b84eb93d1326da04c34
     m_Address: Assets/Project/Resources_moved/Materials
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: ed9975e2016508f40b0485f18fa633ff
-    m_Address: Assets/Project/Sprites/Square.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: fa1607160ebf6584b9494e14b61f4270
-    m_Address: Assets/Project/Sprites/Sources
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 591e0f243421cec46981f3bd860f5f85, type: 2}
   m_SchemaSet:

@@ -70,7 +70,7 @@ namespace XLua
             }
 
 #if THREAD_SAFE || HOTFIX_ENABLE
-            lock(luaEnvLock)
+            lock (luaEnvLock)
 #endif
             {
                 LuaIndexes.LUA_REGISTRYINDEX = LuaAPI.xlua_get_registry_index();
@@ -328,7 +328,7 @@ namespace XLua
 
         static bool ObjectValidCheck(object obj)
         {
-            return (!(obj is UnityEngine.Object)) ||  ((obj as UnityEngine.Object) != null);
+            return (!(obj is UnityEngine.Object)) || ((obj as UnityEngine.Object) != null);
         }
 
         Func<object, bool> object_valid_checker = new Func<object, bool>(ObjectValidCheck);
@@ -409,7 +409,7 @@ namespace XLua
                 {
                     throw new InvalidOperationException("try to dispose a LuaEnv with C# callback!");
                 }
-                
+
                 ObjectTranslatorPool.Instance.Remove(L);
 
                 LuaAPI.lua_close(L);
@@ -598,8 +598,8 @@ namespace XLua
 
         internal List<CustomLoader> customLoaders = new List<CustomLoader>();
 
-        //loader : CustomLoader， filepath参数：（ref类型）输入是require的参数，如果需要支持调试，需要输出真实路径。
-        //                        返回值：如果返回null，代表加载该源下无合适的文件，否则返回UTF8编码的byte[]
+        //loader : CustomLoader， filepath参数：（ref类型）输葋E莚equire的参数，如果需要支持调试，需要输出真实路径。
+        //                        返回值：如果返回null，代柄赜载该源下无合适的文件，否则返回UTF8编聛E腷yte[]
         public void AddLoader(CustomLoader loader)
         {
             customLoaders.Add(loader);

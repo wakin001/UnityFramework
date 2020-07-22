@@ -10,14 +10,14 @@ function start()
     print("luaScript start...")
 
     -- use LuaScript
-    -- c1 = newCounter()
-    -- print(c1()) -- 1
-    -- print(c1()) -- 2
+     c1 = newCounter()
+     print(c1()) -- 1
+     print(c1()) -- 2
 
-    -- c2 = newCounter()
-    -- print(c2()) -- 1
-    -- print(c1()) -- 3
-    -- print(c2()) -- 2
+     c2 = newCounter()
+     print(c2()) -- 1
+     print(c1()) -- 3
+     print(c2()) -- 2
 end
 
 function update()

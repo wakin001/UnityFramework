@@ -9,7 +9,7 @@ require("Lua/LuaScript")
 require("Lua/LuaClassInstance")
 -- require("Lua/LuaClass")
 
-local breakSocketHandle, debugXpCall = require("luadebug/LuaDebug")("localhost", 7003)
+--local breakSocketHandle, debugXpCall = require("luadebug/LuaDebug")("localhost", 7003)
 
 local x = 100
 
@@ -34,6 +34,8 @@ function start()
     myDic.x = 1
     myDic.name = "wang"
     print(myDic["name"])
+
+    --LoadResourceAsync()
 end
 
 function update()
@@ -42,3 +44,9 @@ end
 function ondestroy()
     print("luaScript destroy")
 end
+
+--async funtion LoadResourceAsync()
+--    print("load resouces async.")
+--    local res = await CS.UnityEngine.Resources.LoadAsync("Prefabs/prefab1", typeof(GameObject))
+--    CS.UnityEngine.GameObject.Instantiate(res)
+--end

@@ -1,45 +1,69 @@
 ManifestFileVersion: 0
-CRC: 2832919948
+CRC: 4008028541
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: moveleft
+      Name: view1
       Dependencies: {}
     Info_1:
-      Name: prefabs/views/view2
+      Name: view2
       Dependencies:
-        Dependency_0: sprites_sources
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonresetsprite
     Info_2:
-      Name: sprites/tulips
-      Dependencies: {}
+      Name: view3
+      Dependencies:
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonthumbstickupsprite
+        Dependency_2: buttonresetsprite
     Info_3:
-      Name: atlas/commonatlas
+      Name: view4
       Dependencies:
-        Dependency_0: sprites_sources
-        Dependency_1: buttonarrowupsprite
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonthumbstickupsprite
+        Dependency_2: buttonresetsprite
     Info_4:
-      Name: sprites_sources
-      Dependencies: {}
+      Name: view5
+      Dependencies:
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonthumbstickupsprite
+        Dependency_2: buttonresetsprite
     Info_5:
-      Name: prefabs/views/view3
+      Name: view6
       Dependencies:
-        Dependency_0: sprites_sources
-        Dependency_1: buttonarrowupsprite
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonthumbstickupsprite
+        Dependency_2: buttonresetsprite
     Info_6:
-      Name: animationctrls/view1
+      Name: view7
       Dependencies:
-        Dependency_0: moveleft
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonthumbstickupsprite
+        Dependency_2: buttonresetsprite
     Info_7:
-      Name: prefabs/views/view1
+      Name: view8
       Dependencies:
-        Dependency_0: animationctrls/view1
-        Dependency_1: buttonarrowupsprite
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonthumbstickupsprite
+        Dependency_2: buttonresetsprite
     Info_8:
-      Name: redmat
-      Dependencies: {}
+      Name: view9
+      Dependencies:
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonthumbstickupsprite
+        Dependency_2: buttonresetsprite
     Info_9:
-      Name: glass
-      Dependencies: {}
+      Name: view10
+      Dependencies:
+        Dependency_0: buttonbrakeoversprite
+        Dependency_1: buttonthumbstickupsprite
+        Dependency_2: buttonresetsprite
     Info_10:
-      Name: buttonarrowupsprite
+      Name: buttonbrakeoversprite
+      Dependencies: {}
+    Info_11:
+      Name: buttonthumbstickupsprite
+      Dependencies: {}
+    Info_12:
+      Name: buttonresetsprite
       Dependencies: {}

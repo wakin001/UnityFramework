@@ -4,9 +4,12 @@ using UnityEngine;
 using Framework;
 using UnityEngine.SceneManagement;
 using UnityEngine.Profiling;
+using System.CodeDom;
 
 public class AssetLoaderTest : MonoBehaviour
 {
+    private const string Path_Prefix = "Assets/Project/Resources/";
+    private const string Path_Suffix = ".prefab";
     private string[] loadFiles = new string[]
     {
         "Prefabs/Views/View1",
@@ -15,6 +18,9 @@ public class AssetLoaderTest : MonoBehaviour
         //"Sprite/Tulips",
         //"AnimationCtrls/View1"
     };
+
+    Material redMat;
+    public GameObject sphere;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +40,7 @@ public class AssetLoaderTest : MonoBehaviour
         //});
 
         //LoadWithAwait();
-        StartCoroutine(LoadWithCoroutine());
+        //StartCoroutine(LoadWithCoroutine());
         //LoadFromLocal();
     }
 
@@ -77,8 +83,12 @@ public class AssetLoaderTest : MonoBehaviour
         Profiler.BeginSample("Load asset from local files");
         for (int i = 0; i < loadFiles.Length; ++i)
         {
+            string path = loadFiles[i];
+#if UNITY_EDITOR
+            path = Path_Prefix + path + Path_Suffix;
+#endif
             // sync
-            var prefab = AssetManager.Load<GameObject>(loadFiles[i]);
+            var prefab = AssetManager.Load<GameObject>(path);
             if (prefab != null)
             {
                 Instantiate(prefab);
@@ -117,5 +127,31 @@ public class AssetLoaderTest : MonoBehaviour
     public void OnButtonUnLoadAllTrueTouched()
     {
         AssetBundle.UnloadAllAssetBundles(true);
+    }
+
+    public void OnLoadMatButtonTouched()
+    {
+        string path = "Materials/RedMat";
+#if UNITY_EDITOR
+        path = Path_Prefix + path + ".mat";
+#endif
+        // sync
+        redMat = AssetManager.Load<Material>(path);
+        Debug.Assert(redMat != null, $"{path} is null");
+        var renderer = sphere.GetComponent<MeshRenderer>();
+        renderer.sharedMaterial = redMat;
+    }
+
+    public void OnModifyMatButtonTouched()
+    {
+        redMat.color = Color.blue;
+
+
+        //redMat.color = Color.black;
+        ////告诉编辑器这个物体已经被修改过了，已经脏了
+        //UnityEditor.EditorUtility.SetDirty(redMat);
+        ////保存已经改动过的资源
+        //UnityEditor.AssetDatabase.SaveAssets();
+
     }
 }

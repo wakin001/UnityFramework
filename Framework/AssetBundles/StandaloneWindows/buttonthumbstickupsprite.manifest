@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 1908565147
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: db45107479456e536307b5bce25bcab4
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 192e690a6ab30273b050a05752742228
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 687078895
+  Script: {instanceID: 0}
+Assets:
+- Assets/Project/Sprites/Sources/ButtonThumbstickUpSprite.png
+Dependencies: []
